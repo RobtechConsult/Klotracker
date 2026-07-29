@@ -191,20 +191,28 @@ export function funnyTipsCount() {
 
 // Getränke-Typen für das Trink-Tracking (Standard-Portionsgrößen in ml).
 export const DRINKS = [
-  { key: 'water', emoji: '🚰', label: 'Wasser', ml: 250 },
-  { key: 'coffee', emoji: '☕', label: 'Kaffee', ml: 125 },
-  { key: 'tea', emoji: '🍵', label: 'Tee', ml: 200 },
-  { key: 'other', emoji: '🥤', label: 'Sonstiges', ml: 330 }
+  { key: 'water', emoji: '🚰', icon: 'water', label: 'Wasser', ml: 250 },
+  { key: 'coffee', emoji: '☕', icon: 'coffee', label: 'Kaffee', ml: 125 },
+  { key: 'tea', emoji: '🍵', icon: 'tea', label: 'Tee', ml: 200 },
+  { key: 'other', emoji: '🥤', icon: 'bottle', label: 'Sonstiges', ml: 330 }
 ]
 export const drinkByKey = (key) => DRINKS.find((d) => d.key === key) || DRINKS[3]
 
 // Bristol-Skala als Text – kurz, verständlich, mit Prise Humor.
+// `short` = Alltagswort für die Auswahl, `zone` = fest|ideal|flüssig für die
+// Farb-Orientierung (schneller Überblick, wo der gute Bereich liegt).
 export const BRISTOL = [
-  { n: 1, emoji: '🪨', label: 'Einzelne harte Klümpchen', hint: 'wie Nüsse, schwer rauszubekommen – zu trocken' },
-  { n: 2, emoji: '🌰', label: 'Wurstartig, klumpig', hint: 'leicht verstopft' },
-  { n: 3, emoji: '🌭', label: 'Wurst mit Rissen', hint: 'völlig okay' },
-  { n: 4, emoji: '🍌', label: 'Glatte, weiche Wurst', hint: 'der Goldstandard ✨' },
-  { n: 5, emoji: '🫧', label: 'Weiche Klümpchen', hint: 'tendenziell etwas locker' },
-  { n: 6, emoji: '🥣', label: 'Breiig, matschig', hint: 'Richtung Durchfall' },
-  { n: 7, emoji: '🌊', label: 'Komplett flüssig', hint: 'Durchfall' }
+  { n: 1, emoji: '🪨', short: 'hart', zone: 'fest', label: 'Einzelne harte Klümpchen', hint: 'wie Nüsse, schwer rauszubekommen – zu trocken' },
+  { n: 2, emoji: '🌰', short: 'klumpig', zone: 'fest', label: 'Wurstartig, klumpig', hint: 'leicht verstopft' },
+  { n: 3, emoji: '🌭', short: 'rissig', zone: 'ideal', label: 'Wurst mit Rissen', hint: 'völlig okay' },
+  { n: 4, emoji: '🍌', short: 'ideal', zone: 'ideal', label: 'Glatte, weiche Wurst', hint: 'der Goldstandard ✨' },
+  { n: 5, emoji: '🫧', short: 'weich', zone: 'ideal', label: 'Weiche Klümpchen', hint: 'tendenziell etwas locker' },
+  { n: 6, emoji: '🥣', short: 'breiig', zone: 'flüssig', label: 'Breiig, matschig', hint: 'Richtung Durchfall' },
+  { n: 7, emoji: '🌊', short: 'flüssig', zone: 'flüssig', label: 'Komplett flüssig', hint: 'Durchfall' }
 ]
+
+export const BRISTOL_ZONES = {
+  fest: { label: 'fest', color: 'var(--amber)' },
+  ideal: { label: 'ideal', color: 'var(--green)' },
+  'flüssig': { label: 'flüssig', color: 'var(--blue)' }
+}

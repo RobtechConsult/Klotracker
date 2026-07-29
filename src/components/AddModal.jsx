@@ -49,12 +49,27 @@ export default function AddModal({ type, onSave, onClose, initialWhen, durationS
 
         {isStool && (
           <>
-            <div className="muted" style={{ marginBottom: 6 }}>Konsistenz (Bristol-Skala, optional):</div>
+            <div className="muted" style={{ marginBottom: 6, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+              <span>Konsistenz (optional):</span>
+              <span className="bristol-legend">
+                <span><i style={{ background: 'var(--amber)' }} />fest</span>
+                <span><i style={{ background: 'var(--green)' }} />ideal</span>
+                <span><i style={{ background: 'var(--blue)' }} />flüssig</span>
+              </span>
+            </div>
             <div className="bristol-pick">
               {BRISTOL.map((b) => (
-                <button key={b.n} className={bristol === b.n ? 'sel' : ''} onClick={() => setBristol(bristol === b.n ? null : b.n)} title={b.label} aria-label={`Typ ${b.n}: ${b.label}`}>
-                  <Icon name={`bristol${b.n}`} size={34} />
-                  <span className="n">{b.n}</span>
+                <button
+                  key={b.n}
+                  className={bristol === b.n ? 'sel' : ''}
+                  data-zone={b.zone}
+                  onClick={() => setBristol(bristol === b.n ? null : b.n)}
+                  title={`${b.label} – ${b.hint}`}
+                  aria-label={`Typ ${b.n}: ${b.label}`}
+                >
+                  <Icon name={`bristol${b.n}`} size={30} />
+                  <span className="bp-short">{b.short}</span>
+                  <span className="bp-n">Typ {b.n}</span>
                 </button>
               ))}
             </div>

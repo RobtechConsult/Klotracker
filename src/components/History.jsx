@@ -54,7 +54,7 @@ export default function History({ entries, onDelete, now }) {
               const dr = e.type === 'drink' ? drinkByKey(e.drink) : null
               return (
                 <div className="hist-item" key={e.id}>
-                  <div className="he" aria-hidden="true">{dr ? dr.emoji : TYPE_EMOJI[e.type]}</div>
+                  <div className="he" aria-hidden="true">{dr ? <Icon name={dr.icon} size={22} className="he-drink" /> : TYPE_EMOJI[e.type]}</div>
                   <div className="ht">
                     <div className="h1">
                       {e.type === 'drink' ? (

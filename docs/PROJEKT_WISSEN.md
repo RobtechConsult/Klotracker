@@ -60,6 +60,8 @@ Wasserlassen) – mit Gewohnheits-Prognose, Regelmäßigkeits-Check und Timer. A
 | 2026-07-29 | **Import/Backup** (Backlog #4) | JSON-Import mit Dedup per id (`mergeEntries`/`parseImport`); ergänzt den vorhandenen Export |
 | 2026-07-29 | **Startseiten-Hierarchie & Spacing-System** | Timer entschlackt (schlanke Sekundär-Aktion statt Hero), Prognose nach oben; einheitlicher Rhythmus über `.stack` + `--gap` statt gestreuter margins/inline-styles |
 | 2026-07-29 | **Eigenes Icon-Set** (`Icon.jsx`) | SVG im Mascot-Stil, `currentColor` → Light/Dark & plattformkonsistent. Ersetzt Emojis in Tabbar (Start/Statistik/Verlauf) und Bristol-Skala 1–7 (Picker, Chart, Verlauf). 💩/💧 bewusst behalten. |
+| 2026-07-29 | **Bristol-Auswahl user-freundlich** | Icons größer, dazu **Klartext-Wörter** (hart/klumpig/rissig/ideal/weich/breiig/flüssig) + **Farb-Zonen** (fest/ideal/flüssig) mit Legende → wählbar nach Alltagssprache statt Icon-Deuten. |
+| 2026-07-29 | **Eigene Getränke-Icons** | Glas/Tasse/Teetasse/Flasche (blau) statt Emoji (🚰 etc.) in Trink-Karte & Verlauf. |
 
 ---
 

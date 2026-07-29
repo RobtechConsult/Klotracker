@@ -211,12 +211,30 @@ body {
 .modal .msub { color: var(--ink-soft); font-size: 13px; margin: 0 0 16px; }
 .bristol-pick { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 8px; }
 .bristol-pick button {
+  position: relative; overflow: hidden;
   border: 1px solid var(--line); background: var(--bg); border-radius: 12px;
-  padding: 10px 2px 6px; cursor: pointer;
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 12px 2px 6px; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
 }
-.bristol-pick button.sel { border-color: var(--brown); background: color-mix(in srgb, var(--brown) 15%, transparent); }
-.bristol-pick .n { display: block; font-size: 10px; color: var(--ink-soft); margin-top: 2px; }
+/* Farb-Zone als Balken oben – zeigt auf einen Blick: fest/ideal/flüssig */
+.bristol-pick button::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+}
+.bristol-pick button[data-zone='fest']::before { background: var(--amber); }
+.bristol-pick button[data-zone='ideal']::before { background: var(--green); }
+.bristol-pick button[data-zone='flüssig']::before { background: var(--blue); }
+.bristol-pick button.sel { border-color: var(--brown); background: color-mix(in srgb, var(--brown) 14%, transparent); }
+.bristol-pick .bp-short { display: block; font-size: 11px; font-weight: 700; color: var(--ink); margin-top: 2px; }
+.bristol-pick .bp-n { display: block; font-size: 9px; color: var(--ink-soft); }
+
+/* Legende über der Bristol-Auswahl */
+.bristol-legend { display: inline-flex; gap: 10px; }
+.bristol-legend > span { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; }
+.bristol-legend i { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
+
+/* Getränke-Icons blau einfärben (Wasser-Welt) */
+.drink-emoji svg { color: var(--blue); }
+.he-drink { color: var(--blue); vertical-align: middle; }
 .field { width: 100%; border: 1px solid var(--line); background: var(--bg); border-radius: 12px; padding: 12px; font-size: 14px; color: var(--ink); font-family: inherit; margin-bottom: 12px; }
 .row { display: flex; gap: 10px; }
 .btn { flex: 1; border: none; border-radius: 14px; padding: 14px; font-size: 15px; font-weight: 800; cursor: pointer; }

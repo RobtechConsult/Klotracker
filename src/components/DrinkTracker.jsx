@@ -1,6 +1,7 @@
 import React from 'react'
 import { DRINKS } from '../lib/tips.js'
 import { drinkTotalToday, fmtMl } from '../lib/stats.js'
+import Icon from './Icon.jsx'
 
 // Trink-Tracking: ein Tipp genügt. Zeigt den Tagesfortschritt zum Ziel und
 // bietet Schnell-Buttons für die üblichen Getränke.
@@ -31,7 +32,7 @@ export default function DrinkTracker({ entries, now, goalMl = 2000, onAdd }) {
             onClick={() => onAdd({ type: 'drink', ts: new Date().toISOString(), drink: d.key, amount: d.ml })}
             aria-label={`${d.label} ${d.ml} Milliliter hinzufügen`}
           >
-            <span className="drink-emoji" aria-hidden="true">{d.emoji}</span>
+            <span className="drink-emoji" aria-hidden="true"><Icon name={d.icon} size={26} /></span>
             <span className="drink-label">{d.label}</span>
             <span className="drink-ml">{d.ml} ml</span>
           </button>
