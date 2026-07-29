@@ -114,4 +114,25 @@ gefüllt.
 
 ---
 
+## Als Website veröffentlichen (GitHub Pages)
+
+Der Workflow `.github/workflows/deploy.yml` baut die App bei jedem Push und legt
+den fertigen Stand im Branch **`gh-pages`** ab (inkl. Tests, `.nojekyll` und
+SPA-Fallback `404.html`).
+
+**Einmalig** muss die Pages-Quelle gesetzt werden – das erfordert Admin-Rechte,
+die der Workflow-Token nicht hat:
+
+> **Settings → Pages → Build and deployment → Source: „Deploy from a branch"**
+> → Branch **`gh-pages`**, Ordner **`/ (root)`** → **Save**
+
+Danach ist die App live unter:
+
+**https://robtechconsult.github.io/Klotracker/**
+
+Jeder weitere Push auf den Entwicklungsbranch aktualisiert `gh-pages` automatisch
+– GitHub baut die Seite dann selbst neu. Kein weiterer Handgriff nötig.
+
+---
+
 _Made mit 💛 und einer Rolle Klopapier. Klotracker ist keine medizinische App._

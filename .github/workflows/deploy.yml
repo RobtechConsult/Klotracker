@@ -79,15 +79,15 @@ jobs:
           fi
 
           echo "== Pages-Konfiguration danach =="
-          final=$(curl -s "${auth[@]}" "$api")
-          echo "$final"
-          echo "$final" | grep -q '"build_type": *"legacy"' && echo "$final" | grep -q 'gh-pages' \
-            && { echo "OK: Pages serviert jetzt aus gh-pages."; exit 0; }
+          curl -s "${auth[@]}" "$api"; echo
 
-          if [ "$put" = "204" ] || [ "$put" = "200" ] || [ "$put" = "201" ]; then
-            echo "OK: API akzeptierte die Änderung (HTTP $put)."; exit 0
+          # Hinweis statt Fehlschlag: Das Umschalten der Pages-Quelle erfordert
+          # Admin-Rechte, die der Workflow-Token nicht hat. Der gebaute Stand
+          # liegt trotzdem aktuell im Branch gh-pages bereit. Einmalig nötig:
+          #   Settings -> Pages -> Source = "Deploy from a branch"
+          #   -> Branch: gh-pages / (root) -> Save
+          if [ "$put" != "204" ] && [ "$put" != "200" ] && [ "$put" != "201" ]; then
+            echo "::notice::Pages-Quelle nicht automatisch setzbar (Token ohne Admin-Recht). Bitte einmalig unter Settings -> Pages die Quelle auf Branch 'gh-pages' /(root) stellen."
           fi
-          echo "FEHLER: Pages-Quelle konnte nicht auf gh-pages gesetzt werden."
-          exit 1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
