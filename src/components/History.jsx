@@ -1,6 +1,6 @@
 import React from 'react'
 import { BRISTOL } from '../lib/tips.js'
-import { dayKey } from '../lib/stats.js'
+import { dayKey, fmtDuration } from '../lib/stats.js'
 
 const fmt = (ts) => {
   const d = new Date(ts)
@@ -51,7 +51,7 @@ export default function History({ entries, onDelete, now }) {
                 <div className="hist-item" key={e.id}>
                   <div className="he">{e.type === 'stool' ? '💩' : '💧'}</div>
                   <div className="ht">
-                    <div className="h1">{e.type === 'stool' ? 'Stuhlgang' : 'Wasserlassen'}{b ? ` · ${b.emoji} Typ ${b.n}` : ''}</div>
+                    <div className="h1">{e.type === 'stool' ? 'Stuhlgang' : 'Wasserlassen'}{b ? ` · ${b.emoji} Typ ${b.n}` : ''}{e.durationSec ? ` · ⏱️ ${fmtDuration(e.durationSec)}` : ''}</div>
                     <div className="h2">{fmt(e.ts)} Uhr{e.note ? ` · ${e.note}` : ''}</div>
                   </div>
                   <button className="del" onClick={() => onDelete(e.id)} title="Löschen" aria-label="Löschen">🗑️</button>

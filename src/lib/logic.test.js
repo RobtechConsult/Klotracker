@@ -1,7 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { predictNextStool, findTimeClusters } from './prediction.js'
-import { averagePerDay, countsPerDay, streakDays, minutesOfDay, hourHistogram } from './stats.js'
+import { averagePerDay, countsPerDay, streakDays, minutesOfDay, hourHistogram, fmtDuration, fmtDurationShort, toiletTimeStats } from './stats.js'
 import { healthCheck } from './tips.js'
 
 const iso = (day, h, m = 0) => {
@@ -98,6 +98,40 @@ test('healthCheck: sehr selten -> watch (Verstopfungshinweis)', () => {
   const now = new Date(2026, 0, 14, 23)
   const res = healthCheck(entries, now)
   assert.ok(res.findings.some((f) => f.level === 'watch'))
+})
+
+test('fmtDuration formatiert Minuten/Stunden', () => {
+  assert.equal(fmtDuration(95), '1:35')
+  assert.equal(fmtDuration(600), '10:00')
+  assert.equal(fmtDuration(3720), '1 Std 2 Min')
+})
+
+test('fmtDurationShort', () => {
+  assert.equal(fmtDurationShort(45), '45 Sek')
+  assert.equal(fmtDurationShort(600), '10 Min')
+  assert.equal(fmtDurationShort(3600), '1,0 Std')
+})
+
+test('toiletTimeStats summiert nur getimte Stuhlgänge im Zeitraum', () => {
+  const now = new Date(2026, 0, 10, 20)
+  const entries = [
+    { type: 'stool', ts: iso(10, 8), durationSec: 300 }, // heute, 5 min
+    { type: 'stool', ts: iso(9, 8), durationSec: 600 }, // gestern, 10 min
+    { type: 'stool', ts: iso(8, 8) }, // ohne Dauer -> zählt nicht
+    { type: 'urine', ts: iso(10, 9), durationSec: 120 }, // kein Stuhl -> zählt nicht
+    { type: 'stool', ts: iso(1, 8), durationSec: 999 } // außerhalb 7-Tage-Fensters
+  ]
+  const s = toiletTimeStats(entries, 7, now)
+  assert.equal(s.count, 2)
+  assert.equal(s.totalSec, 900)
+  assert.equal(s.avgSec, 450)
+  assert.equal(s.longestSec, 600)
+})
+
+test('toiletTimeStats leer, wenn keine Dauern', () => {
+  const s = toiletTimeStats([{ type: 'stool', ts: iso(1, 8) }], 7, new Date(2026, 0, 1, 20))
+  assert.equal(s.count, 0)
+  assert.equal(s.avgSec, 0)
 })
 
 test('minutesOfDay & hourHistogram', () => {

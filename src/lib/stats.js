@@ -92,6 +92,49 @@ export function hourHistogram(entries, type) {
   return hours
 }
 
+/** Sekunden menschenlesbar: 95 -> "1:35", 3720 -> "1 Std 2 Min". */
+export function fmtDuration(sec) {
+  const s = Math.max(0, Math.round(sec))
+  if (s < 3600) {
+    const m = Math.floor(s / 60)
+    const r = s % 60
+    return `${m}:${String(r).padStart(2, '0')}`
+  }
+  const h = Math.floor(s / 3600)
+  const m = Math.round((s % 3600) / 60)
+  return m ? `${h} Std ${m} Min` : `${h} Std`
+}
+
+/** Kompakt für Kacheln: 620 -> "10 Min", 3720 -> "1,0 Std". */
+export function fmtDurationShort(sec) {
+  const s = Math.max(0, Math.round(sec))
+  if (s < 60) return `${s} Sek`
+  if (s < 3600) return `${Math.round(s / 60)} Min`
+  return `${(s / 3600).toFixed(1).replace('.', ',')} Std`
+}
+
+/**
+ * Auswertung der "Thron-Zeit": alle Stuhlgänge mit gemessener Dauer im
+ * Zeitraum. Liefert Gesamt-, Durchschnitts- und Rekordzeit.
+ */
+export function toiletTimeStats(entries, days = 7, now = new Date()) {
+  const cutoff = new Date(now)
+  cutoff.setDate(cutoff.getDate() - (days - 1))
+  cutoff.setHours(0, 0, 0, 0)
+  const timed = entries.filter(
+    (e) => e.type === 'stool' && e.durationSec > 0 && new Date(e.ts) >= cutoff
+  )
+  const totalSec = timed.reduce((s, e) => s + e.durationSec, 0)
+  const count = timed.length
+  const longest = timed.reduce((m, e) => (e.durationSec > m ? e.durationSec : m), 0)
+  return {
+    totalSec,
+    count,
+    avgSec: count ? totalSec / count : 0,
+    longestSec: longest
+  }
+}
+
 /** Durchschnittlicher Abstand zwischen Stuhlgängen in Stunden. */
 export function averageIntervalHours(entries, type = 'stool') {
   const times = entries

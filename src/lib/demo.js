@@ -32,7 +32,8 @@ export function makeDemoEntries(now = new Date(), days = 21) {
         id: makeId(),
         ts: at(day, 7, 40, 35).toISOString(),
         type: 'stool',
-        bristol: [3, 4, 4, 4, 5][Math.floor(rand() * 5)]
+        bristol: [3, 4, 4, 4, 5][Math.floor(rand() * 5)],
+        durationSec: Math.round(150 + rand() * 600) // 2,5–12,5 Min auf dem Thron
       })
     }
     // Gelegentlicher Nachmittags-Gang (~15:00).
@@ -41,7 +42,8 @@ export function makeDemoEntries(now = new Date(), days = 21) {
         id: makeId(),
         ts: at(day, 15, 0, 50).toISOString(),
         type: 'stool',
-        bristol: [3, 4, 4, 5, 6][Math.floor(rand() * 5)]
+        bristol: [3, 4, 4, 5, 6][Math.floor(rand() * 5)],
+        durationSec: Math.round(120 + rand() * 480) // 2–10 Min
       })
     }
     // Wasserlassen: 5–7x über den Tag verteilt.

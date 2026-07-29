@@ -197,7 +197,8 @@ body {
 .tabbar button {
   flex: 1; background: none; border: none; cursor: pointer;
   display: flex; flex-direction: column; align-items: center; gap: 3px;
-  font-size: 10.5px; color: var(--ink-soft); padding: 6px 0; font-weight: 600;
+  font-size: 11px; color: var(--ink-soft); padding: 6px 0; font-weight: 600;
+  position: relative;
 }
 .tabbar button.active { color: var(--brown); }
 .tabbar button .ti { font-size: 21px; }
@@ -228,3 +229,61 @@ body {
 .disclaimer { font-size: 11px; color: var(--ink-soft); text-align: center; padding: 4px 12px 0; line-height: 1.4; }
 .muted { color: var(--ink-soft); font-size: 13px; }
 .section-title { font-size: 13px; font-weight: 800; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.06em; margin: 18px 4px 8px; }
+
+/* --- Timer --- */
+.timer-card { padding: 14px; }
+.big-btn.timer { background: linear-gradient(160deg, #6bb6c9, var(--blue)); color: #08343f; width: 100%; }
+.timer-live-wrap { text-align: center; }
+.timer-live {
+  font-size: 52px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  margin: 6px 0 2px;
+  color: var(--blue);
+}
+
+/* --- Thron-Zeit --- */
+.throne { background: linear-gradient(160deg, color-mix(in srgb, var(--gold) 22%, transparent), transparent), var(--bg-elev); }
+.throne-hero { text-align: center; padding: 6px 0 2px; }
+.throne-big { font-size: 40px; font-weight: 900; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.throne .quip { font-size: 13.5px; font-style: italic; color: var(--ink-soft); text-align: center; }
+
+/* --- Duration badge (im AddModal) --- */
+.duration-badge {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--blue-soft); color: var(--ink);
+  border-radius: 12px; padding: 10px 12px; margin-bottom: 12px; font-size: 14px;
+}
+.duration-badge .de { font-size: 20px; }
+
+/* --- Accessibility-Quick-Wins --- */
+:where(button, a, input, [tabindex]):focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+/* Kräftigere Textfarben für die Gesundheits-Ampel (besserer Kontrast). */
+:root { --green-ink: #1f7a4d; --amber-ink: #9a5b00; --red-ink: #b13b28; }
+@media (prefers-color-scheme: dark) {
+  :root { --green-ink: #7dd1a5; --amber-ink: #f0c06a; --red-ink: #f0937d; }
+}
+.badge.good { color: var(--green-ink); }
+.badge.watch { color: var(--amber-ink); }
+.badge.alert { color: var(--red-ink); }
+
+/* Aktiver Tab bekommt ein zweites Signal (nicht nur Farbe). */
+.tabbar button.active { color: var(--brown-2); font-weight: 800; }
+.tabbar button.active::before {
+  content: ""; position: absolute; top: 0;
+  width: 26px; height: 3px; border-radius: 0 0 3px 3px; background: var(--brown-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

@@ -23,6 +23,7 @@ bleiben per `localStorage` auf dem Gerät. Was aufs Klo geht, bleibt auf dem Klo
 |---|---|
 | **Schnell-Tracking** | Zwei große Buttons: *Stuhlgang* 💩 und *Wasserlassen* 💧. Ein Tipp, fertig. |
 | **Details (optional)** | Uhrzeit anpassen, **Bristol-Konsistenz** (Typ 1–7) und Notiz. |
+| **Timer „Zeit auf dem Thron"** ⏱️ | Sitzung starten & stoppen; am Ende die Wochen-Gesamtzeit auf dem Klo – inkl. Ø-Dauer, Rekord und lustiger Umrechnung. Überlebt App-Neustarts. |
 | **Bildliche Visualisierung** | Radiale **24-Stunden-Uhr** (wann ist bei dir was los?), Wochen-Balkendiagramm, Bristol-Verteilung. |
 | **Gewohnheits-Algorithmus** | *„Nächster wahrscheinlicher Stuhlgang **XX:XX Uhr**"* inkl. Zeitfenster und Sicherheits-Score. |
 | **Regelmäßigkeits-Check** | Erkennt *zu oft* / *zu selten* und flüssige/harte Konsistenz – mit ehrlichem Kern, humorvoll verpackt. |

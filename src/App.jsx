@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { loadEntries, saveEntries, makeId, loadSettings, saveSettings, exportJSON } from './lib/storage.js'
+import { loadEntries, saveEntries, makeId, loadSettings, saveSettings, exportJSON, loadSession, saveSession } from './lib/storage.js'
 import { predictNextStool } from './lib/prediction.js'
-import { countToday, streakDays, averagePerDay } from './lib/stats.js'
+import { countToday, streakDays, averagePerDay, fmtDuration } from './lib/stats.js'
 import { tipOfNow } from './lib/tips.js'
 import { makeDemoEntries } from './lib/demo.js'
 
@@ -11,19 +11,30 @@ import HourClock from './components/HourClock.jsx'
 import HealthCheck from './components/HealthCheck.jsx'
 import BristolChart from './components/BristolChart.jsx'
 import History from './components/History.jsx'
+import ThroneTime from './components/ThroneTime.jsx'
 import AddModal from './components/AddModal.jsx'
 
 export default function App() {
   const [entries, setEntries] = useState(() => loadEntries())
   const [settings, setSettings] = useState(() => loadSettings())
   const [tab, setTab] = useState('home')
-  const [adding, setAdding] = useState(null) // 'stool' | 'urine' | null
+  const [adding, setAdding] = useState(null) // { type, initialWhen?, durationSec? } | null
   const [toast, setToast] = useState(null)
   const [showSettings, setShowSettings] = useState(false)
+  const [session, setSession] = useState(() => loadSession()) // laufender Timer
+  const [, setTick] = useState(0) // erzwingt Sekunden-Rerender bei laufendem Timer
   const now = new Date()
 
   useEffect(() => saveEntries(entries), [entries])
   useEffect(() => saveSettings(settings), [settings])
+  useEffect(() => saveSession(session), [session])
+  // Verstrichene Zeit wird beim Rendern aus startedAt berechnet (übersteht
+  // App-Neustart/Reload); der Interval erzwingt nur die Sekundenanzeige.
+  useEffect(() => {
+    if (!session) return
+    const id = setInterval(() => setTick((t) => t + 1), 1000)
+    return () => clearInterval(id)
+  }, [session])
 
   const prediction = useMemo(() => predictNextStool(entries, now), [entries])
   const tipSeed = useMemo(() => Math.floor(Date.now() / 3600000) + entries.length, [entries.length])
@@ -37,10 +48,38 @@ export default function App() {
     const entry = { id: makeId(), ...data }
     setEntries((prev) => [entry, ...prev].sort((a, b) => new Date(b.ts) - new Date(a.ts)))
     setAdding(null)
-    flash(data.type === 'stool' ? 'Stuhlgang gespeichert 💩' : 'Wasserlassen gespeichert 💧')
+    flash(
+      data.durationSec
+        ? `Sitzung gespeichert · ${fmtDuration(data.durationSec)} Min auf dem Thron 👑`
+        : data.type === 'stool'
+          ? 'Stuhlgang gespeichert 💩'
+          : 'Wasserlassen gespeichert 💧'
+    )
   }
 
   const deleteEntry = (id) => setEntries((prev) => prev.filter((e) => e.id !== id))
+
+  // --- Timer ("Schiss starten/stoppen") ---
+  const startSession = () => {
+    setSession({ startedAt: new Date().toISOString() })
+    flash('Timer läuft – lass dir Zeit ⏱️')
+  }
+  const stopSession = () => {
+    if (!session) return
+    const durationSec = Math.max(1, (Date.now() - new Date(session.startedAt).getTime()) / 1000)
+    const startedAt = session.startedAt
+    // Vergessen zu stoppen? Bei sehr langer Sitzung freundlich nachfragen.
+    if (durationSec > 45 * 60 && !confirm(`Der Timer lief ${fmtDuration(durationSec)} Min. So lange wirklich speichern – oder hast du das Stoppen vergessen?`)) {
+      return
+    }
+    setSession(null)
+    setAdding({ type: 'stool', initialWhen: startedAt, durationSec })
+  }
+  const cancelSession = () => {
+    setSession(null)
+    flash('Timer verworfen 🚮')
+  }
+  const elapsedSec = session ? Math.max(0, (Date.now() - new Date(session.startedAt).getTime()) / 1000) : 0
 
   const loadDemo = () => {
     setEntries(makeDemoEntries(now))
@@ -86,17 +125,40 @@ export default function App() {
         <>
           <div className="card" style={{ padding: 14 }}>
             <div className="quick">
-              <button className="big-btn stool" onClick={() => setAdding('stool')}>
-                <span className="emoji">💩</span>
+              <button className="big-btn stool" onClick={() => setAdding({ type: 'stool' })}>
+                <span className="emoji" aria-hidden="true">💩</span>
                 Stuhlgang
                 <span className="sub">jetzt eintragen</span>
               </button>
-              <button className="big-btn urine" onClick={() => setAdding('urine')}>
-                <span className="emoji">💧</span>
+              <button className="big-btn urine" onClick={() => setAdding({ type: 'urine' })}>
+                <span className="emoji" aria-hidden="true">💧</span>
                 Wasserlassen
                 <span className="sub">jetzt eintragen</span>
               </button>
             </div>
+          </div>
+
+          {/* Timer: den "Schiss" starten und stoppen */}
+          <div className="card timer-card">
+            {session ? (
+              <div className="timer-live-wrap">
+                <div className="eyebrow">Sitzung läuft … 🚽</div>
+                <div className="timer-live" aria-live="polite">{fmtDuration(elapsedSec)}</div>
+                <div className="muted">
+                  seit {new Date(session.startedAt).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })} Uhr · bleib entspannt 🧘
+                </div>
+                <div className="row" style={{ marginTop: 14 }}>
+                  <button className="btn ghost" onClick={cancelSession}>Verwerfen</button>
+                  <button className="btn primary" onClick={stopSession}>⏹ Stopp &amp; speichern</button>
+                </div>
+              </div>
+            ) : (
+              <button className="big-btn timer" onClick={startSession}>
+                <span className="emoji" aria-hidden="true">⏱️</span>
+                Sitzung starten
+                <span className="sub">„Schiss" starten &amp; stoppen</span>
+              </button>
+            )}
           </div>
 
           <div className="tiles">
@@ -121,6 +183,7 @@ export default function App() {
             <div className="tile"><div className="num">{averagePerDay(entries, 'urine', 30, now).toFixed(1)}</div><div className="lbl">Ø 💧 / Tag</div></div>
             <div className="tile"><div className="num">{entries.length}</div><div className="lbl">Einträge gesamt</div></div>
           </div>
+          <ThroneTime entries={entries} now={now} />
           <HourClock entries={entries} prediction={prediction} now={now} />
           <DayChart entries={entries} days={7} now={now} />
           <BristolChart entries={entries} />
@@ -147,7 +210,15 @@ export default function App() {
         </button>
       </nav>
 
-      {adding && <AddModal type={adding} onSave={addEntry} onClose={() => setAdding(null)} />}
+      {adding && (
+        <AddModal
+          type={adding.type}
+          initialWhen={adding.initialWhen}
+          durationSec={adding.durationSec}
+          onSave={addEntry}
+          onClose={() => setAdding(null)}
+        />
+      )}
 
       {showSettings && (
         <div className="modal-back" onClick={() => setShowSettings(false)}>

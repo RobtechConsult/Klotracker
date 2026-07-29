@@ -3,8 +3,9 @@
 
 const KEY = 'klotracker.entries.v1'
 const SETTINGS_KEY = 'klotracker.settings.v1'
+const SESSION_KEY = 'klotracker.session.v1'
 
-/** @typedef {{ id:string, ts:string, type:'stool'|'urine', bristol?:number, note?:string }} Entry */
+/** @typedef {{ id:string, ts:string, type:'stool'|'urine', bristol?:number, note?:string, durationSec?:number }} Entry */
 
 export function loadEntries() {
   try {
@@ -51,4 +52,27 @@ export function saveSettings(settings) {
 
 export function exportJSON(entries) {
   return JSON.stringify({ app: 'klotracker', version: 1, exportedAt: new Date().toISOString(), entries }, null, 2)
+}
+
+// --- Laufende Sitzung (Timer) -------------------------------------------
+// Wird separat gespeichert, damit ein laufender Timer einen App-Neustart oder
+// das versehentliche Schließen übersteht. Der Darm wartet schließlich nicht.
+export function loadSession() {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY)
+    if (!raw) return null
+    const s = JSON.parse(raw)
+    return s && s.startedAt ? s : null
+  } catch {
+    return null
+  }
+}
+
+export function saveSession(session) {
+  try {
+    if (session) localStorage.setItem(SESSION_KEY, JSON.stringify(session))
+    else localStorage.removeItem(SESSION_KEY)
+  } catch {
+    /* ignore */
+  }
 }
