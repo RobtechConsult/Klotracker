@@ -6,19 +6,18 @@ on:
       - claude/toilet-tracker-app-jf9vuw
   workflow_dispatch:
 
-# Rechte, die der GitHub-Token für das Pages-Deployment braucht.
+# contents: write  -> um den gebauten Stand auf den gh-pages-Branch zu pushen
+# pages:    write  -> um die Pages-Quelle per API auf gh-pages zu stellen
 permissions:
-  contents: read
+  contents: write
   pages: write
-  id-token: write
 
-# Nur ein Deployment gleichzeitig; laufende werden nicht abgebrochen.
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -36,31 +35,43 @@ jobs:
       - name: Run tests
         run: npm test
 
-      - name: Configure Pages
-        id: pages
-        uses: actions/configure-pages@v5
-        with:
-          # Aktiviert GitHub Pages automatisch, falls noch nicht geschehen.
-          enablement: true
-
       - name: Build
         run: npm run build
         env:
-          # Basis-Pfad = Repo-Name, damit Assets auf der Projekt-Site laden.
-          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          # Projekt-Site liegt unter /Klotracker/ – Basis-Pfad entsprechend setzen.
+          BASE_PATH: /Klotracker/
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
+      - name: Prepare artifact
+        run: |
+          touch dist/.nojekyll
+          cp dist/index.html dist/404.html   # SPA-Fallback für Deep-Links
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Publish to gh-pages branch
+        run: |
+          cd dist
+          git init -q
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Deploy ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Point GitHub Pages at gh-pages branch
+        run: |
+          echo "Setze Pages-Quelle auf Branch gh-pages ..."
+          code=$(curl -s -o /tmp/resp.json -w "%{http_code}" -X PUT \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages" \
+            -d '{"build_type":"legacy","source":{"branch":"gh-pages","path":"/"}}')
+          echo "HTTP $code"; cat /tmp/resp.json || true
+          # 204/200 = aktualisiert. 409/422 kann bedeuten: schon so gesetzt.
+          if [ "$code" != "204" ] && [ "$code" != "200" ] && [ "$code" != "409" ] && [ "$code" != "422" ]; then
+            echo "Konnte Pages-Quelle nicht automatisch setzen (HTTP $code)."
+            echo "Einmalig nötig: Settings → Pages → Source = Branch 'gh-pages' /(root)."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
