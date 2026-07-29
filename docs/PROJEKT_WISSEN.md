@@ -56,6 +56,8 @@ Wasserlassen) – mit Gewohnheits-Prognose, Regelmäßigkeits-Check und Timer. A
 | 2026-07-29 | Grundgerüst | Tracking, 24h-Uhr, Wochen-Balken, Bristol, Prognose (KDE), Health-Check, Verlauf, Export, Demo |
 | 2026-07-29 | **Timer „Zeit auf dem Thron"** | Start/Stopp, live tickend, überlebt Neustart, Wochen-/Ø-/Rekord-Auswertung, lustige Umrechnungen, Sanity-Guard bei >45 Min |
 | 2026-07-29 | A11y-Quick-Wins | Zoom wieder erlaubt, `:focus-visible`, `prefers-reduced-motion`, Badge-Kontrast, Aktiv-Tab-Indikator |
+| 2026-07-29 | **Trink-Tracking** (Backlog #2) | Neuer `type:'drink'` (Wasser/Kaffee/Tee/Sonstiges, ml), Tagesziel-Fortschritt, Schnell-Buttons ohne Modal; Hydration fließt in den Health-Check ein (belegt die „mehr trinken"-Hinweise) |
+| 2026-07-29 | **Import/Backup** (Backlog #4) | JSON-Import mit Dedup per id (`mergeEntries`/`parseImport`); ergänzt den vorhandenen Export |
 
 ---
 
@@ -68,10 +70,10 @@ priorisiert nach Impact/Aufwand.
 
 | Prio | Feature | Aufwand | Impact | Kern-Idee |
 |------|---------|---------|--------|-----------|
-| ★ 1 | **Lokale Erinnerungen/Notifications** | M | Hoch | Zur prognostizierten Cluster-Zeit erinnern (Daten sind da!). Verstärkt den USP. |
-| ★ 2 | **Trink-Tracking (Wasser/Kaffee)** | M | Hoch | Schließt inhaltliche Lücke: Health-Check rät „mehr trinken", kann es aber nicht messen. Basis für Korrelationen. |
+| ★ 1 | **Lokale Erinnerungen/Notifications** | M | Hoch | Zur prognostizierten Cluster-Zeit erinnern (Daten sind da!). Verstärkt den USP. **← nächster logischer Schritt** |
+| ✅ 2 | ~~**Trink-Tracking (Wasser/Kaffee)**~~ | M | Hoch | **Erledigt.** Speist jetzt den Health-Check. Nächster Ausbau: Kaffee↔Gang-Korrelation (#5). |
 | ★ 3 | **Symptom-Tracking (Blut/Schmerz/Blähung)** | M | Hoch | Macht den medizinischen Anspruch ehrlich (Disclaimer nennt „Blut im Stuhl"). Bei „Blut" → sachlicher Warn-Banner. |
-| 4 | **Import/Backup** (JSON rein, CSV raus) | S | Hoch | Schützt vor Datenverlust bei Gerätewechsel (localStorage-only!). |
+| ✅ 4 | ~~**Import/Backup** (JSON)~~ | S | Hoch | **Erledigt** (Dedup per id). Optionaler Ausbau: CSV-Export. |
 | 5 | **Insights: Korrelationen & Trends** | L | Hoch | Kaffee↔Gang, Wochentagsmuster, „diese vs. letzte Woche". `averageIntervalHours()` existiert, wird noch nicht genutzt. |
 | 6 | Onboarding (3 Slides) + Settings ausbauen | S | Mittel | Konzept/Datenschutz erklären; `humor`-Flag ist da, aber ohne UI. |
 | 7 | Arzt-Report als PDF (`window.print()`) | M | Mittel | App wird „sprechstundentauglich". Ton hier sachlich. |

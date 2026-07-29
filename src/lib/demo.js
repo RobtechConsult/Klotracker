@@ -53,6 +53,13 @@ export function makeDemoEntries(now = new Date(), days = 21) {
       const h = times[k % times.length]
       out.push({ id: makeId(), ts: at(day, h, 15, 40).toISOString(), type: 'urine' })
     }
+
+    // Trinken: morgens Kaffee, tagsüber ein paar Gläser Wasser (~1,4–2 L).
+    out.push({ id: makeId(), ts: at(day, 7, 30, 20).toISOString(), type: 'drink', drink: 'coffee', amount: 125 })
+    const glasses = 5 + Math.floor(rand() * 4)
+    for (let k = 0; k < glasses; k++) {
+      out.push({ id: makeId(), ts: at(day, 8 + k * 2, 0, 45).toISOString(), type: 'drink', drink: 'water', amount: 250 })
+    }
   }
 
   return out.sort((a, b) => new Date(b.ts) - new Date(a.ts))

@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { loadEntries, saveEntries, makeId, loadSettings, saveSettings, exportJSON, loadSession, saveSession } from './lib/storage.js'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { loadEntries, saveEntries, makeId, loadSettings, saveSettings, exportJSON, loadSession, saveSession, mergeEntries, parseImport } from './lib/storage.js'
 import { predictNextStool } from './lib/prediction.js'
 import { countToday, streakDays, averagePerDay, fmtDuration } from './lib/stats.js'
 import { tipOfNow } from './lib/tips.js'
@@ -12,6 +12,7 @@ import HealthCheck from './components/HealthCheck.jsx'
 import BristolChart from './components/BristolChart.jsx'
 import History from './components/History.jsx'
 import ThroneTime from './components/ThroneTime.jsx'
+import DrinkTracker from './components/DrinkTracker.jsx'
 import AddModal from './components/AddModal.jsx'
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false)
   const [session, setSession] = useState(() => loadSession()) // laufender Timer
   const [, setTick] = useState(0) // erzwingt Sekunden-Rerender bei laufendem Timer
+  const importRef = useRef(null)
   const now = new Date()
 
   useEffect(() => saveEntries(entries), [entries])
@@ -58,6 +60,30 @@ export default function App() {
   }
 
   const deleteEntry = (id) => setEntries((prev) => prev.filter((e) => e.id !== id))
+
+  // Getränk direkt (ohne Modal) eintragen – minimale Reibung.
+  const addDrink = (data) => {
+    const entry = { id: makeId(), ...data }
+    setEntries((prev) => [entry, ...prev].sort((a, b) => new Date(b.ts) - new Date(a.ts)))
+    flash('Prost! 🥤 Schluck gespeichert')
+  }
+
+  // Backup einlesen und mit vorhandenen Daten zusammenführen (Dedup per id).
+  const importFile = async (e) => {
+    const file = e.target.files?.[0]
+    e.target.value = '' // erlaubt erneuten Import derselben Datei
+    if (!file) return
+    try {
+      const text = await file.text()
+      const incoming = parseImport(text)
+      const { merged, added } = mergeEntries(entries, incoming)
+      setEntries(merged)
+      setShowSettings(false)
+      flash(added > 0 ? `${added} Einträge importiert 📥` : 'Nichts Neues zu importieren 🤷')
+    } catch {
+      flash('Import fehlgeschlagen – keine gültige Datei 🙈')
+    }
+  }
 
   // --- Timer ("Schiss starten/stoppen") ---
   const startSession = () => {
@@ -161,6 +187,8 @@ export default function App() {
             )}
           </div>
 
+          <DrinkTracker entries={entries} now={now} goalMl={settings.drinkGoalMl} onAdd={addDrink} />
+
           <div className="tiles">
             <div className="tile"><div className="num">{stoolToday}</div><div className="lbl">💩 heute</div></div>
             <div className="tile"><div className="num">{urineToday}</div><div className="lbl">💧 heute</div></div>
@@ -228,6 +256,8 @@ export default function App() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <button className="btn ghost" onClick={loadDemo}>🎬 Beispieldaten laden (zum Ausprobieren)</button>
               <button className="btn ghost" onClick={doExport} disabled={!entries.length}>⬇️ Daten exportieren (JSON)</button>
+              <button className="btn ghost" onClick={() => importRef.current?.click()}>📥 Daten importieren (Backup)</button>
+              <input ref={importRef} type="file" accept="application/json,.json" onChange={importFile} style={{ display: 'none' }} />
               <button className="btn ghost" style={{ color: 'var(--red)' }} onClick={clearAll} disabled={!entries.length}>🗑️ Alle Daten löschen</button>
             </div>
             <p className="disclaimer" style={{ marginTop: 16 }}>

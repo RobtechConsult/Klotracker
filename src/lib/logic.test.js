@@ -1,8 +1,9 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { predictNextStool, findTimeClusters } from './prediction.js'
-import { averagePerDay, countsPerDay, streakDays, minutesOfDay, hourHistogram, fmtDuration, fmtDurationShort, toiletTimeStats } from './stats.js'
+import { averagePerDay, countsPerDay, streakDays, minutesOfDay, hourHistogram, fmtDuration, fmtDurationShort, toiletTimeStats, drinkTotalToday, averageDrinkPerDay, fmtMl } from './stats.js'
 import { healthCheck } from './tips.js'
+import { mergeEntries, parseImport } from './storage.js'
 
 const iso = (day, h, m = 0) => {
   const d = new Date(2026, 0, day, h, m, 0)
@@ -132,6 +133,62 @@ test('toiletTimeStats leer, wenn keine Dauern', () => {
   const s = toiletTimeStats([{ type: 'stool', ts: iso(1, 8) }], 7, new Date(2026, 0, 1, 20))
   assert.equal(s.count, 0)
   assert.equal(s.avgSec, 0)
+})
+
+test('drinkTotalToday & averageDrinkPerDay', () => {
+  const now = new Date(2026, 0, 10, 20)
+  const entries = [
+    { type: 'drink', ts: iso(10, 8), drink: 'water', amount: 250 },
+    { type: 'drink', ts: iso(10, 12), drink: 'coffee', amount: 125 },
+    { type: 'drink', ts: iso(9, 8), drink: 'water', amount: 500 },
+    { type: 'stool', ts: iso(10, 9) } // kein Getränk
+  ]
+  assert.equal(drinkTotalToday(entries, now), 375)
+  // getrackt seit dem 9. bis 10. = 2 Tage, total 875 -> 437,5/Tag
+  assert.equal(averageDrinkPerDay(entries, 7, now), 437.5)
+})
+
+test('averageDrinkPerDay zählt nur das Zeitfenster (kein Overcount)', () => {
+  const now = new Date(2026, 0, 20, 20)
+  const entries = []
+  for (let d = 1; d <= 20; d++) entries.push({ type: 'drink', ts: iso(d, 10), drink: 'water', amount: 1000 })
+  // 7-Tage-Fenster (14.–20.) = 7 Tage × 1000 ml / 7 = 1000, nicht 20×1000/7
+  assert.equal(averageDrinkPerDay(entries, 7, now), 1000)
+})
+
+test('fmtMl', () => {
+  assert.equal(fmtMl(300), '300 ml')
+  assert.equal(fmtMl(1500), '1,5 L')
+})
+
+test('healthCheck: wenig Trinken -> Hinweis', () => {
+  const now = new Date(2026, 0, 3, 20)
+  const entries = [
+    { type: 'drink', ts: iso(1, 8), drink: 'water', amount: 300 },
+    { type: 'drink', ts: iso(2, 8), drink: 'water', amount: 300 },
+    { type: 'drink', ts: iso(3, 8), drink: 'water', amount: 300 }
+  ]
+  const res = healthCheck(entries, now)
+  assert.ok(res.findings.some((f) => /Wüste|geht noch/i.test(f.title)))
+})
+
+test('mergeEntries dedupliziert per id und ergänzt neue', () => {
+  const existing = [{ id: 'a', type: 'stool', ts: iso(1, 8) }]
+  const incoming = [
+    { id: 'a', type: 'stool', ts: iso(1, 8) }, // Duplikat
+    { id: 'b', type: 'drink', ts: iso(2, 8), drink: 'water', amount: 250 }, // neu
+    { id: 'x', type: 'quatsch', ts: iso(3, 8) } // ungültig -> raus
+  ]
+  const { merged, added } = mergeEntries(existing, incoming)
+  assert.equal(added, 1)
+  assert.equal(merged.length, 2)
+  assert.ok(merged.some((e) => e.id === 'b'))
+})
+
+test('parseImport akzeptiert Array und {entries:[…]}', () => {
+  assert.equal(parseImport('[{"a":1}]').length, 1)
+  assert.equal(parseImport('{"entries":[{"a":1},{"b":2}]}').length, 2)
+  assert.throws(() => parseImport('{"foo":true}'))
 })
 
 test('minutesOfDay & hourHistogram', () => {

@@ -3,7 +3,7 @@
 // WICHTIG: Klotracker ist keine medizinische App und ersetzt keine Ärztin
 // und keinen Arzt. Die Hinweise sind Orientierung, kein Befund.
 
-import { averagePerDay, bristolDistribution, countToday } from './stats.js'
+import { averagePerDay, bristolDistribution, countToday, averageDrinkPerDay, fmtMl } from './stats.js'
 
 // --- Medizinisch grobe Richtwerte (bewusst konservativ) -------------------
 // Stuhlgang gilt weithin als normal zwischen 3x pro Woche und 3x pro Tag.
@@ -124,6 +124,34 @@ export function healthCheck(entries, now = new Date()) {
     }
   }
 
+  // --- Trinkmenge (belegt die "mehr trinken"-Hinweise mit echten Daten) ---
+  if (entries.some((e) => e.type === 'drink')) {
+    const drinkAvg = averageDrinkPerDay(entries, 7, now)
+    const GOAL = 2000
+    if (drinkAvg < GOAL * 0.5) {
+      findings.push({
+        level: 'watch',
+        icon: '🏜️',
+        title: 'Trink-Wüste',
+        text: `Nur ~${fmtMl(drinkAvg)} pro Tag getrunken – das ist wenig. Kein Wunder, wenn's beim großen Geschäft mal hakt. Stell dir eine Flasche in Sichtweite. 💧`
+      })
+    } else if (drinkAvg < GOAL * 0.9) {
+      findings.push({
+        level: 'watch',
+        icon: '🚰',
+        title: 'Da geht noch was',
+        text: `~${fmtMl(drinkAvg)} pro Tag – solide, aber unter dem üblichen Richtwert (~2 L). Ein Glas mehr schadet selten.`
+      })
+    } else {
+      findings.push({
+        level: 'good',
+        icon: '💦',
+        title: 'Gut hydriert',
+        text: `~${fmtMl(drinkAvg)} pro Tag – deine Nieren geben dir ein High-Five. 🙌`
+      })
+    }
+  }
+
   const worst = findings.some((f) => f.level === 'alert')
     ? 'alert'
     : findings.some((f) => f.level === 'watch')
@@ -160,6 +188,15 @@ export function tipOfNow(seed = 0) {
 export function funnyTipsCount() {
   return FUNNY_TIPS.length
 }
+
+// Getränke-Typen für das Trink-Tracking (Standard-Portionsgrößen in ml).
+export const DRINKS = [
+  { key: 'water', emoji: '🚰', label: 'Wasser', ml: 250 },
+  { key: 'coffee', emoji: '☕', label: 'Kaffee', ml: 125 },
+  { key: 'tea', emoji: '🍵', label: 'Tee', ml: 200 },
+  { key: 'other', emoji: '🥤', label: 'Sonstiges', ml: 330 }
+]
+export const drinkByKey = (key) => DRINKS.find((d) => d.key === key) || DRINKS[3]
 
 // Bristol-Skala als Text – kurz, verständlich, mit Prise Humor.
 export const BRISTOL = [

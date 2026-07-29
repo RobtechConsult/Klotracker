@@ -5,7 +5,10 @@ const KEY = 'klotracker.entries.v1'
 const SETTINGS_KEY = 'klotracker.settings.v1'
 const SESSION_KEY = 'klotracker.session.v1'
 
-/** @typedef {{ id:string, ts:string, type:'stool'|'urine', bristol?:number, note?:string, durationSec?:number }} Entry */
+/** @typedef {{ id:string, ts:string, type:'stool'|'urine'|'drink', bristol?:number, note?:string, durationSec?:number, drink?:string, amount?:number }} Entry */
+
+const TYPES = ['stool', 'urine', 'drink']
+const isValid = (e) => e && e.ts && TYPES.includes(e.type)
 
 export function loadEntries() {
   try {
@@ -14,12 +17,37 @@ export function loadEntries() {
     const data = JSON.parse(raw)
     if (!Array.isArray(data)) return []
     // Neueste zuerst
-    return data
-      .filter((e) => e && e.ts && (e.type === 'stool' || e.type === 'urine'))
-      .sort((a, b) => new Date(b.ts) - new Date(a.ts))
+    return data.filter(isValid).sort((a, b) => new Date(b.ts) - new Date(a.ts))
   } catch {
     return []
   }
+}
+
+/**
+ * Führt importierte Einträge mit den vorhandenen zusammen (Dedup per id).
+ * Liefert die zusammengeführte, sortierte Liste plus Anzahl neu hinzugefügter.
+ */
+export function mergeEntries(existing, incoming) {
+  const map = new Map(existing.map((e) => [e.id, e]))
+  let added = 0
+  for (const e of Array.isArray(incoming) ? incoming : []) {
+    if (!isValid(e)) continue
+    const id = e.id || makeId()
+    if (!map.has(id)) {
+      map.set(id, { ...e, id })
+      added++
+    }
+  }
+  const merged = [...map.values()].sort((a, b) => new Date(b.ts) - new Date(a.ts))
+  return { merged, added }
+}
+
+/** Robustes Parsen einer Export-Datei: akzeptiert {entries:[…]} oder ein Array. */
+export function parseImport(text) {
+  const data = JSON.parse(text)
+  const arr = Array.isArray(data) ? data : Array.isArray(data?.entries) ? data.entries : null
+  if (!arr) throw new Error('Kein gültiges Klotracker-Backup.')
+  return arr
 }
 
 export function saveEntries(entries) {
@@ -35,10 +63,11 @@ export function makeId() {
 }
 
 export function loadSettings() {
+  const defaults = { humor: true, drinkGoalMl: 2000 }
   try {
-    return { humor: true, ...JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}') }
+    return { ...defaults, ...JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}') }
   } catch {
-    return { humor: true }
+    return defaults
   }
 }
 

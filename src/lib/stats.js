@@ -135,6 +135,54 @@ export function toiletTimeStats(entries, days = 7, now = new Date()) {
   }
 }
 
+// --- Trinken -------------------------------------------------------------
+/** Getrunkene Menge (ml) heute. */
+export function drinkTotalToday(entries, now = new Date()) {
+  const k = dayKey(now)
+  return entries
+    .filter((e) => e.type === 'drink' && dayKey(e.ts) === k)
+    .reduce((s, e) => s + (e.amount || 0), 0)
+}
+
+/** Getrunkene ml pro Tag für die letzten n Tage, ältester zuerst. */
+export function drinkMlByDay(entries, days, now = new Date()) {
+  const buckets = []
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(now)
+    d.setDate(d.getDate() - i)
+    buckets.push({ key: dayKey(d), date: new Date(d), ml: 0 })
+  }
+  const index = new Map(buckets.map((b) => [b.key, b]))
+  for (const e of entries) {
+    if (e.type !== 'drink') continue
+    const b = index.get(dayKey(e.ts))
+    if (b) b.ml += e.amount || 0
+  }
+  return buckets
+}
+
+/** Durchschnittliche Trinkmenge (ml) pro Tag – nur im Zeitfenster der letzten `days`. */
+export function averageDrinkPerDay(entries, days, now = new Date()) {
+  const cutoff = new Date(now)
+  cutoff.setDate(cutoff.getDate() - (days - 1))
+  cutoff.setHours(0, 0, 0, 0)
+  const drinks = entries.filter((e) => e.type === 'drink' && new Date(e.ts) >= cutoff)
+  if (drinks.length === 0) return 0
+  const firstTs = Math.min(...drinks.map((e) => new Date(e.ts).getTime()))
+  const first = new Date(firstTs)
+  const startMid = new Date(first.getFullYear(), first.getMonth(), first.getDate()).getTime()
+  const nowMid = new Date(now).setHours(0, 0, 0, 0)
+  const spanDays = Math.min(days, Math.max(1, Math.floor((nowMid - startMid) / 86400000) + 1))
+  const total = drinks.reduce((s, e) => s + (e.amount || 0), 0)
+  return total / spanDays
+}
+
+/** Menge menschenlesbar: 1500 -> "1,5 L", 300 -> "300 ml". */
+export function fmtMl(ml) {
+  const v = Math.max(0, Math.round(ml))
+  return v >= 1000 ? `${(v / 1000).toFixed(1).replace('.', ',')} L` : `${v} ml`
+}
+
 /** Durchschnittlicher Abstand zwischen Stuhlgängen in Stunden. */
 export function averageIntervalHours(entries, type = 'stool') {
   const times = entries
