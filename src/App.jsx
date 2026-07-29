@@ -14,6 +14,7 @@ import History from './components/History.jsx'
 import ThroneTime from './components/ThroneTime.jsx'
 import DrinkTracker from './components/DrinkTracker.jsx'
 import AddModal from './components/AddModal.jsx'
+import Icon from './components/Icon.jsx'
 
 export default function App() {
   const [entries, setEntries] = useState(() => loadEntries())
@@ -148,7 +149,8 @@ export default function App() {
       </header>
 
       {tab === 'home' && (
-        <>
+        <div className="stack">
+          {/* Primäraktion: Loggen */}
           <div className="card" style={{ padding: 14 }}>
             <div className="quick">
               <button className="big-btn stool" onClick={() => setAdding({ type: 'stool' })}>
@@ -164,9 +166,9 @@ export default function App() {
             </div>
           </div>
 
-          {/* Timer: den "Schiss" starten und stoppen */}
-          <div className="card timer-card">
-            {session ? (
+          {/* Timer als schlanke Sekundär-Aktion (läuft: prominente Live-Karte) */}
+          {session ? (
+            <div className="card timer-card">
               <div className="timer-live-wrap">
                 <div className="eyebrow">Sitzung läuft … 🚽</div>
                 <div className="timer-live" aria-live="polite">{fmtDuration(elapsedSec)}</div>
@@ -178,16 +180,16 @@ export default function App() {
                   <button className="btn primary" onClick={stopSession}>⏹ Stopp &amp; speichern</button>
                 </div>
               </div>
-            ) : (
-              <button className="big-btn timer" onClick={startSession}>
-                <span className="emoji" aria-hidden="true">⏱️</span>
-                Sitzung starten
-                <span className="sub">„Schiss" starten &amp; stoppen</span>
-              </button>
-            )}
-          </div>
+            </div>
+          ) : (
+            <button className="timer-slim" onClick={startSession}>
+              <span className="ts-ic" aria-hidden="true">⏱️</span>
+              <span className="ts-txt"><strong>Sitzung starten</strong><small>„Schiss" starten &amp; stoppen</small></span>
+            </button>
+          )}
 
-          <DrinkTracker entries={entries} now={now} goalMl={settings.drinkGoalMl} onAdd={addDrink} />
+          {/* Hero-Insight: die Prognose */}
+          <PredictionCard prediction={prediction} />
 
           <div className="tiles">
             <div className="tile"><div className="num">{stoolToday}</div><div className="lbl">💩 heute</div></div>
@@ -195,17 +197,17 @@ export default function App() {
             <div className="tile"><div className="num">{streak}</div><div className="lbl">🔥 Tage-Serie</div></div>
           </div>
 
-          <PredictionCard prediction={prediction} />
+          <DrinkTracker entries={entries} now={now} goalMl={settings.drinkGoalMl} onAdd={addDrink} />
 
           <div className="card tip">
             <div className="eyebrow">Spruch des Moments</div>
             <p className="quote" style={{ margin: '8px 0 0' }}>„{tipOfNow(tipSeed)}"</p>
           </div>
-        </>
+        </div>
       )}
 
       {tab === 'stats' && (
-        <>
+        <div className="stack">
           <div className="tiles">
             <div className="tile"><div className="num">{stoolAvg.toFixed(1)}</div><div className="lbl">Ø 💩 / Tag</div></div>
             <div className="tile"><div className="num">{averagePerDay(entries, 'urine', 30, now).toFixed(1)}</div><div className="lbl">Ø 💧 / Tag</div></div>
@@ -216,7 +218,7 @@ export default function App() {
           <DayChart entries={entries} days={7} now={now} />
           <BristolChart entries={entries} />
           <HealthCheck entries={entries} now={now} />
-        </>
+        </div>
       )}
 
       {tab === 'history' && (
@@ -227,14 +229,14 @@ export default function App() {
       )}
 
       <nav className="tabbar">
-        <button className={tab === 'home' ? 'active' : ''} onClick={() => setTab('home')}>
-          <span className="ti">🏠</span>Start
+        <button className={tab === 'home' ? 'active' : ''} onClick={() => setTab('home')} aria-label="Start">
+          <Icon name="home" size={23} className="ti" />Start
         </button>
-        <button className={tab === 'stats' ? 'active' : ''} onClick={() => setTab('stats')}>
-          <span className="ti">📊</span>Statistik
+        <button className={tab === 'stats' ? 'active' : ''} onClick={() => setTab('stats')} aria-label="Statistik">
+          <Icon name="stats" size={23} className="ti" />Statistik
         </button>
-        <button className={tab === 'history' ? 'active' : ''} onClick={() => setTab('history')}>
-          <span className="ti">📜</span>Verlauf
+        <button className={tab === 'history' ? 'active' : ''} onClick={() => setTab('history')} aria-label="Verlauf">
+          <Icon name="history" size={23} className="ti" />Verlauf
         </button>
       </nav>
 

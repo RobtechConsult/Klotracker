@@ -266,6 +266,33 @@ body {
 .drink-label { font-size: 12px; font-weight: 700; }
 .drink-ml { font-size: 10.5px; color: var(--ink-soft); }
 
+/* --- Layout-Stack: EIN Abstandswert steuert alle Blöcke --- */
+:root { --gap: 14px; }
+.stack { display: flex; flex-direction: column; gap: var(--gap); }
+/* Karten/Kacheln bringen eigene margins mit – im Stack neutralisieren,
+   damit ausschließlich der gap den Rhythmus bestimmt (kein „margin vergessen"). */
+.stack > * { margin-bottom: 0; }
+
+/* --- Schlanker Timer (Sekundär-Aktion, kein Hero-Fill) --- */
+.timer-slim {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+  background: var(--bg-elev); color: var(--ink);
+  border: 1px solid color-mix(in srgb, var(--blue) 45%, var(--line));
+  border-radius: var(--radius); padding: 12px 16px; box-shadow: var(--shadow); cursor: pointer;
+}
+.timer-slim:active { transform: scale(0.985); }
+.timer-slim .ts-ic { font-size: 24px; line-height: 1; }
+.timer-slim .ts-txt { display: flex; flex-direction: column; line-height: 1.25; }
+.timer-slim .ts-txt strong { font-size: 15px; }
+.timer-slim .ts-txt small { font-size: 12px; color: var(--ink-soft); }
+
+/* --- Eigene Icons (Farbe erbt via currentColor) --- */
+.bristol-row .be { color: var(--brown-2); display: flex; justify-content: center; }
+.bristol-pick button svg { color: var(--brown-2); }
+.bristol-pick button.sel svg { color: var(--brown); }
+.h1-ic { color: var(--brown-2); vertical-align: -2px; }
+.tabbar .ti { display: block; margin-bottom: 1px; }
+
 /* --- Duration badge (im AddModal) --- */
 .duration-badge {
   display: flex; align-items: center; gap: 8px;

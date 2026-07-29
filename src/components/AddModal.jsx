@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { BRISTOL } from '../lib/tips.js'
 import { fmtDuration } from '../lib/stats.js'
+import Icon from './Icon.jsx'
 
 // Detail-Erfassung nach dem Schnell-Tippen. Beim Stuhlgang lässt sich optional
 // die Bristol-Konsistenz und eine Notiz angeben, außerdem die Uhrzeit anpassen
@@ -51,8 +52,8 @@ export default function AddModal({ type, onSave, onClose, initialWhen, durationS
             <div className="muted" style={{ marginBottom: 6 }}>Konsistenz (Bristol-Skala, optional):</div>
             <div className="bristol-pick">
               {BRISTOL.map((b) => (
-                <button key={b.n} className={bristol === b.n ? 'sel' : ''} onClick={() => setBristol(bristol === b.n ? null : b.n)} title={b.label}>
-                  {b.emoji}
+                <button key={b.n} className={bristol === b.n ? 'sel' : ''} onClick={() => setBristol(bristol === b.n ? null : b.n)} title={b.label} aria-label={`Typ ${b.n}: ${b.label}`}>
+                  <Icon name={`bristol${b.n}`} size={22} />
                   <span className="n">{b.n}</span>
                 </button>
               ))}
