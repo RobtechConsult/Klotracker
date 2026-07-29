@@ -210,7 +210,11 @@ body {
 .modal h3 { margin: 0 0 4px; font-size: 18px; }
 .modal .msub { color: var(--ink-soft); font-size: 13px; margin: 0 0 16px; }
 .bristol-pick { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 8px; }
-.bristol-pick button { border: 1px solid var(--line); background: var(--bg); border-radius: 12px; padding: 8px 2px; font-size: 20px; cursor: pointer; }
+.bristol-pick button {
+  border: 1px solid var(--line); background: var(--bg); border-radius: 12px;
+  padding: 10px 2px 6px; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
 .bristol-pick button.sel { border-color: var(--brown); background: color-mix(in srgb, var(--brown) 15%, transparent); }
 .bristol-pick .n { display: block; font-size: 10px; color: var(--ink-soft); margin-top: 2px; }
 .field { width: 100%; border: 1px solid var(--line); background: var(--bg); border-radius: 12px; padding: 12px; font-size: 14px; color: var(--ink); font-family: inherit; margin-bottom: 12px; }

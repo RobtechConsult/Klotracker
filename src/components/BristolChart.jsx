@@ -16,7 +16,7 @@ export default function BristolChart({ entries }) {
       <div className="bristol-list">
         {BRISTOL.map((b, i) => (
           <div className="bristol-row" key={b.n}>
-            <div className="be"><Icon name={`bristol${b.n}`} size={24} title={`Typ ${b.n}`} /></div>
+            <div className="be"><Icon name={`bristol${b.n}`} size={30} title={`Typ ${b.n}`} /></div>
             <div className="bl">
               Typ {b.n}: {b.label}
               <small>{b.hint}</small>

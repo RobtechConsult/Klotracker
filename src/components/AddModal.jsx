@@ -53,7 +53,7 @@ export default function AddModal({ type, onSave, onClose, initialWhen, durationS
             <div className="bristol-pick">
               {BRISTOL.map((b) => (
                 <button key={b.n} className={bristol === b.n ? 'sel' : ''} onClick={() => setBristol(bristol === b.n ? null : b.n)} title={b.label} aria-label={`Typ ${b.n}: ${b.label}`}>
-                  <Icon name={`bristol${b.n}`} size={22} />
+                  <Icon name={`bristol${b.n}`} size={34} />
                   <span className="n">{b.n}</span>
                 </button>
               ))}

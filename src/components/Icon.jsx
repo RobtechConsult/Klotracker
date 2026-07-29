@@ -33,37 +33,46 @@ const STROKE = {
   )
 }
 
+// Bristol-Silhouetten – bewusst kräftig und deutlich unterscheidbar.
+// Sie füllen die ganze Icon-Fläche, damit sie auch klein gut erkennbar sind.
 const FILL = {
-  // 1 – einzelne harte Klümpchen
+  // 1 – einzelne harte Klümpchen (mehrere klar getrennte Kugeln)
   bristol1: (
     <>
-      <circle cx="8" cy="8.6" r="2.3" />
-      <circle cx="15.4" cy="8" r="1.9" />
-      <circle cx="10.6" cy="14.6" r="2.7" />
-      <circle cx="16.2" cy="14.2" r="2.1" />
+      <circle cx="7" cy="7.5" r="3.1" />
+      <circle cx="16.5" cy="7" r="2.7" />
+      <circle cx="9.5" cy="16" r="3.6" />
+      <circle cx="17.5" cy="15.5" r="3" />
     </>
   ),
-  // 2 – klumpige, dicke Wurst
+  // 2 – klumpige, dicke Wurst (stark bucklige Kontur)
   bristol2: (
-    <path d="M4 12c0-2.2 1.7-3.5 3.5-3.3 1 .1 1.3.8 2.6.8s1.6-.9 2.9-.8 1.6.9 2.7 1c1.8.2 2.3 1.3 2.3 2.3s-.5 2.1-2.3 2.3c-1.1.1-1.4 1-2.7 1s-1.6-.8-2.9-.8-1.6.7-2.6.8C5.7 15.5 4 14.2 4 12z" />
+    <path d="M2.5 12c0-2.6 1.7-4 3.7-3.9 1.2 0 1.6 1.1 3 1.1s1.8-1.2 3.3-1.2 1.8 1.2 3.3 1.2c2 .1 3.7 1.2 3.7 3.8s-1.7 3.9-3.7 3.8c-1.5 0-1.9-1.2-3.3-1.2s-1.8 1.2-3.3 1.2-1.8-1.1-3-1.1C4.2 16 2.5 14.6 2.5 12z" />
   ),
-  // 3 – Wurst mit Rissen (leicht welliger Rücken)
+  // 3 – Wurst mit Rissen (in Segmente „gebrochen")
   bristol3: (
-    <path d="M3 12c0-1.7 1.3-3 3-3l1.3.02.9-.7.9.7H12l.9-.7.9.7 1.2.02c1.7 0 3 1.3 3 2.96s-1.3 3-3 3H6c-1.7 0-3-1.3-3-3z" />
+    <>
+      <path d="M2.5 12a4.2 4.2 0 0 1 4.2-4.2h.8v8.4h-.8A4.2 4.2 0 0 1 2.5 12z" />
+      <rect x="9" y="7.8" width="6" height="8.4" rx="1.6" />
+      <path d="M16.5 7.8h.8A4.2 4.2 0 0 1 17.3 16.2h-.8z" />
+    </>
   ),
-  // 4 – glatte, weiche Wurst (der Goldstandard)
-  bristol4: <rect x="3" y="9" width="18" height="6" rx="3" />,
-  // 5 – weiche Klümpchen
+  // 4 – glatte, weiche Wurst (der Goldstandard: sauberer Riegel)
+  bristol4: <rect x="2.5" y="8" width="19" height="8" rx="4" />,
+  // 5 – weiche Klümpchen (wenige große, runde Blobs)
   bristol5: (
-    <path d="M4 12.4c0-2 1.6-3.5 3.6-3.5 1.7 0 2.5 1.1 2.5 1.1s.9-1.3 2.6-1.3c2 0 3.6 1.6 3.6 3.6s-1.6 3.6-3.6 3.6c-1.7 0-2.5-1.1-2.5-1.1s-.9 1.2-2.6 1.2C7.6 16 4 14.4 4 12.4z" />
+    <>
+      <ellipse cx="7.2" cy="12" rx="4.7" ry="4.3" />
+      <ellipse cx="16.4" cy="12.3" rx="4" ry="3.8" />
+    </>
   ),
-  // 6 – breiig, matschig (fluffige Wolke)
+  // 6 – breiig, matschig (fluffige, ausgefranste Wolke)
   bristol6: (
-    <path d="M5.5 15.5C4.1 15.5 3 14.4 3 13c0-1.2.9-2.3 2.1-2.5C5.4 9 6.8 8 8.4 8c.6 0 1.2.2 1.7.5C10.7 7.6 11.8 7 13 7c1.7 0 3.1 1.1 3.6 2.6.3-.1.6-.1.9-.1 1.6 0 2.9 1.2 3 2.7 1 .1 1.5.9 1.5 1.8 0 1-.9 1.8-2 1.8H5.5z" />
+    <path d="M5 17.5C3.3 17.5 2 16.2 2 14.5c0-1.4 1-2.6 2.4-2.9C4.7 9.4 6.3 8 8.2 8c.8 0 1.5.3 2.1.7C11 7.2 12.6 6.5 14.2 6.5c2.1 0 3.9 1.4 4.5 3.4.3-.1.7-.2 1-.2 1.9 0 3.4 1.4 3.6 3.3 1.2.2 2.2 1.2 2.2 2.5 0 1.4-1.2 2.5-2.6 2.5H5z" />
   ),
-  // 7 – komplett flüssig (Pfütze mit welligem Rand)
+  // 7 – komplett flüssig (breite Pfütze mit welligem Rand)
   bristol7: (
-    <path d="M3 14c1.5 0 1.5-1.1 3-1.1s1.5 1.1 3 1.1 1.5-1.1 3-1.1 1.5 1.1 3 1.1 1.5-1.1 3-1.1v2.6c0 .8-.7 1.5-1.6 1.5H4.6C3.7 17.5 3 16.8 3 16z" />
+    <path d="M1.5 15c1.8 0 1.8-1.5 3.6-1.5S6.9 15 8.7 15s1.8-1.5 3.6-1.5S14.1 15 15.9 15s1.8-1.5 3.6-1.5S21.3 15 22.5 15v2.4c0 1.1-.9 2.1-2.1 2.1H3.6c-1.2 0-2.1-.9-2.1-2.1z" />
   )
 }
 
