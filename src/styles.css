@@ -130,7 +130,7 @@ body {
 .conf-bar > div { height: 100%; background: linear-gradient(90deg, var(--amber), var(--green)); border-radius: 99px; }
 
 /* --- Stat tiles --- */
-.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
 .tile { background: var(--bg-elev); border: 1px solid var(--line); border-radius: 16px; padding: 12px 8px; text-align: center; box-shadow: var(--shadow); }
 .tile .num { font-size: 24px; font-weight: 900; letter-spacing: -0.02em; }
 .tile .lbl { font-size: 10.5px; color: var(--ink-soft); margin-top: 2px; line-height: 1.2; }

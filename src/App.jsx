@@ -206,7 +206,7 @@ export default function App() {
 
       {tab === 'stats' && (
         <>
-          <div className="tiles" style={{ marginBottom: 4 }}>
+          <div className="tiles">
             <div className="tile"><div className="num">{stoolAvg.toFixed(1)}</div><div className="lbl">Ø 💩 / Tag</div></div>
             <div className="tile"><div className="num">{averagePerDay(entries, 'urine', 30, now).toFixed(1)}</div><div className="lbl">Ø 💧 / Tag</div></div>
             <div className="tile"><div className="num">{entries.length}</div><div className="lbl">Einträge gesamt</div></div>
