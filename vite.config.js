@@ -5,8 +5,14 @@ import { VitePWA } from 'vite-plugin-pwa'
 // Klotracker läuft komplett clientseitig – kein Backend, keine Cloud.
 // Alle Daten bleiben auf dem Handy (localStorage). Datenschutz ist hier
 // wortwörtlich Privatsache.
+// Für GitHub Pages (Projekt-Site) wird der Repo-Pfad als Basis gesetzt,
+// z.B. /Klotracker/. Vite erwartet einen abschließenden Slash. Lokal bleibt
+// es relativ (./).
+const rawBase = process.env.BASE_PATH
+const base = rawBase ? (rawBase.endsWith('/') ? rawBase : rawBase + '/') : './'
+
 export default defineConfig({
-  base: './',
+  base,
   plugins: [
     react(),
     VitePWA({
