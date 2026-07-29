@@ -1,23 +1,24 @@
 name: Deploy Klotracker to GitHub Pages
 
+# Standard-Deployment über GitHub Actions – wie bei den anderen Projekten.
+# Gebaut und veröffentlicht wird der Stand auf main.
 on:
   push:
     branches:
-      - claude/toilet-tracker-app-jf9vuw
+      - main
   workflow_dispatch:
 
-# contents: write  -> um den gebauten Stand auf den gh-pages-Branch zu pushen
-# pages:    write  -> um die Pages-Quelle per API auf gh-pages zu stellen
 permissions:
-  contents: write
+  contents: read
   pages: write
+  id-token: write
 
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -35,59 +36,28 @@ jobs:
       - name: Run tests
         run: npm test
 
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
       - name: Build
         run: npm run build
         env:
-          # Projekt-Site liegt unter /Klotracker/ – Basis-Pfad entsprechend setzen.
-          BASE_PATH: /Klotracker/
+          # Basis-Pfad = Repo-Name (/Klotracker/), von configure-pages geliefert.
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
 
-      - name: Prepare artifact
-        run: |
-          touch dist/.nojekyll
-          cp dist/index.html dist/404.html   # SPA-Fallback für Deep-Links
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
 
-      - name: Publish to gh-pages branch
-        run: |
-          cd dist
-          git init -q
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -q -m "Deploy ${GITHUB_SHA::7}"
-          git push -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:gh-pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Point GitHub Pages at gh-pages branch
-        run: |
-          api="https://api.github.com/repos/${GITHUB_REPOSITORY}/pages"
-          auth=(-H "Authorization: Bearer ${GITHUB_TOKEN}" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28")
-          body='{"build_type":"legacy","source":{"branch":"gh-pages","path":"/"}}'
-
-          echo "== Aktuelle Pages-Konfiguration =="
-          curl -s "${auth[@]}" "$api" || true; echo
-
-          echo "== Versuche PUT (Quelle -> gh-pages) =="
-          put=$(curl -s -o /tmp/resp.json -w "%{http_code}" -X PUT "${auth[@]}" "$api" -d "$body")
-          echo "PUT HTTP $put"; cat /tmp/resp.json 2>/dev/null; echo
-
-          if [ "$put" != "204" ] && [ "$put" != "200" ]; then
-            echo "== PUT nicht ok, versuche POST (Pages neu anlegen) =="
-            post=$(curl -s -o /tmp/resp.json -w "%{http_code}" -X POST "${auth[@]}" "$api" -d "$body")
-            echo "POST HTTP $post"; cat /tmp/resp.json 2>/dev/null; echo
-            put="$post"
-          fi
-
-          echo "== Pages-Konfiguration danach =="
-          curl -s "${auth[@]}" "$api"; echo
-
-          # Hinweis statt Fehlschlag: Das Umschalten der Pages-Quelle erfordert
-          # Admin-Rechte, die der Workflow-Token nicht hat. Der gebaute Stand
-          # liegt trotzdem aktuell im Branch gh-pages bereit. Einmalig nötig:
-          #   Settings -> Pages -> Source = "Deploy from a branch"
-          #   -> Branch: gh-pages / (root) -> Save
-          if [ "$put" != "204" ] && [ "$put" != "200" ] && [ "$put" != "201" ]; then
-            echo "::notice::Pages-Quelle nicht automatisch setzbar (Token ohne Admin-Recht). Bitte einmalig unter Settings -> Pages die Quelle auf Branch 'gh-pages' /(root) stellen."
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

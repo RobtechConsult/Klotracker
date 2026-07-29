@@ -116,22 +116,17 @@ gefüllt.
 
 ## Als Website veröffentlichen (GitHub Pages)
 
-Der Workflow `.github/workflows/deploy.yml` baut die App bei jedem Push und legt
-den fertigen Stand im Branch **`gh-pages`** ab (inkl. Tests, `.nojekyll` und
-SPA-Fallback `404.html`).
+Der Workflow `.github/workflows/deploy.yml` baut, testet und deployt die App bei
+jedem Push auf **`main`** über **GitHub Actions** (`actions/deploy-pages`).
 
-**Einmalig** muss die Pages-Quelle gesetzt werden – das erfordert Admin-Rechte,
-die der Workflow-Token nicht hat:
+**Einmalige Einstellung:** Settings → Pages → **Source: „GitHub Actions"**.
 
-> **Settings → Pages → Build and deployment → Source: „Deploy from a branch"**
-> → Branch **`gh-pages`**, Ordner **`/ (root)`** → **Save**
-
-Danach ist die App live unter:
+Danach gilt: **Was auf `main` landet, geht live.** Die App ist erreichbar unter:
 
 **https://robtechconsult.github.io/Klotracker/**
 
-Jeder weitere Push auf den Entwicklungsbranch aktualisiert `gh-pages` automatisch
-– GitHub baut die Seite dann selbst neu. Kein weiterer Handgriff nötig.
+Entwickelt wird auf dem Feature-Branch; zum Veröffentlichen wird nach `main`
+gemergt.
 
 ---
 
