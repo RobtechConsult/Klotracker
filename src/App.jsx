@@ -15,6 +15,7 @@ import ThroneTime from './components/ThroneTime.jsx'
 import DrinkTracker from './components/DrinkTracker.jsx'
 import Trends from './components/Trends.jsx'
 import Achievements from './components/Achievements.jsx'
+import FriendCompare from './components/FriendCompare.jsx'
 import Onboarding from './components/Onboarding.jsx'
 import AddModal from './components/AddModal.jsx'
 import Icon from './components/Icon.jsx'
@@ -22,7 +23,15 @@ import Icon from './components/Icon.jsx'
 export default function App() {
   const [entries, setEntries] = useState(() => loadEntries())
   const [settings, setSettings] = useState(() => loadSettings())
-  const [tab, setTab] = useState('home')
+  const [incomingCompare, setIncomingCompare] = useState(() => {
+    try {
+      const m = window.location.hash.match(/vergleich=([^&]+)/)
+      return m ? m[1] : null
+    } catch {
+      return null
+    }
+  })
+  const [tab, setTab] = useState(incomingCompare ? 'stats' : 'home')
   const [adding, setAdding] = useState(null) // { type, initialWhen?, durationSec? } | null
   const [toast, setToast] = useState(null)
   const [showSettings, setShowSettings] = useState(false)
@@ -240,6 +249,17 @@ export default function App() {
           <DayChart entries={entries} days={7} now={now} />
           <BristolChart entries={entries} />
           <HealthCheck entries={entries} now={now} />
+          <FriendCompare
+            entries={entries}
+            settings={settings}
+            now={now}
+            incoming={incomingCompare}
+            onIncomingHandled={() => {
+              setIncomingCompare(null)
+              try { history.replaceState(null, '', location.pathname + location.search) } catch { /* ignore */ }
+            }}
+            onToast={flash}
+          />
           <Achievements entries={entries} settings={settings} now={now} />
         </div>
       )}

@@ -5,6 +5,7 @@ import { averagePerDay, countsPerDay, streakDays, minutesOfDay, hourHistogram, f
 import { healthCheck } from './tips.js'
 import { mergeEntries, parseImport } from './storage.js'
 import { computeAchievements, achievementSummary } from './achievements.js'
+import { buildSummary, encodeSummary, decodeSummary, compare } from './social.js'
 
 const iso = (day, h, m = 0) => {
   const d = new Date(2026, 0, day, h, m, 0)
@@ -274,6 +275,31 @@ test('achievementSummary zählt freigeschaltete', () => {
   const { done, total } = achievementSummary(list)
   assert.ok(done >= 1)
   assert.equal(total, list.length)
+})
+
+test('social: encode/decode Round-Trip (auch mit Umlauten)', () => {
+  const summary = { v: 1, n: 'Jörg', s7: 8, sa: 1.1, ua: 6, dr: 1700, tt: 4200, rec: 620, st: 5 }
+  const code = encodeSummary(summary)
+  assert.equal(typeof code, 'string')
+  assert.deepEqual(decodeSummary(code), summary)
+})
+
+test('social: decodeSummary akzeptiert ganze Links & lehnt Müll ab', () => {
+  const code = encodeSummary({ v: 1, n: '', s7: 1, sa: 1, ua: 1, dr: 1, tt: 1, rec: 1, st: 1 })
+  assert.ok(decodeSummary('https://x.y/#vergleich=' + code))
+  assert.throws(() => decodeSummary('total-kaputt!!'))
+})
+
+test('social: buildSummary + compare kürt Sieger', () => {
+  const now = new Date(2026, 0, 15, 20)
+  const entries = []
+  for (const d of [9, 11, 13, 15]) entries.push({ type: 'stool', ts: iso(d, 8), durationSec: 300 })
+  const mine = buildSummary(entries, { name: 'Ich' }, now)
+  const friend = { v: 1, n: 'Freund', s7: 1, sa: 0.5, ua: 4, dr: 500, tt: 100, rec: 60, st: 0 }
+  const cmp = compare(mine, friend)
+  assert.equal(cmp.rows.length, 6)
+  assert.ok(cmp.meScore >= 1) // ich habe mehr Streak/Thron-Zeit
+  assert.ok(/führst|Unentschieden|Freund/.test(cmp.verdict))
 })
 
 test('minutesOfDay & hourHistogram', () => {

@@ -68,6 +68,7 @@ Wasserlassen) – mit Gewohnheits-Prognose, Regelmäßigkeits-Check und Timer. A
 | 2026-07-29 | **Gamification/Achievements** (Backlog #8) | 13 Abzeichen aus `achievements.js` (rein/testbar), Raster mit freigeschaltet/gesperrt + Fortschritt, auf dem Statistik-Tab |
 | 2026-07-29 | **Individualisierungs-Einstellungen** | Name (Header-Begrüßung), Tagesziel Trinken (Stepper), Design **Auto/Hell/Dunkel** (manuell via `data-theme`, gewinnt über System), Humor an/aus (blendet Sprüche/Quips aus). Settings in „Individualisierung" + „Daten & mehr" gegliedert. |
 | 2026-07-29 | **Einstellbare Portionsgrößen** | Pro Getränk (Wasser/Kaffee/Tee/Sonstiges) eigene ml per Stepper (50–1000). Nur Overrides in `settings.drinkSizes`, Defaults zentral in `DRINKS`; wirken sofort auf die Trink-Buttons. |
+| 2026-07-29 | **Freundes-Vergleich (Social, serverlos)** | `social.js`: Wochen-Bilanz (nur Aggregate) → URL-sicherer Code/Link (Web Share/Clipboard). Freund-Code einfügen → „Klo-Duell" (Kopf-an-Kopf, Sieger je Metrik). Inbound `#vergleich=`-Link öffnet Vergleich automatisch. Kein Server, keine Rohdaten geteilt. |
 
 ---
 
