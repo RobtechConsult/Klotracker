@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { loadEntries, saveEntries, makeId, loadSettings, saveSettings, exportJSON, loadSession, saveSession, mergeEntries, parseImport } from './lib/storage.js'
 import { predictNextStool } from './lib/prediction.js'
 import { countToday, streakDays, averagePerDay, fmtDuration, fmtMl } from './lib/stats.js'
-import { tipOfNow } from './lib/tips.js'
+import { tipOfNow, DRINKS } from './lib/tips.js'
 import { makeDemoEntries } from './lib/demo.js'
 
 import PredictionCard from './components/PredictionCard.jsx'
@@ -216,7 +216,7 @@ export default function App() {
             <div className="tile"><div className="num">{streak}</div><div className="lbl">🔥 Tage-Serie</div></div>
           </div>
 
-          <DrinkTracker entries={entries} now={now} goalMl={settings.drinkGoalMl} onAdd={addDrink} />
+          <DrinkTracker entries={entries} now={now} goalMl={settings.drinkGoalMl} sizes={settings.drinkSizes} onAdd={addDrink} />
 
           {settings.humor && (
             <div className="card tip">
@@ -308,6 +308,24 @@ export default function App() {
                   <span />
                 </button>
               </div>
+            </div>
+
+            <div className="set-title">Portionsgrößen (Getränke)</div>
+            <div className="set-section">
+              {DRINKS.map((d) => {
+                const ml = settings.drinkSizes?.[d.key] ?? d.ml
+                const setMl = (v) => setSetting({ drinkSizes: { ...settings.drinkSizes, [d.key]: Math.max(50, Math.min(1000, v)) } })
+                return (
+                  <div className="set-row" key={d.key}>
+                    <label><Icon name={d.icon} size={18} className="set-drink-ic" /> {d.label}</label>
+                    <div className="stepper">
+                      <button aria-label={`${d.label} weniger`} onClick={() => setMl(ml - 50)} disabled={ml <= 50}>−</button>
+                      <span className="val">{ml} ml</span>
+                      <button aria-label={`${d.label} mehr`} onClick={() => setMl(ml + 50)} disabled={ml >= 1000}>+</button>
+                    </div>
+                  </div>
+                )
+              })}
             </div>
 
             <div className="set-title">Daten &amp; mehr</div>

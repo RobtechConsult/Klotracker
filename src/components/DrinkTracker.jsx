@@ -5,7 +5,7 @@ import Icon from './Icon.jsx'
 
 // Trink-Tracking: ein Tipp genügt. Zeigt den Tagesfortschritt zum Ziel und
 // bietet Schnell-Buttons für die üblichen Getränke.
-export default function DrinkTracker({ entries, now, goalMl = 2000, onAdd }) {
+export default function DrinkTracker({ entries, now, goalMl = 2000, sizes = {}, onAdd }) {
   const today = drinkTotalToday(entries, now)
   const pct = Math.min(100, Math.round((today / goalMl) * 100))
   const reached = today >= goalMl
@@ -25,18 +25,21 @@ export default function DrinkTracker({ entries, now, goalMl = 2000, onAdd }) {
       </div>
 
       <div className="drink-grid">
-        {DRINKS.map((d) => (
-          <button
-            key={d.key}
-            className="drink-btn"
-            onClick={() => onAdd({ type: 'drink', ts: new Date().toISOString(), drink: d.key, amount: d.ml })}
-            aria-label={`${d.label} ${d.ml} Milliliter hinzufügen`}
-          >
-            <span className="drink-emoji" aria-hidden="true"><Icon name={d.icon} size={26} /></span>
-            <span className="drink-label">{d.label}</span>
-            <span className="drink-ml">{d.ml} ml</span>
-          </button>
-        ))}
+        {DRINKS.map((d) => {
+          const ml = sizes[d.key] ?? d.ml
+          return (
+            <button
+              key={d.key}
+              className="drink-btn"
+              onClick={() => onAdd({ type: 'drink', ts: new Date().toISOString(), drink: d.key, amount: ml })}
+              aria-label={`${d.label} ${ml} Milliliter hinzufügen`}
+            >
+              <span className="drink-emoji" aria-hidden="true"><Icon name={d.icon} size={26} /></span>
+              <span className="drink-label">{d.label}</span>
+              <span className="drink-ml">{ml} ml</span>
+            </button>
+          )
+        })}
       </div>
     </div>
   )

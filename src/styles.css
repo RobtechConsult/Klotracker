@@ -346,6 +346,7 @@ body {
   border-radius: 10px; padding: 9px 11px; font-size: 14px; color: var(--ink); font-family: inherit; text-align: right;
 }
 .set-title { font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); margin: 4px 4px 2px; }
+.set-drink-ic { color: var(--blue); vertical-align: -3px; margin-right: 2px; }
 
 /* Stepper (−/+) */
 .stepper { display: flex; align-items: center; gap: 10px; }
