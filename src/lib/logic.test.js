@@ -7,6 +7,7 @@ import { mergeEntries, parseImport } from './storage.js'
 import { computeAchievements, achievementSummary } from './achievements.js'
 import { buildSummary, encodeSummary, decodeSummary, compare } from './social.js'
 import { proStatus, TRIAL_DAYS } from './pro.js'
+import { reportData, renderReportHtml } from './report.js'
 
 const iso = (day, h, m = 0) => {
   const d = new Date(2026, 0, day, h, m, 0)
@@ -320,6 +321,34 @@ test('proStatus: Trial aktiv, dann abgelaufen, Kauf schaltet frei', () => {
   assert.equal(s.mode, 'unlocked')
   // ohne Trial-Start -> none
   assert.equal(proStatus({}, new Date()).mode, 'none')
+})
+
+test('reportData fasst Zeitraum korrekt zusammen', () => {
+  const now = new Date(2026, 0, 30, 20)
+  const entries = [
+    { type: 'stool', ts: iso(28, 8), bristol: 4, symptoms: ['blood'] },
+    { type: 'stool', ts: iso(26, 8), bristol: 4 },
+    { type: 'urine', ts: iso(28, 9) },
+    { type: 'stool', ts: new Date(2025, 11, 1, 8).toISOString() } // ausserhalb 30-Tage-Fenster
+  ]
+  const d = reportData(entries, { name: 'Pat' }, now, 30)
+  assert.equal(d.stoolCount, 2) // der alte zählt nicht
+  assert.equal(d.urineCount, 1)
+  assert.equal(d.bristolTotal, 2)
+  assert.equal(d.dist[3], 2) // Typ 4
+  assert.equal(d.symptoms.blood, 1)
+  assert.equal(d.daily.length, 2) // nur Tage mit Eintraegen
+})
+
+test('renderReportHtml erzeugt gültiges HTML mit Blut-Flag & escaped Name', () => {
+  const now = new Date(2026, 0, 5, 20)
+  const entries = [{ type: 'stool', ts: iso(4, 8), bristol: 4, symptoms: ['blood'] }]
+  const html = renderReportHtml(reportData(entries, { name: '<b>Max</b>' }, now, 30), now)
+  assert.ok(html.startsWith('<!doctype html>'))
+  assert.ok(/Verlaufsbericht/.test(html))
+  assert.ok(/ärztliche Abklärung empfohlen/.test(html)) // Blut-Flag
+  assert.ok(html.includes('&lt;b&gt;Max&lt;/b&gt;')) // Name escaped
+  assert.ok(!html.includes('<b>Max</b>'))
 })
 
 test('minutesOfDay & hourHistogram', () => {

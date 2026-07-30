@@ -8,7 +8,8 @@ export const TRIAL_DAYS = 4
 export const PRO_FEATURES = [
   { emoji: '🔮', title: 'Gewohnheits-Prognose', desc: 'Deine wahrscheinlichste nächste Klo-Zeit.' },
   { emoji: '🕐', title: 'Tagesrhythmus', desc: 'Die radiale 24-Stunden-Uhr deiner Muster.' },
-  { emoji: '📈', title: 'Trends & Muster', desc: 'Diese Woche vs. letzte, Ø-Abstand, aktivster Tag.' }
+  { emoji: '📈', title: 'Trends & Muster', desc: 'Diese Woche vs. letzte, Ø-Abstand, aktivster Tag.' },
+  { emoji: '📄', title: 'Arzt-Report als PDF', desc: 'Sachliche Verlaufs-Zusammenfassung zum Ausdrucken/Teilen.' }
 ]
 
 /**

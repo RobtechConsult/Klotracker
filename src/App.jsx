@@ -22,6 +22,7 @@ import ProDialog from './components/ProDialog.jsx'
 import AddModal from './components/AddModal.jsx'
 import Icon from './components/Icon.jsx'
 import { proStatus } from './lib/pro.js'
+import { reportData, renderReportHtml } from './lib/report.js'
 
 export default function App() {
   const [entries, setEntries] = useState(() => loadEntries())
@@ -172,6 +173,18 @@ export default function App() {
       flash('Alles blitzeblank 🧼')
     }
   }
+  // Arzt-Report (Pro): druckbares HTML in neuem Tab -> „Als PDF speichern".
+  const makeReport = () => {
+    if (!pro.active) { setShowSettings(false); setShowPro(true); return }
+    const html = renderReportHtml(reportData(entries, settings, now, 30), now)
+    const w = window.open('', '_blank')
+    if (!w) { flash('Bitte Pop-ups erlauben, um den Report zu öffnen 🙈'); return }
+    w.document.open()
+    w.document.write(html)
+    w.document.close()
+    setShowSettings(false)
+  }
+
   const doExport = () => {
     const blob = new Blob([exportJSON(entries)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
@@ -401,6 +414,9 @@ export default function App() {
             <div className="set-title">Daten &amp; mehr</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <button className="btn ghost" onClick={loadDemo}>🎬 Beispieldaten laden (zum Ausprobieren)</button>
+              <button className="btn ghost" onClick={makeReport} disabled={!entries.length}>
+                📄 Arzt-Report als PDF {!pro.active && <span className="inline-pro">PRO</span>}
+              </button>
               <button className="btn ghost" onClick={doExport} disabled={!entries.length}>⬇️ Daten exportieren (JSON)</button>
               <button className="btn ghost" onClick={() => importRef.current?.click()}>📥 Daten importieren (Backup)</button>
               <input ref={importRef} type="file" accept="application/json,.json" onChange={importFile} style={{ display: 'none' }} />
