@@ -17,8 +17,11 @@ import Trends from './components/Trends.jsx'
 import Achievements from './components/Achievements.jsx'
 import FriendCompare from './components/FriendCompare.jsx'
 import Onboarding from './components/Onboarding.jsx'
+import ProLock from './components/ProLock.jsx'
+import ProDialog from './components/ProDialog.jsx'
 import AddModal from './components/AddModal.jsx'
 import Icon from './components/Icon.jsx'
+import { proStatus } from './lib/pro.js'
 
 export default function App() {
   const [entries, setEntries] = useState(() => loadEntries())
@@ -35,6 +38,7 @@ export default function App() {
   const [adding, setAdding] = useState(null) // { type, initialWhen?, durationSec? } | null
   const [toast, setToast] = useState(null)
   const [showSettings, setShowSettings] = useState(false)
+  const [showPro, setShowPro] = useState(false)
   const [session, setSession] = useState(() => loadSession()) // laufender Timer
   const [, setTick] = useState(0) // erzwingt Sekunden-Rerender bei laufendem Timer
   const importRef = useRef(null)
@@ -51,6 +55,26 @@ export default function App() {
   }, [settings.theme])
 
   const setSetting = (patch) => setSettings((s) => ({ ...s, ...patch }))
+
+  // 4-Tage-Testphase beim allerersten Start anstoßen.
+  useEffect(() => {
+    if (!settings.proUnlocked && !settings.proTrialStart) {
+      setSetting({ proTrialStart: new Date().toISOString() })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const pro = proStatus(settings, now)
+  const unlockPro = () => {
+    setSetting({ proUnlocked: true })
+    setShowPro(false)
+    flash('Danke für den Support! 🧻💛 Pro ist frei.')
+  }
+  const resetTrial = () => {
+    setSetting({ proUnlocked: false, proTrialStart: new Date().toISOString() })
+    setShowPro(false)
+    flash('Testphase neu gestartet 🔄')
+  }
   // Verstrichene Zeit wird beim Rendern aus startedAt berechnet (übersteht
   // App-Neustart/Reload); der Interval erzwingt nur die Sekundenanzeige.
   useEffect(() => {
@@ -216,8 +240,12 @@ export default function App() {
             </button>
           )}
 
-          {/* Hero-Insight: die Prognose */}
-          <PredictionCard prediction={prediction} humor={settings.humor} />
+          {/* Hero-Insight: die Prognose (Pro) */}
+          {pro.active ? (
+            <PredictionCard prediction={prediction} humor={settings.humor} />
+          ) : (
+            <ProLock emoji="🔮" title="Nächster-Gang-Prognose" desc="Der Gewohnheits-Algorithmus sagt dir deine wahrscheinlichste nächste Klo-Zeit – ein Pro-Feature." onUnlock={() => setShowPro(true)} />
+          )}
 
           <div className="tiles">
             <div className="tile"><div className="num">{stoolToday}</div><div className="lbl">💩 heute</div></div>
@@ -243,9 +271,18 @@ export default function App() {
             <div className="tile"><div className="num">{averagePerDay(entries, 'urine', 30, now).toFixed(1)}</div><div className="lbl">Ø 💧 / Tag</div></div>
             <div className="tile"><div className="num">{entries.length}</div><div className="lbl">Einträge gesamt</div></div>
           </div>
-          <HourClock entries={entries} prediction={prediction} now={now} />
-          <ThroneTime entries={entries} now={now} humor={settings.humor} />
-          <Trends entries={entries} now={now} />
+          {pro.active ? (
+            <>
+              <HourClock entries={entries} prediction={prediction} now={now} />
+              <ThroneTime entries={entries} now={now} humor={settings.humor} />
+              <Trends entries={entries} now={now} />
+            </>
+          ) : (
+            <>
+              <ProLock emoji="📈" title="Erweiterte Statistiken" desc="Tagesrhythmus (24h-Uhr) & Trends (Woche vs. Woche) sind Pro-Features." onUnlock={() => setShowPro(true)} />
+              <ThroneTime entries={entries} now={now} humor={settings.humor} />
+            </>
+          )}
           <DayChart entries={entries} days={7} now={now} />
           <BristolChart entries={entries} />
           <HealthCheck entries={entries} now={now} />
@@ -298,6 +335,19 @@ export default function App() {
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h3>⚙️ Einstellungen</h3>
             <p className="msub">Deine Daten bleiben zu 100 % auf diesem Gerät. Kein Server, kein Mitlesen.</p>
+
+            <button className="pro-banner" onClick={() => { setShowSettings(false); setShowPro(true) }}>
+              <span className="pb-ic" aria-hidden="true">🧻</span>
+              <span className="pb-txt">
+                <strong>Klotracker Pro</strong>
+                <small>
+                  {pro.mode === 'unlocked' ? 'Aktiv – danke für den Support! 💛'
+                    : pro.mode === 'trial' ? `Testphase: noch ${pro.daysLeft} ${pro.daysLeft === 1 ? 'Tag' : 'Tage'}`
+                    : 'Testphase vorbei – Supporter werden'}
+                </small>
+              </span>
+              <span className="pb-arrow" aria-hidden="true">›</span>
+            </button>
 
             <div className="set-title">Individualisierung</div>
             <div className="set-section">
@@ -366,6 +416,8 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {showPro && <ProDialog status={pro} onUnlock={unlockPro} onClose={() => setShowPro(false)} onResetTrial={resetTrial} />}
 
       {!settings.onboarded && <Onboarding onDone={finishOnboarding} onLoadDemo={onboardWithDemo} />}
 

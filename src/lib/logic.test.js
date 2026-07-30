@@ -6,6 +6,7 @@ import { healthCheck } from './tips.js'
 import { mergeEntries, parseImport } from './storage.js'
 import { computeAchievements, achievementSummary } from './achievements.js'
 import { buildSummary, encodeSummary, decodeSummary, compare } from './social.js'
+import { proStatus, TRIAL_DAYS } from './pro.js'
 
 const iso = (day, h, m = 0) => {
   const d = new Date(2026, 0, day, h, m, 0)
@@ -300,6 +301,25 @@ test('social: buildSummary + compare kürt Sieger', () => {
   assert.equal(cmp.rows.length, 6)
   assert.ok(cmp.meScore >= 1) // ich habe mehr Streak/Thron-Zeit
   assert.ok(/führst|Unentschieden|Freund/.test(cmp.verdict))
+})
+
+test('proStatus: Trial aktiv, dann abgelaufen, Kauf schaltet frei', () => {
+  const start = new Date(2026, 0, 10, 12)
+  // Tag 2 der Testphase -> aktiv
+  let s = proStatus({ proTrialStart: start.toISOString() }, new Date(2026, 0, 12, 12))
+  assert.equal(s.active, true)
+  assert.equal(s.mode, 'trial')
+  assert.ok(s.daysLeft >= 1 && s.daysLeft <= TRIAL_DAYS)
+  // nach 4 Tagen -> abgelaufen
+  s = proStatus({ proTrialStart: start.toISOString() }, new Date(2026, 0, 15, 13))
+  assert.equal(s.active, false)
+  assert.equal(s.mode, 'expired')
+  // gekauft -> immer aktiv
+  s = proStatus({ proUnlocked: true }, new Date(2030, 0, 1))
+  assert.equal(s.active, true)
+  assert.equal(s.mode, 'unlocked')
+  // ohne Trial-Start -> none
+  assert.equal(proStatus({}, new Date()).mode, 'none')
 })
 
 test('minutesOfDay & hourHistogram', () => {

@@ -63,7 +63,7 @@ export function makeId() {
 }
 
 export function loadSettings() {
-  const defaults = { humor: true, drinkGoalMl: 2000, onboarded: false, name: '', theme: 'auto', drinkSizes: {} }
+  const defaults = { humor: true, drinkGoalMl: 2000, onboarded: false, name: '', theme: 'auto', drinkSizes: {}, proUnlocked: false, proTrialStart: null }
   try {
     return { ...defaults, ...JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}') }
   } catch {
