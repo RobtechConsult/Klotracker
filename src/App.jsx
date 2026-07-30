@@ -235,11 +235,11 @@ export default function App() {
             <div className="tile"><div className="num">{entries.length}</div><div className="lbl">Einträge gesamt</div></div>
           </div>
           <HourClock entries={entries} prediction={prediction} now={now} />
-          <HealthCheck entries={entries} now={now} />
+          <ThroneTime entries={entries} now={now} humor={settings.humor} />
           <Trends entries={entries} now={now} />
           <DayChart entries={entries} days={7} now={now} />
           <BristolChart entries={entries} />
-          <ThroneTime entries={entries} now={now} humor={settings.humor} />
+          <HealthCheck entries={entries} now={now} />
           <Achievements entries={entries} settings={settings} now={now} />
         </div>
       )}
