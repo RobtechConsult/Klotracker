@@ -4,6 +4,7 @@ import { predictNextStool, findTimeClusters } from './prediction.js'
 import { averagePerDay, countsPerDay, streakDays, minutesOfDay, hourHistogram, fmtDuration, fmtDurationShort, toiletTimeStats, drinkTotalToday, averageDrinkPerDay, fmtMl, weekTrend, mostActiveWeekday } from './stats.js'
 import { healthCheck } from './tips.js'
 import { mergeEntries, parseImport } from './storage.js'
+import { computeAchievements, achievementSummary } from './achievements.js'
 
 const iso = (day, h, m = 0) => {
   const d = new Date(2026, 0, day, h, m, 0)
@@ -234,6 +235,45 @@ test('healthCheck: Blut -> alert (sachlich, ohne Humor)', () => {
   const f = res.findings.find((x) => /Blut/i.test(x.title))
   assert.ok(f)
   assert.equal(f.level, 'alert')
+})
+
+test('computeAchievements: erster Eintrag & Frühaufsteher', () => {
+  const now = new Date(2026, 0, 5, 20)
+  const entries = [{ type: 'stool', ts: iso(5, 6, 30) }] // 6:30 Uhr = früh
+  const list = computeAchievements(entries, {}, now)
+  const first = list.find((a) => a.key === 'first')
+  const early = list.find((a) => a.key === 'early')
+  assert.equal(first.achieved, true)
+  assert.equal(early.achieved, true)
+  const night = list.find((a) => a.key === 'night')
+  assert.equal(night.achieved, false)
+})
+
+test('computeAchievements: Fortschritt bei Bristol-Perfektionist', () => {
+  const now = new Date(2026, 0, 10, 20)
+  const entries = [1, 2, 3].map((d) => ({ type: 'stool', ts: iso(d, 8), bristol: 4 }))
+  const list = computeAchievements(entries, {}, now)
+  const ideal = list.find((a) => a.key === 'ideal')
+  assert.equal(ideal.achieved, false)
+  assert.deepEqual(ideal.progress, { current: 3, target: 5 })
+})
+
+test('computeAchievements: Hydration-Held bei Trinkziel', () => {
+  const now = new Date(2026, 0, 3, 20)
+  const entries = [
+    { type: 'drink', ts: iso(3, 8), amount: 1000 },
+    { type: 'drink', ts: iso(3, 12), amount: 1200 }
+  ]
+  const list = computeAchievements(entries, { drinkGoalMl: 2000 }, now)
+  assert.equal(list.find((a) => a.key === 'hydration').achieved, true)
+})
+
+test('achievementSummary zählt freigeschaltete', () => {
+  const now = new Date(2026, 0, 5, 20)
+  const list = computeAchievements([{ type: 'stool', ts: iso(5, 12) }], {}, now)
+  const { done, total } = achievementSummary(list)
+  assert.ok(done >= 1)
+  assert.equal(total, list.length)
 })
 
 test('minutesOfDay & hourHistogram', () => {

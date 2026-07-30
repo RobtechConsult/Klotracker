@@ -14,6 +14,8 @@ import History from './components/History.jsx'
 import ThroneTime from './components/ThroneTime.jsx'
 import DrinkTracker from './components/DrinkTracker.jsx'
 import Trends from './components/Trends.jsx'
+import Achievements from './components/Achievements.jsx'
+import Onboarding from './components/Onboarding.jsx'
 import AddModal from './components/AddModal.jsx'
 import Icon from './components/Icon.jsx'
 
@@ -113,6 +115,14 @@ export default function App() {
     setEntries(makeDemoEntries(now))
     setShowSettings(false)
     flash('Beispieldaten geladen 🎬')
+  }
+
+  // Onboarding (erster Start)
+  const finishOnboarding = () => setSettings((s) => ({ ...s, onboarded: true }))
+  const onboardWithDemo = () => {
+    setEntries(makeDemoEntries(now))
+    finishOnboarding()
+    flash('Willkommen! Beispieldaten geladen 🎬')
   }
   const clearAll = () => {
     if (confirm('Wirklich ALLE Einträge löschen? Das kann niemand rückgängig machen – nicht mal die beste Spülung.')) {
@@ -215,6 +225,7 @@ export default function App() {
             <div className="tile"><div className="num">{entries.length}</div><div className="lbl">Einträge gesamt</div></div>
           </div>
           <Trends entries={entries} now={now} />
+          <Achievements entries={entries} settings={settings} now={now} />
           <ThroneTime entries={entries} now={now} />
           <HourClock entries={entries} prediction={prediction} now={now} />
           <DayChart entries={entries} days={7} now={now} />
@@ -262,6 +273,7 @@ export default function App() {
               <button className="btn ghost" onClick={doExport} disabled={!entries.length}>⬇️ Daten exportieren (JSON)</button>
               <button className="btn ghost" onClick={() => importRef.current?.click()}>📥 Daten importieren (Backup)</button>
               <input ref={importRef} type="file" accept="application/json,.json" onChange={importFile} style={{ display: 'none' }} />
+              <button className="btn ghost" onClick={() => { setSettings((s) => ({ ...s, onboarded: false })); setShowSettings(false) }}>ℹ️ Einführung nochmal zeigen</button>
               <button className="btn ghost" style={{ color: 'var(--red)' }} onClick={clearAll} disabled={!entries.length}>🗑️ Alle Daten löschen</button>
             </div>
             <p className="disclaimer" style={{ marginTop: 16 }}>
@@ -273,6 +285,8 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {!settings.onboarded && <Onboarding onDone={finishOnboarding} onLoadDemo={onboardWithDemo} />}
 
       {toast && <div className="toast">{toast}</div>}
     </div>

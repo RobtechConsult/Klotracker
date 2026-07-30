@@ -266,6 +266,44 @@ body {
 .trend-fact { font-size: 13px; color: var(--ink-soft); display: flex; gap: 8px; align-items: baseline; }
 .trend-fact strong { color: var(--ink); }
 .tf-ic { font-size: 15px; }
+
+/* --- Achievements --- */
+.ach-count { font-size: 12px; font-weight: 800; color: var(--brown-2); }
+.ach-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
+.ach {
+  display: flex; gap: 10px; align-items: flex-start;
+  border: 1px solid var(--line); border-radius: 14px; padding: 10px;
+}
+.ach.on { background: color-mix(in srgb, var(--gold) 14%, transparent); border-color: color-mix(in srgb, var(--gold) 40%, var(--line)); }
+.ach.off { opacity: 0.62; }
+.ach-emoji { font-size: 24px; line-height: 1.1; }
+.ach.off .ach-emoji { filter: grayscale(1); opacity: 0.8; }
+.ach-body { min-width: 0; }
+.ach-title { font-size: 13px; font-weight: 800; }
+.ach-desc { font-size: 11px; color: var(--ink-soft); line-height: 1.25; }
+.ach-prog { height: 5px; background: var(--line); border-radius: 99px; overflow: hidden; margin-top: 5px; }
+.ach-prog > div { height: 100%; background: var(--brown-2); border-radius: 99px; }
+
+/* --- Onboarding --- */
+.onb-back {
+  position: fixed; inset: 0; z-index: 100;
+  background: linear-gradient(160deg, var(--gold), var(--brown-2));
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+.onb {
+  position: relative; width: 100%; max-width: 400px;
+  background: var(--bg-elev); color: var(--ink);
+  border-radius: 26px; padding: 30px 24px 24px; text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: slideup 0.25s ease;
+}
+.onb-skip { position: absolute; top: 14px; right: 16px; background: none; border: none; color: var(--ink-soft); font-size: 13px; cursor: pointer; }
+.onb-emoji { font-size: 64px; line-height: 1; margin: 6px 0 14px; }
+.onb-title { font-size: 22px; margin: 0 0 10px; letter-spacing: -0.02em; }
+.onb-text { font-size: 15px; color: var(--ink-soft); line-height: 1.5; margin: 0 0 20px; }
+.onb-dots { display: flex; justify-content: center; gap: 7px; margin-bottom: 20px; }
+.onb-dots span { width: 8px; height: 8px; border-radius: 99px; background: var(--line); }
+.onb-dots span.on { background: var(--brown-2); width: 22px; }
+.onb-actions { display: flex; flex-direction: column; gap: 10px; }
 .field { width: 100%; border: 1px solid var(--line); background: var(--bg); border-radius: 12px; padding: 12px; font-size: 14px; color: var(--ink); font-family: inherit; margin-bottom: 12px; }
 .row { display: flex; gap: 10px; }
 .btn { flex: 1; border: none; border-radius: 14px; padding: 14px; font-size: 15px; font-weight: 800; cursor: pointer; }

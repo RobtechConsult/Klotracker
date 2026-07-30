@@ -64,6 +64,8 @@ Wasserlassen) – mit Gewohnheits-Prognose, Regelmäßigkeits-Check und Timer. A
 | 2026-07-29 | **Eigene Getränke-Icons** | Glas/Tasse/Teetasse/Flasche (blau) statt Emoji (🚰 etc.) in Trink-Karte & Verlauf. |
 | 2026-07-29 | **Symptom-Tracking** (Backlog #3) | Optionale Chips (Blut/Schmerzen/Schleim/Blähungen/Drang) im AddModal; sachlicher Warn-Banner bei Blut/Schmerz; fließt in Health-Check (Blut→Alert) & Verlauf ein |
 | 2026-07-29 | **Trends & Muster** (Backlog #5) | „Diese Woche vs. letzte" (Stuhlgang/Trinken/Thron-Zeit mit ▲▼%), Ø-Abstand (`averageIntervalHours` jetzt genutzt), aktivster Wochentag |
+| 2026-07-29 | **Onboarding** (Backlog #6) | 3-Slide-Einstieg beim ersten Start (Was/Mehrwert/Datenschutz) + „mit Beispieldaten starten"; `settings.onboarded`; in Einstellungen wieder aufrufbar |
+| 2026-07-29 | **Gamification/Achievements** (Backlog #8) | 13 Abzeichen aus `achievements.js` (rein/testbar), Raster mit freigeschaltet/gesperrt + Fortschritt, auf dem Statistik-Tab |
 
 ---
 
@@ -81,9 +83,9 @@ priorisiert nach Impact/Aufwand.
 | ✅ 3 | ~~**Symptom-Tracking (Blut/Schmerz/Blähung)**~~ | M | Hoch | **Erledigt.** Chips + Warn-Banner + Health-Check-Integration. |
 | ✅ 4 | ~~**Import/Backup** (JSON)~~ | S | Hoch | **Erledigt** (Dedup per id). Optionaler Ausbau: CSV-Export. |
 | ✅ 5 | ~~**Insights: Trends**~~ | L | Hoch | **Erledigt** (Basis): Woche-über-Woche, Ø-Abstand, aktivster Tag. Ausbau möglich: Kaffee↔Gang-Korrelation. |
-| 6 | Onboarding (3 Slides) + Settings ausbauen | S | Mittel | Konzept/Datenschutz erklären; `humor`-Flag ist da, aber ohne UI. |
+| ✅ 6 | ~~Onboarding (3 Slides)~~ | S | Mittel | **Erledigt.** Settings-Ausbau (Humor-Flag-UI) noch offen. |
 | 7 | Arzt-Report als PDF (`window.print()`) | M | Mittel | App wird „sprechstundentauglich". Ton hier sachlich. |
-| 8 | Gamification: Achievements/Streaks | M | Mittel | „Längste Sitzung", „Blitz-Besuch <60s", „Lesesaal-Abo". Rein lokal. |
+| ✅ 8 | ~~Gamification: Achievements~~ | M | Mittel | **Erledigt.** 13 Abzeichen, rein lokal. |
 | 9 | Prognose verbessern | M | Mittel | Intervall-Modell (Zeit seit letztem Gang) + Wochentag; „überfällig"-Status; auch für Urin (Code kann's schon). |
 | 10 | Barrierefreiheit vertiefen | S | Mittel | Bristol-Picker `role=radiogroup`, SVG-Charts `aria-label`. |
 | — | Später: Profile (Familie/Baby), i18n, Widgets | L | — | Bewusst nach den obigen. |
