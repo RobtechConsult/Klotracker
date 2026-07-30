@@ -1,0 +1,12 @@
+{
+  "appId": "com.robtechconsult.klotracker",
+  "appName": "Klotracker",
+  "webDir": "dist",
+  "backgroundColor": "#fdf6ec",
+  "ios": {
+    "contentInset": "always"
+  },
+  "android": {
+    "backgroundColor": "#fdf6ec"
+  }
+}

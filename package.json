@@ -8,13 +8,22 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node --test"
+    "test": "node --test",
+    "app:sync": "vite build && cap sync",
+    "app:ios": "vite build && cap sync ios && cap open ios",
+    "app:android": "vite build && cap sync android && cap open android",
+    "cap:add:ios": "cap add ios",
+    "cap:add:android": "cap add android"
   },
   "dependencies": {
+    "@capacitor/android": "^6.2.1",
+    "@capacitor/core": "^6.2.1",
+    "@capacitor/ios": "^6.2.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@capacitor/cli": "^6.2.1",
     "@vitejs/plugin-react": "^4.3.4",
     "vite": "^5.4.11",
     "vite-plugin-pwa": "^0.21.1"

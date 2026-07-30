@@ -23,6 +23,7 @@ import AddModal from './components/AddModal.jsx'
 import Icon from './components/Icon.jsx'
 import { proStatus } from './lib/pro.js'
 import { reportData, renderReportHtml } from './lib/report.js'
+import { isNative, purchase, proProductForTier, tipProductForTier, initPurchases } from './lib/purchases.js'
 
 export default function App() {
   const [entries, setEntries] = useState(() => loadEntries())
@@ -57,6 +58,9 @@ export default function App() {
 
   const setSetting = (patch) => setSettings((s) => ({ ...s, ...patch }))
 
+  // In-App-Käufe initialisieren (nur nativ; auf Web No-op).
+  useEffect(() => { initPurchases() }, [])
+
   // 4-Tage-Testphase beim allerersten Start anstoßen.
   useEffect(() => {
     if (!settings.proUnlocked && !settings.proTrialStart) {
@@ -66,12 +70,30 @@ export default function App() {
   }, [])
 
   const pro = proStatus(settings, now)
-  const buyPro = (tier) => {
+  const buyPro = async (tier) => {
+    if (isNative()) {
+      try {
+        const r = await purchase(proProductForTier(tier.key))
+        if (!r?.ok) { flash('Kauf abgebrochen'); return }
+      } catch {
+        flash('Kauf derzeit nicht möglich 🙈')
+        return
+      }
+    }
     setSetting({ proUnlocked: true, tipCount: (settings.tipCount || 0) + (tier?.tip || 0) })
     setShowPro(false)
     flash(tier?.tip ? 'Danke für Pro + Trinkgeld! 🧻💛' : 'Danke für den Support! 💛 Pro ist frei.')
   }
-  const giveTip = (tier) => {
+  const giveTip = async (tier) => {
+    if (isNative()) {
+      try {
+        const r = await purchase(tipProductForTier(tier.key))
+        if (!r?.ok) { flash('Kauf abgebrochen'); return }
+      } catch {
+        flash('Kauf derzeit nicht möglich 🙈')
+        return
+      }
+    }
     setSetting({ tipCount: (settings.tipCount || 0) + 1 })
     flash(`Danke fürs ${tier?.title || 'Klopapier'}! 🧻💛`)
   }
