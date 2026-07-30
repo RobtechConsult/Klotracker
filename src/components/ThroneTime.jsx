@@ -17,7 +17,7 @@ function funnyComparison(totalSec) {
   return `Das sind ~${val} ${best.label} – theoretisch nebenbei ${best.verb}.`
 }
 
-export default function ThroneTime({ entries, now }) {
+export default function ThroneTime({ entries, now, humor = true }) {
   const week = toiletTimeStats(entries, 7, now)
   const today = toiletTimeStats(entries, 1, now)
 
@@ -44,7 +44,7 @@ export default function ThroneTime({ entries, now }) {
             <div className="tile"><div className="num">{fmtDuration(week.longestSec)}</div><div className="lbl">🏆 Rekord</div></div>
           </div>
 
-          <p className="quip" style={{ marginTop: 12 }}>{funnyComparison(week.totalSec)}</p>
+          {humor && <p className="quip" style={{ marginTop: 12 }}>{funnyComparison(week.totalSec)}</p>}
         </>
       )}
     </div>

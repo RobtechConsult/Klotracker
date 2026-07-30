@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { loadEntries, saveEntries, makeId, loadSettings, saveSettings, exportJSON, loadSession, saveSession, mergeEntries, parseImport } from './lib/storage.js'
 import { predictNextStool } from './lib/prediction.js'
-import { countToday, streakDays, averagePerDay, fmtDuration } from './lib/stats.js'
+import { countToday, streakDays, averagePerDay, fmtDuration, fmtMl } from './lib/stats.js'
 import { tipOfNow } from './lib/tips.js'
 import { makeDemoEntries } from './lib/demo.js'
 
@@ -34,6 +34,14 @@ export default function App() {
   useEffect(() => saveEntries(entries), [entries])
   useEffect(() => saveSettings(settings), [settings])
   useEffect(() => saveSession(session), [session])
+  // Manuelle Design-Wahl auf <html> anwenden ('auto' = System-Einstellung).
+  useEffect(() => {
+    const root = document.documentElement
+    if (settings.theme === 'light' || settings.theme === 'dark') root.dataset.theme = settings.theme
+    else delete root.dataset.theme
+  }, [settings.theme])
+
+  const setSetting = (patch) => setSettings((s) => ({ ...s, ...patch }))
   // Verstrichene Zeit wird beim Rendern aus startedAt berechnet (übersteht
   // App-Neustart/Reload); der Interval erzwingt nur die Sekundenanzeige.
   useEffect(() => {
@@ -153,7 +161,7 @@ export default function App() {
         <span className="logo">🚽</span>
         <div>
           <h1>Klotracker</h1>
-          <p className="sub">Tracken mit Augenzwinkern</p>
+          <p className="sub">{settings.name ? `Hallo, ${settings.name}! 👋` : 'Tracken mit Augenzwinkern'}</p>
         </div>
         <div className="spacer" />
         <button className="icon-btn" onClick={() => setShowSettings(true)} aria-label="Einstellungen">⚙️</button>
@@ -200,7 +208,7 @@ export default function App() {
           )}
 
           {/* Hero-Insight: die Prognose */}
-          <PredictionCard prediction={prediction} />
+          <PredictionCard prediction={prediction} humor={settings.humor} />
 
           <div className="tiles">
             <div className="tile"><div className="num">{stoolToday}</div><div className="lbl">💩 heute</div></div>
@@ -210,10 +218,12 @@ export default function App() {
 
           <DrinkTracker entries={entries} now={now} goalMl={settings.drinkGoalMl} onAdd={addDrink} />
 
-          <div className="card tip">
-            <div className="eyebrow">Spruch des Moments</div>
-            <p className="quote" style={{ margin: '8px 0 0' }}>„{tipOfNow(tipSeed)}"</p>
-          </div>
+          {settings.humor && (
+            <div className="card tip">
+              <div className="eyebrow">Spruch des Moments</div>
+              <p className="quote" style={{ margin: '8px 0 0' }}>„{tipOfNow(tipSeed)}"</p>
+            </div>
+          )}
         </div>
       )}
 
@@ -226,7 +236,7 @@ export default function App() {
           </div>
           <Trends entries={entries} now={now} />
           <Achievements entries={entries} settings={settings} now={now} />
-          <ThroneTime entries={entries} now={now} />
+          <ThroneTime entries={entries} now={now} humor={settings.humor} />
           <HourClock entries={entries} prediction={prediction} now={now} />
           <DayChart entries={entries} days={7} now={now} />
           <BristolChart entries={entries} />
@@ -268,6 +278,39 @@ export default function App() {
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h3>⚙️ Einstellungen</h3>
             <p className="msub">Deine Daten bleiben zu 100 % auf diesem Gerät. Kein Server, kein Mitlesen.</p>
+
+            <div className="set-title">Individualisierung</div>
+            <div className="set-section">
+              <div className="set-row">
+                <label htmlFor="set-name">Dein Name</label>
+                <input id="set-name" className="set-input" value={settings.name || ''} placeholder="optional"
+                  onChange={(e) => setSetting({ name: e.target.value.slice(0, 24) })} />
+              </div>
+              <div className="set-row">
+                <label>Tagesziel Trinken</label>
+                <div className="stepper">
+                  <button aria-label="weniger" onClick={() => setSetting({ drinkGoalMl: Math.max(1000, settings.drinkGoalMl - 250) })} disabled={settings.drinkGoalMl <= 1000}>−</button>
+                  <span className="val">{fmtMl(settings.drinkGoalMl)}</span>
+                  <button aria-label="mehr" onClick={() => setSetting({ drinkGoalMl: Math.min(4000, settings.drinkGoalMl + 250) })} disabled={settings.drinkGoalMl >= 4000}>+</button>
+                </div>
+              </div>
+              <div className="set-row">
+                <label>Design</label>
+                <div className="seg" role="group" aria-label="Design">
+                  {[['auto', 'Auto'], ['light', 'Hell'], ['dark', 'Dunkel']].map(([v, l]) => (
+                    <button key={v} className={settings.theme === v ? 'on' : ''} onClick={() => setSetting({ theme: v })}>{l}</button>
+                  ))}
+                </div>
+              </div>
+              <div className="set-row">
+                <label htmlFor="set-humor">Humor &amp; Sprüche</label>
+                <button id="set-humor" role="switch" aria-checked={settings.humor} className={`toggle ${settings.humor ? 'on' : ''}`} onClick={() => setSetting({ humor: !settings.humor })}>
+                  <span />
+                </button>
+              </div>
+            </div>
+
+            <div className="set-title">Daten &amp; mehr</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <button className="btn ghost" onClick={loadDemo}>🎬 Beispieldaten laden (zum Ausprobieren)</button>
               <button className="btn ghost" onClick={doExport} disabled={!entries.length}>⬇️ Daten exportieren (JSON)</button>

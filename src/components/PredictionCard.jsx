@@ -8,7 +8,7 @@ function quip(p) {
   return 'Reine Kaffeesatzleserei bislang – gib mir mehr Daten. ☕'
 }
 
-export default function PredictionCard({ prediction }) {
+export default function PredictionCard({ prediction, humor = true }) {
   const p = prediction
 
   if (p.status === 'learning') {
@@ -44,7 +44,7 @@ export default function PredictionCard({ prediction }) {
       <div className="delta">{humanizeDelta(p.inMinutes)}{p.tomorrow ? ' (morgen)' : ''} · Zeitfenster {p.windowFrom}–{p.windowTo}</div>
       <div className="conf-bar"><div style={{ width: `${p.confidence}%` }} /></div>
       <div className="window">Sicherheit: {p.confidence}%</div>
-      <div className="quip">{quip(p)}</div>
+      {humor && <div className="quip">{quip(p)}</div>}
     </div>
   )
 }

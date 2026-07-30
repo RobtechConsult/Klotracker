@@ -17,6 +17,8 @@
   color-scheme: light dark;
 }
 
+/* Dunkle Palette – als wiederverwendbarer Block, damit sowohl der
+   System-Auto-Modus als auch die manuelle Umschaltung dieselben Werte nutzen. */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #1c1712;
@@ -31,6 +33,35 @@
     --blue-soft: #1f3640;
     --shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
   }
+}
+/* Manuelle Umschaltung (gewinnt dank höherer Spezifität über die Media-Query). */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #1c1712;
+  --bg-elev: #29211a;
+  --ink: #f3e9db;
+  --ink-soft: #b6a48c;
+  --line: #3a2f24;
+  --brown: #c99a67;
+  --brown-2: #d8a978;
+  --gold: #e3b877;
+  --blue: #5bc0de;
+  --blue-soft: #1f3640;
+  --shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #fdf6ec;
+  --bg-elev: #ffffff;
+  --ink: #3a2a1a;
+  --ink-soft: #7a6650;
+  --line: #ece0cf;
+  --brown: #7c5a3a;
+  --brown-2: #a8703f;
+  --gold: #e3b877;
+  --blue: #3aa6c7;
+  --blue-soft: #d9f0f6;
+  --shadow: 0 6px 20px rgba(90, 60, 30, 0.12);
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -304,6 +335,37 @@ body {
 .onb-dots span { width: 8px; height: 8px; border-radius: 99px; background: var(--line); }
 .onb-dots span.on { background: var(--brown-2); width: 22px; }
 .onb-actions { display: flex; flex-direction: column; gap: 10px; }
+
+/* --- Einstellungen: Individualisierung --- */
+.set-section { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+.set-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+.set-row:first-child { border-top: none; }
+.set-row > label { flex: 1; font-size: 14px; font-weight: 600; }
+.set-input {
+  flex: 1; max-width: 55%; border: 1px solid var(--line); background: var(--bg);
+  border-radius: 10px; padding: 9px 11px; font-size: 14px; color: var(--ink); font-family: inherit; text-align: right;
+}
+.set-title { font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); margin: 4px 4px 2px; }
+
+/* Stepper (−/+) */
+.stepper { display: flex; align-items: center; gap: 10px; }
+.stepper button {
+  width: 32px; height: 32px; border-radius: 9px; border: 1px solid var(--line);
+  background: var(--bg); color: var(--ink); font-size: 18px; font-weight: 800; cursor: pointer; line-height: 1;
+}
+.stepper button:disabled { opacity: 0.4; cursor: default; }
+.stepper .val { min-width: 62px; text-align: center; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+/* Segmented control */
+.seg { display: inline-flex; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 3px; gap: 2px; }
+.seg button { border: none; background: none; color: var(--ink-soft); font-size: 13px; font-weight: 700; padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+.seg button.on { background: var(--brown); color: #fff; }
+
+/* Toggle switch */
+.toggle { width: 48px; height: 28px; border-radius: 99px; border: none; background: var(--line); position: relative; cursor: pointer; transition: background 0.15s ease; }
+.toggle.on { background: var(--green); }
+.toggle > span { position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 99px; background: #fff; transition: transform 0.15s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
+.toggle.on > span { transform: translateX(20px); }
 .field { width: 100%; border: 1px solid var(--line); background: var(--bg); border-radius: 12px; padding: 12px; font-size: 14px; color: var(--ink); font-family: inherit; margin-bottom: 12px; }
 .row { display: flex; gap: 10px; }
 .btn { flex: 1; border: none; border-radius: 14px; padding: 14px; font-size: 15px; font-weight: 800; cursor: pointer; }

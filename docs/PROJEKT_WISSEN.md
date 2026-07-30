@@ -66,6 +66,7 @@ Wasserlassen) – mit Gewohnheits-Prognose, Regelmäßigkeits-Check und Timer. A
 | 2026-07-29 | **Trends & Muster** (Backlog #5) | „Diese Woche vs. letzte" (Stuhlgang/Trinken/Thron-Zeit mit ▲▼%), Ø-Abstand (`averageIntervalHours` jetzt genutzt), aktivster Wochentag |
 | 2026-07-29 | **Onboarding** (Backlog #6) | 3-Slide-Einstieg beim ersten Start (Was/Mehrwert/Datenschutz) + „mit Beispieldaten starten"; `settings.onboarded`; in Einstellungen wieder aufrufbar |
 | 2026-07-29 | **Gamification/Achievements** (Backlog #8) | 13 Abzeichen aus `achievements.js` (rein/testbar), Raster mit freigeschaltet/gesperrt + Fortschritt, auf dem Statistik-Tab |
+| 2026-07-29 | **Individualisierungs-Einstellungen** | Name (Header-Begrüßung), Tagesziel Trinken (Stepper), Design **Auto/Hell/Dunkel** (manuell via `data-theme`, gewinnt über System), Humor an/aus (blendet Sprüche/Quips aus). Settings in „Individualisierung" + „Daten & mehr" gegliedert. |
 
 ---
 
