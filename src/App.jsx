@@ -234,13 +234,13 @@ export default function App() {
             <div className="tile"><div className="num">{averagePerDay(entries, 'urine', 30, now).toFixed(1)}</div><div className="lbl">Ø 💧 / Tag</div></div>
             <div className="tile"><div className="num">{entries.length}</div><div className="lbl">Einträge gesamt</div></div>
           </div>
-          <Trends entries={entries} now={now} />
-          <Achievements entries={entries} settings={settings} now={now} />
-          <ThroneTime entries={entries} now={now} humor={settings.humor} />
           <HourClock entries={entries} prediction={prediction} now={now} />
+          <HealthCheck entries={entries} now={now} />
+          <Trends entries={entries} now={now} />
           <DayChart entries={entries} days={7} now={now} />
           <BristolChart entries={entries} />
-          <HealthCheck entries={entries} now={now} />
+          <ThroneTime entries={entries} now={now} humor={settings.humor} />
+          <Achievements entries={entries} settings={settings} now={now} />
         </div>
       )}
 
