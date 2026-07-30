@@ -183,6 +183,50 @@ export function fmtMl(ml) {
   return v >= 1000 ? `${(v / 1000).toFixed(1).replace('.', ',')} L` : `${v} ml`
 }
 
+// --- Trends / Muster -----------------------------------------------------
+// Vergleicht die letzten 7 Tage mit den 7 Tagen davor.
+function windowValue(entries, now, olderDaysBack, newerDaysBack, valueFn) {
+  const nowMs = new Date(now).getTime()
+  const start = nowMs - olderDaysBack * 86400000
+  const end = nowMs - newerDaysBack * 86400000
+  let sum = 0
+  for (const e of entries) {
+    const t = new Date(e.ts).getTime()
+    if (t >= start && t < end) sum += valueFn(e)
+  }
+  return sum
+}
+
+/**
+ * Woche-über-Woche-Trend. kind: 'stool' | 'urine' | 'drink' | 'toilet'.
+ * Liefert { cur, prev, deltaPct|null } (Menge/Anzahl je nach kind).
+ */
+export function weekTrend(entries, kind, now = new Date()) {
+  let valueFn
+  if (kind === 'drink') valueFn = (e) => (e.type === 'drink' ? e.amount || 0 : 0)
+  else if (kind === 'toilet') valueFn = (e) => (e.type === 'stool' ? e.durationSec || 0 : 0)
+  else valueFn = (e) => (e.type === kind ? 1 : 0)
+
+  const cur = windowValue(entries, now, 7, 0, valueFn)
+  const prev = windowValue(entries, now, 14, 7, valueFn)
+  const deltaPct = prev > 0 ? Math.round(((cur - prev) / prev) * 100) : null
+  return { cur, prev, deltaPct }
+}
+
+/** Aktivster Wochentag (0=So..6=Sa) für einen Typ über die letzten `days` Tage. */
+export function mostActiveWeekday(entries, type, days = 30, now = new Date()) {
+  const cutoff = new Date(now)
+  cutoff.setDate(cutoff.getDate() - (days - 1))
+  cutoff.setHours(0, 0, 0, 0)
+  const counts = new Array(7).fill(0)
+  for (const e of entries) {
+    if (e.type === type && new Date(e.ts) >= cutoff) counts[new Date(e.ts).getDay()]++
+  }
+  const max = Math.max(...counts)
+  if (max === 0) return null
+  return { weekday: counts.indexOf(max), count: max }
+}
+
 /** Durchschnittlicher Abstand zwischen Stuhlgängen in Stunden. */
 export function averageIntervalHours(entries, type = 'stool') {
   const times = entries

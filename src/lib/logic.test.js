@@ -1,7 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { predictNextStool, findTimeClusters } from './prediction.js'
-import { averagePerDay, countsPerDay, streakDays, minutesOfDay, hourHistogram, fmtDuration, fmtDurationShort, toiletTimeStats, drinkTotalToday, averageDrinkPerDay, fmtMl } from './stats.js'
+import { averagePerDay, countsPerDay, streakDays, minutesOfDay, hourHistogram, fmtDuration, fmtDurationShort, toiletTimeStats, drinkTotalToday, averageDrinkPerDay, fmtMl, weekTrend, mostActiveWeekday } from './stats.js'
 import { healthCheck } from './tips.js'
 import { mergeEntries, parseImport } from './storage.js'
 
@@ -189,6 +189,51 @@ test('parseImport akzeptiert Array und {entries:[…]}', () => {
   assert.equal(parseImport('[{"a":1}]').length, 1)
   assert.equal(parseImport('{"entries":[{"a":1},{"b":2}]}').length, 2)
   assert.throws(() => parseImport('{"foo":true}'))
+})
+
+test('weekTrend vergleicht diese Woche mit der Vorwoche', () => {
+  const now = new Date(2026, 0, 15, 20)
+  const entries = []
+  // diese Woche (Tag 9-15): 3 Stuhlgänge
+  for (const day of [10, 12, 14]) entries.push({ type: 'stool', ts: iso(day, 8) })
+  // Vorwoche (Tag 2-8): 2 Stuhlgänge
+  for (const day of [4, 6]) entries.push({ type: 'stool', ts: iso(day, 8) })
+  const t = weekTrend(entries, 'stool', now)
+  assert.equal(t.cur, 3)
+  assert.equal(t.prev, 2)
+  assert.equal(t.deltaPct, 50)
+})
+
+test('weekTrend: keine Vorwoche -> deltaPct null', () => {
+  const now = new Date(2026, 0, 15, 20)
+  const entries = [{ type: 'drink', ts: iso(14, 8), amount: 500 }]
+  const t = weekTrend(entries, 'drink', now)
+  assert.equal(t.cur, 500)
+  assert.equal(t.prev, 0)
+  assert.equal(t.deltaPct, null)
+})
+
+test('mostActiveWeekday findet den häufigsten Tag', () => {
+  const now = new Date(2026, 0, 15, 20) // Do
+  // 2026-01-05 und -12 sind Montage
+  const entries = [
+    { type: 'stool', ts: iso(5, 8) },
+    { type: 'stool', ts: iso(12, 8) },
+    { type: 'stool', ts: iso(13, 8) }
+  ]
+  const r = mostActiveWeekday(entries, 'stool', 30, now)
+  assert.equal(r.weekday, 1) // Montag
+  assert.equal(r.count, 2)
+})
+
+test('healthCheck: Blut -> alert (sachlich, ohne Humor)', () => {
+  const now = new Date(2026, 0, 5, 20)
+  const entries = [{ type: 'stool', ts: iso(4, 8), symptoms: ['blood'] }]
+  const res = healthCheck(entries, now)
+  assert.equal(res.level, 'alert')
+  const f = res.findings.find((x) => /Blut/i.test(x.title))
+  assert.ok(f)
+  assert.equal(f.level, 'alert')
 })
 
 test('minutesOfDay & hourHistogram', () => {

@@ -13,6 +13,7 @@ import BristolChart from './components/BristolChart.jsx'
 import History from './components/History.jsx'
 import ThroneTime from './components/ThroneTime.jsx'
 import DrinkTracker from './components/DrinkTracker.jsx'
+import Trends from './components/Trends.jsx'
 import AddModal from './components/AddModal.jsx'
 import Icon from './components/Icon.jsx'
 
@@ -213,6 +214,7 @@ export default function App() {
             <div className="tile"><div className="num">{averagePerDay(entries, 'urine', 30, now).toFixed(1)}</div><div className="lbl">Ø 💧 / Tag</div></div>
             <div className="tile"><div className="num">{entries.length}</div><div className="lbl">Einträge gesamt</div></div>
           </div>
+          <Trends entries={entries} now={now} />
           <ThroneTime entries={entries} now={now} />
           <HourClock entries={entries} prediction={prediction} now={now} />
           <DayChart entries={entries} days={7} now={now} />

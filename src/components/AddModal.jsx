@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { BRISTOL } from '../lib/tips.js'
+import { BRISTOL, SYMPTOMS } from '../lib/tips.js'
 import { fmtDuration } from '../lib/stats.js'
 import Icon from './Icon.jsx'
 
@@ -16,8 +16,13 @@ export default function AddModal({ type, onSave, onClose, initialWhen, durationS
   const [when, setWhen] = useState(toLocalInput(initialWhen ? new Date(initialWhen) : new Date()))
   const [bristol, setBristol] = useState(null)
   const [note, setNote] = useState('')
+  const [symptoms, setSymptoms] = useState([])
   const isStool = type === 'stool'
   const timed = durationSec > 0
+  const hasSerious = symptoms.some((k) => SYMPTOMS.find((s) => s.key === k)?.serious)
+
+  const toggleSymptom = (key) =>
+    setSymptoms((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]))
 
   const save = () => {
     onSave({
@@ -25,7 +30,8 @@ export default function AddModal({ type, onSave, onClose, initialWhen, durationS
       ts: new Date(when).toISOString(),
       bristol: isStool ? bristol || undefined : undefined,
       note: note.trim() || undefined,
-      durationSec: timed ? Math.round(durationSec) : undefined
+      durationSec: timed ? Math.round(durationSec) : undefined,
+      symptoms: symptoms.length ? symptoms : undefined
     })
   }
 
@@ -74,6 +80,27 @@ export default function AddModal({ type, onSave, onClose, initialWhen, durationS
               ))}
             </div>
           </>
+        )}
+
+        <div className="muted" style={{ marginBottom: 6 }}>Symptome (optional):</div>
+        <div className="symptom-pick">
+          {SYMPTOMS.map((s) => (
+            <button
+              key={s.key}
+              type="button"
+              className={symptoms.includes(s.key) ? 'sel' : ''}
+              data-serious={s.serious ? 'true' : undefined}
+              onClick={() => toggleSymptom(s.key)}
+              aria-pressed={symptoms.includes(s.key)}
+            >
+              <span aria-hidden="true">{s.emoji}</span> {s.label}
+            </button>
+          ))}
+        </div>
+        {hasSerious && (
+          <div className="serious-note">
+            ⚕️ Blut oder anhaltende Schmerzen bitte ärztlich abklären lassen – das ist kein Grund zur Panik, aber ein Grund zum Nachschauen.
+          </div>
         )}
 
         <input className="field" placeholder="Notiz (optional) – z.B. 'nach 3 Kaffee' ☕" value={note} onChange={(e) => setNote(e.target.value)} />

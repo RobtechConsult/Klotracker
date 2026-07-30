@@ -1,5 +1,5 @@
 import React from 'react'
-import { BRISTOL, drinkByKey } from '../lib/tips.js'
+import { BRISTOL, drinkByKey, symptomByKey } from '../lib/tips.js'
 import { dayKey, fmtDuration, fmtMl } from '../lib/stats.js'
 import Icon from './Icon.jsx'
 
@@ -70,6 +70,19 @@ export default function History({ entries, onDelete, now }) {
                       )}
                     </div>
                     <div className="h2">{fmt(e.ts)} Uhr{e.note ? ` · ${e.note}` : ''}</div>
+                    {Array.isArray(e.symptoms) && e.symptoms.length > 0 && (
+                      <div className="hist-sym">
+                        {e.symptoms.map((k) => {
+                          const s = symptomByKey(k)
+                          if (!s) return null
+                          return (
+                            <span key={k} className={`sym-badge${s.serious ? ' serious' : ''}`}>
+                              {s.emoji} {s.label}
+                            </span>
+                          )
+                        })}
+                      </div>
+                    )}
                   </div>
                   <button className="del" onClick={() => onDelete(e.id)} title="Löschen" aria-label="Löschen">🗑️</button>
                 </div>

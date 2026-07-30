@@ -43,7 +43,9 @@ export function makeDemoEntries(now = new Date(), days = 21) {
         ts: at(day, 15, 0, 50).toISOString(),
         type: 'stool',
         bristol: [3, 4, 4, 5, 6][Math.floor(rand() * 5)],
-        durationSec: Math.round(120 + rand() * 480) // 2–10 Min
+        durationSec: Math.round(120 + rand() * 480), // 2–10 Min
+        // gelegentlich harmlose Blähungen als Beispiel fürs Symptom-Tracking
+        symptoms: rand() > 0.7 ? ['bloating'] : undefined
       })
     }
     // Wasserlassen: 5–7x über den Tag verteilt.

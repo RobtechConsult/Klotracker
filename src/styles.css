@@ -235,6 +235,37 @@ body {
 /* Getränke-Icons blau einfärben (Wasser-Welt) */
 .drink-emoji svg { color: var(--blue); }
 .he-drink { color: var(--blue); vertical-align: middle; }
+
+/* --- Symptome (Chips) --- */
+.symptom-pick { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.symptom-pick button {
+  border: 1px solid var(--line); background: var(--bg); color: var(--ink);
+  border-radius: 99px; padding: 8px 12px; font-size: 13px; cursor: pointer;
+}
+.symptom-pick button.sel { border-color: var(--brown); background: color-mix(in srgb, var(--brown) 14%, transparent); font-weight: 700; }
+.symptom-pick button.sel[data-serious='true'] { border-color: var(--red); background: color-mix(in srgb, var(--red) 15%, transparent); color: var(--red-ink); }
+.serious-note {
+  background: color-mix(in srgb, var(--red) 11%, transparent); color: var(--ink);
+  border: 1px solid color-mix(in srgb, var(--red) 32%, transparent);
+  border-radius: 12px; padding: 10px 12px; font-size: 12.5px; margin-bottom: 12px; line-height: 1.4;
+}
+.hist-sym { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+.sym-badge { font-size: 10.5px; background: var(--line); color: var(--ink-soft); border-radius: 6px; padding: 2px 6px; }
+.sym-badge.serious { background: color-mix(in srgb, var(--red) 18%, transparent); color: var(--red-ink); font-weight: 700; }
+
+/* --- Trends / Muster --- */
+.trend-list { display: flex; flex-direction: column; margin-bottom: 8px; }
+.trend-row { display: flex; align-items: center; gap: 8px; padding: 9px 0; border-top: 1px solid var(--line); }
+.trend-row:first-child { border-top: none; }
+.trend-label { flex: 1; font-size: 14px; }
+.trend-val { font-weight: 800; font-size: 15px; font-variant-numeric: tabular-nums; }
+.trend-delta { font-size: 12px; font-weight: 800; width: 62px; text-align: right; }
+.trend-delta.up, .trend-delta.down { color: var(--brown-2); }
+.trend-delta.flat, .trend-delta.neu { color: var(--ink-soft); }
+.trend-facts { border-top: 1px solid var(--line); padding-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+.trend-fact { font-size: 13px; color: var(--ink-soft); display: flex; gap: 8px; align-items: baseline; }
+.trend-fact strong { color: var(--ink); }
+.tf-ic { font-size: 15px; }
 .field { width: 100%; border: 1px solid var(--line); background: var(--bg); border-radius: 12px; padding: 12px; font-size: 14px; color: var(--ink); font-family: inherit; margin-bottom: 12px; }
 .row { display: flex; gap: 10px; }
 .btn { flex: 1; border: none; border-radius: 14px; padding: 14px; font-size: 15px; font-weight: 800; cursor: pointer; }

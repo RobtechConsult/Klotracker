@@ -28,6 +28,41 @@ export function healthCheck(entries, now = new Date()) {
   const hasStool = entries.some((e) => e.type === 'stool')
   const hasUrine = entries.some((e) => e.type === 'urine')
 
+  // --- Warnzeichen (Symptome) – ganz oben, bewusst sachlich, kein Humor ---
+  const cutoff14 = new Date(now)
+  cutoff14.setDate(cutoff14.getDate() - 13)
+  cutoff14.setHours(0, 0, 0, 0)
+  const symCounts = {}
+  for (const e of entries) {
+    if (Array.isArray(e.symptoms) && new Date(e.ts) >= cutoff14) {
+      for (const s of e.symptoms) symCounts[s] = (symCounts[s] || 0) + 1
+    }
+  }
+  if (symCounts.blood) {
+    findings.push({
+      level: 'alert',
+      icon: '🩸',
+      title: 'Blut bemerkt',
+      text: `${symCounts.blood}x Blut in den letzten 14 Tagen vermerkt. Blut im/am Stuhl sollte ärztlich abgeklärt werden – auch wenn es meist harmlose Ursachen (z. B. Hämorrhoiden) hat. Bitte ernst nehmen.`
+    })
+  }
+  if (symCounts.pain >= 2) {
+    findings.push({
+      level: 'watch',
+      icon: '😣',
+      title: 'Wiederkehrende Schmerzen',
+      text: `${symCounts.pain}x Schmerzen vermerkt. Halten Bauch- oder Darmschmerzen an, ist ein ärztlicher Check sinnvoll.`
+    })
+  }
+  if (symCounts.bloating >= 4) {
+    findings.push({
+      level: 'watch',
+      icon: '💨',
+      title: 'Oft Blähungen',
+      text: `${symCounts.bloating}x Blähungen zuletzt. Häufige Auslöser: hastiges Essen, kohlensäurehaltige Getränke, bestimmte Lebensmittel. Beobachte, was bei dir dazugehört.`
+    })
+  }
+
   // --- Stuhlgang-Frequenz ---
   if (hasStool) {
     if (stoolAvg > STOOL_MAX_PER_DAY) {
@@ -210,6 +245,16 @@ export const BRISTOL = [
   { n: 6, emoji: '🥣', short: 'breiig', zone: 'flüssig', label: 'Breiig, matschig', hint: 'Richtung Durchfall' },
   { n: 7, emoji: '🌊', short: 'flüssig', zone: 'flüssig', label: 'Komplett flüssig', hint: 'Durchfall' }
 ]
+
+// Optionale Symptome/Warnzeichen. `serious` = ärztlich relevant (kein Humor).
+export const SYMPTOMS = [
+  { key: 'blood', label: 'Blut', emoji: '🩸', serious: true },
+  { key: 'pain', label: 'Schmerzen', emoji: '😣', serious: true },
+  { key: 'mucus', label: 'Schleim', emoji: '🫧' },
+  { key: 'bloating', label: 'Blähungen', emoji: '💨' },
+  { key: 'urgency', label: 'Starker Drang', emoji: '🚨' }
+]
+export const symptomByKey = (key) => SYMPTOMS.find((s) => s.key === key)
 
 export const BRISTOL_ZONES = {
   fest: { label: 'fest', color: 'var(--amber)' },

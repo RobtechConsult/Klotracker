@@ -62,6 +62,8 @@ Wasserlassen) – mit Gewohnheits-Prognose, Regelmäßigkeits-Check und Timer. A
 | 2026-07-29 | **Eigenes Icon-Set** (`Icon.jsx`) | SVG im Mascot-Stil, `currentColor` → Light/Dark & plattformkonsistent. Ersetzt Emojis in Tabbar (Start/Statistik/Verlauf) und Bristol-Skala 1–7 (Picker, Chart, Verlauf). 💩/💧 bewusst behalten. |
 | 2026-07-29 | **Bristol-Auswahl user-freundlich** | Icons größer, dazu **Klartext-Wörter** (hart/klumpig/rissig/ideal/weich/breiig/flüssig) + **Farb-Zonen** (fest/ideal/flüssig) mit Legende → wählbar nach Alltagssprache statt Icon-Deuten. |
 | 2026-07-29 | **Eigene Getränke-Icons** | Glas/Tasse/Teetasse/Flasche (blau) statt Emoji (🚰 etc.) in Trink-Karte & Verlauf. |
+| 2026-07-29 | **Symptom-Tracking** (Backlog #3) | Optionale Chips (Blut/Schmerzen/Schleim/Blähungen/Drang) im AddModal; sachlicher Warn-Banner bei Blut/Schmerz; fließt in Health-Check (Blut→Alert) & Verlauf ein |
+| 2026-07-29 | **Trends & Muster** (Backlog #5) | „Diese Woche vs. letzte" (Stuhlgang/Trinken/Thron-Zeit mit ▲▼%), Ø-Abstand (`averageIntervalHours` jetzt genutzt), aktivster Wochentag |
 
 ---
 
@@ -76,9 +78,9 @@ priorisiert nach Impact/Aufwand.
 |------|---------|---------|--------|-----------|
 | ★ 1 | **Lokale Erinnerungen/Notifications** | M | Hoch | Zur prognostizierten Cluster-Zeit erinnern (Daten sind da!). Verstärkt den USP. **← nächster logischer Schritt** |
 | ✅ 2 | ~~**Trink-Tracking (Wasser/Kaffee)**~~ | M | Hoch | **Erledigt.** Speist jetzt den Health-Check. Nächster Ausbau: Kaffee↔Gang-Korrelation (#5). |
-| ★ 3 | **Symptom-Tracking (Blut/Schmerz/Blähung)** | M | Hoch | Macht den medizinischen Anspruch ehrlich (Disclaimer nennt „Blut im Stuhl"). Bei „Blut" → sachlicher Warn-Banner. |
+| ✅ 3 | ~~**Symptom-Tracking (Blut/Schmerz/Blähung)**~~ | M | Hoch | **Erledigt.** Chips + Warn-Banner + Health-Check-Integration. |
 | ✅ 4 | ~~**Import/Backup** (JSON)~~ | S | Hoch | **Erledigt** (Dedup per id). Optionaler Ausbau: CSV-Export. |
-| 5 | **Insights: Korrelationen & Trends** | L | Hoch | Kaffee↔Gang, Wochentagsmuster, „diese vs. letzte Woche". `averageIntervalHours()` existiert, wird noch nicht genutzt. |
+| ✅ 5 | ~~**Insights: Trends**~~ | L | Hoch | **Erledigt** (Basis): Woche-über-Woche, Ø-Abstand, aktivster Tag. Ausbau möglich: Kaffee↔Gang-Korrelation. |
 | 6 | Onboarding (3 Slides) + Settings ausbauen | S | Mittel | Konzept/Datenschutz erklären; `humor`-Flag ist da, aber ohne UI. |
 | 7 | Arzt-Report als PDF (`window.print()`) | M | Mittel | App wird „sprechstundentauglich". Ton hier sachlich. |
 | 8 | Gamification: Achievements/Streaks | M | Mittel | „Längste Sitzung", „Blitz-Besuch <60s", „Lesesaal-Abo". Rein lokal. |
