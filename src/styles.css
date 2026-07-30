@@ -418,6 +418,22 @@ body {
 .pro-feat .pf-desc { font-size: 12.5px; color: var(--ink-soft); }
 .pro-feat.muted-feat { opacity: 0.9; }
 .inline-pro { background: var(--brown); color: #fff; font-size: 9px; font-weight: 900; letter-spacing: 0.06em; padding: 2px 6px; border-radius: 99px; margin-left: 4px; vertical-align: 1px; }
+
+/* Supporter-/Trinkgeld-Stufen */
+.tier-list { display: flex; flex-direction: column; gap: 8px; margin: 6px 0 8px; }
+.tier {
+  position: relative; display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; cursor: pointer;
+  background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; color: var(--ink);
+}
+.tier:active { transform: scale(0.99); }
+.tier.popular { border-color: var(--brown); background: color-mix(in srgb, var(--gold) 14%, transparent); }
+.tier-pop { position: absolute; top: -8px; right: 12px; background: var(--brown); color: #fff; font-size: 9px; font-weight: 900; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 99px; }
+.tier-em { font-size: 26px; line-height: 1; }
+.tier-body { flex: 1; display: flex; flex-direction: column; }
+.tier-title { font-weight: 800; font-size: 15px; }
+.tier-note { font-size: 12px; color: var(--ink-soft); }
+.tier-price { font-weight: 900; font-size: 15px; font-variant-numeric: tabular-nums; }
+.tier-list.tips .tier { padding: 10px 14px; }
 .field { width: 100%; border: 1px solid var(--line); background: var(--bg); border-radius: 12px; padding: 12px; font-size: 14px; color: var(--ink); font-family: inherit; margin-bottom: 12px; }
 .row { display: flex; gap: 10px; }
 .btn { flex: 1; border: none; border-radius: 14px; padding: 14px; font-size: 15px; font-weight: 800; cursor: pointer; }

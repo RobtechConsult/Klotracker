@@ -66,10 +66,14 @@ export default function App() {
   }, [])
 
   const pro = proStatus(settings, now)
-  const unlockPro = () => {
-    setSetting({ proUnlocked: true })
+  const buyPro = (tier) => {
+    setSetting({ proUnlocked: true, tipCount: (settings.tipCount || 0) + (tier?.tip || 0) })
     setShowPro(false)
-    flash('Danke für den Support! 🧻💛 Pro ist frei.')
+    flash(tier?.tip ? 'Danke für Pro + Trinkgeld! 🧻💛' : 'Danke für den Support! 💛 Pro ist frei.')
+  }
+  const giveTip = (tier) => {
+    setSetting({ tipCount: (settings.tipCount || 0) + 1 })
+    flash(`Danke fürs ${tier?.title || 'Klopapier'}! 🧻💛`)
   }
   const resetTrial = () => {
     setSetting({ proUnlocked: false, proTrialStart: new Date().toISOString() })
@@ -433,7 +437,7 @@ export default function App() {
         </div>
       )}
 
-      {showPro && <ProDialog status={pro} onUnlock={unlockPro} onClose={() => setShowPro(false)} onResetTrial={resetTrial} />}
+      {showPro && <ProDialog status={pro} tipCount={settings.tipCount} onBuy={buyPro} onTip={giveTip} onClose={() => setShowPro(false)} onResetTrial={resetTrial} />}
 
       {!settings.onboarded && <Onboarding onDone={finishOnboarding} onLoadDemo={onboardWithDemo} />}
 

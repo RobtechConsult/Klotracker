@@ -12,6 +12,21 @@ export const PRO_FEATURES = [
   { emoji: '📄', title: 'Arzt-Report als PDF', desc: 'Sachliche Verlaufs-Zusammenfassung zum Ausdrucken/Teilen.' }
 ]
 
+// Kauf-Optionen: alle schalten Pro dauerhaft frei, höhere Stufen = extra
+// Trinkgeld. (Preise sind Beispiele – die echten kommen aus dem App Store.)
+export const SUPPORTER_TIERS = [
+  { key: 'roll', emoji: '🧻', title: 'Eine Rolle', price: '2,99 €', note: 'Schaltet Pro dauerhaft frei', tip: 0 },
+  { key: 'pack', emoji: '📦', title: '6er-Pack', price: '4,99 €', note: 'Pro + kleines Trinkgeld', tip: 1, popular: true },
+  { key: 'bulk', emoji: '🚛', title: 'Großpackung', price: '9,99 €', note: 'Pro + großes Trinkgeld – Klo-Held!', tip: 2 }
+]
+
+// Trinkgeld nach dem Kauf – jederzeit, beliebig oft.
+export const TIP_TIERS = [
+  { key: 'roll', emoji: '🧻', title: 'Eine Rolle', price: '1,99 €' },
+  { key: 'pack', emoji: '📦', title: '6er-Pack', price: '4,99 €' },
+  { key: 'bulk', emoji: '🚛', title: 'Großpackung', price: '9,99 €' }
+]
+
 /**
  * @returns {{active:boolean, mode:'unlocked'|'trial'|'expired'|'none', daysLeft:number}}
  */
