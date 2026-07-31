@@ -448,6 +448,8 @@ body {
 .toast { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 99px; font-size: 13px; font-weight: 600; z-index: 60; box-shadow: var(--shadow); animation: pop 0.2s ease; }
 @keyframes pop { from { transform: translate(-50%, 8px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
 .disclaimer { font-size: 11px; color: var(--ink-soft); text-align: center; padding: 4px 12px 0; line-height: 1.4; }
+.disclaimer a { color: inherit; text-decoration: underline; }
+.restore-btn { width: 100%; margin-top: 8px; font-size: 13px; }
 .muted { color: var(--ink-soft); font-size: 13px; }
 .section-title { font-size: 13px; font-weight: 800; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.06em; margin: 18px 4px 8px; }
 

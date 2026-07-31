@@ -23,7 +23,7 @@ import AddModal from './components/AddModal.jsx'
 import Icon from './components/Icon.jsx'
 import { proStatus } from './lib/pro.js'
 import { reportData, renderReportHtml } from './lib/report.js'
-import { isNative, purchase, proProductForTier, tipProductForTier, initPurchases } from './lib/purchases.js'
+import { isNative, purchase, restore, proProductForTier, tipProductForTier, initPurchases } from './lib/purchases.js'
 
 export default function App() {
   const [entries, setEntries] = useState(() => loadEntries())
@@ -101,6 +101,22 @@ export default function App() {
     setSetting({ proUnlocked: false, proTrialStart: new Date().toISOString() })
     setShowPro(false)
     flash('Testphase neu gestartet 🔄')
+  }
+  // Käufe wiederherstellen (Pflicht für App-Store-Freigabe, Apple 3.1.1).
+  const restorePurchases = async () => {
+    if (!isNative()) { flash('Wiederherstellen geht nur in der App 🙈'); return }
+    try {
+      const r = await restore()
+      if (r?.ok) {
+        setSetting({ proUnlocked: true })
+        setShowPro(false)
+        flash('Käufe wiederhergestellt 💛')
+      } else {
+        flash('Keine früheren Käufe gefunden 🤷')
+      }
+    } catch {
+      flash('Wiederherstellen derzeit nicht möglich 🙈')
+    }
   }
   // Verstrichene Zeit wird beim Rendern aus startedAt berechnet (übersteht
   // App-Neustart/Reload); der Interval erzwingt nur die Sekundenanzeige.
@@ -449,8 +465,15 @@ export default function App() {
               <button className="btn ghost" onClick={() => { setSettings((s) => ({ ...s, onboarded: false })); setShowSettings(false) }}>ℹ️ Einführung nochmal zeigen</button>
               <button className="btn ghost" style={{ color: 'var(--red)' }} onClick={clearAll} disabled={!entries.length}>🗑️ Alle Daten löschen</button>
             </div>
+
+            <div className="set-title">Rechtliches</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <button className="btn ghost" onClick={() => window.open(import.meta.env.BASE_URL + 'datenschutz.html', '_blank')}>🔒 Datenschutzerklärung</button>
+              <button className="btn ghost" onClick={() => { setShowSettings(false); setShowPro(true) }}>↩︎ Käufe wiederherstellen</button>
+            </div>
             <p className="disclaimer" style={{ marginTop: 16 }}>
               Klotracker v1 · Made mit 💛 und einer Rolle Klopapier. Keine medizinische App.
+              Deine Daten bleiben lokal – <a href={import.meta.env.BASE_URL + 'datenschutz.html'} target="_blank" rel="noreferrer">Datenschutz</a>.
             </p>
             <div className="row" style={{ marginTop: 12 }}>
               <button className="btn primary" onClick={() => setShowSettings(false)}>Schließen</button>
@@ -459,7 +482,7 @@ export default function App() {
         </div>
       )}
 
-      {showPro && <ProDialog status={pro} tipCount={settings.tipCount} onBuy={buyPro} onTip={giveTip} onClose={() => setShowPro(false)} onResetTrial={resetTrial} />}
+      {showPro && <ProDialog status={pro} tipCount={settings.tipCount} onBuy={buyPro} onTip={giveTip} onClose={() => setShowPro(false)} onResetTrial={resetTrial} onRestore={restorePurchases} />}
 
       {!settings.onboarded && <Onboarding onDone={finishOnboarding} onLoadDemo={onboardWithDemo} />}
 

@@ -4,7 +4,7 @@ import { PRO_FEATURES, TRIAL_DAYS, SUPPORTER_TIERS, TIP_TIERS } from '../lib/pro
 // Pro-Info, Kauf-Optionen (mehrere Stufen inkl. Trinkgeld) und – nach dem Kauf –
 // ein dauerhafter Trinkgeld-Bereich. Der echte Kauf kommt später über native
 // In-App-Käufe; hier wird zum Testen lokal freigeschaltet.
-export default function ProDialog({ status, tipCount = 0, onBuy, onTip, onClose, onResetTrial }) {
+export default function ProDialog({ status, tipCount = 0, onBuy, onTip, onClose, onResetTrial, onRestore }) {
   const unlocked = status.mode === 'unlocked'
 
   return (
@@ -54,6 +54,9 @@ export default function ProDialog({ status, tipCount = 0, onBuy, onTip, onClose,
             <p className="disclaimer" style={{ marginTop: 0 }}>
               Alle Optionen schalten Pro dauerhaft frei – höhere Stufen sind extra Trinkgeld fürs Klopapier. 🧻 (Preise Beispiel; final im App Store.)
             </p>
+            {onRestore && (
+              <button className="btn ghost restore-btn" onClick={onRestore}>↩︎ Käufe wiederherstellen</button>
+            )}
           </>
         ) : (
           <>
