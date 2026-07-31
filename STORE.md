@@ -93,16 +93,21 @@ import { Purchases } from '@revenuecat/purchases-capacitor'
 Bei erfolgreichem Kauf setzt die App-Logik `settings.proUnlocked` (schon
 verdrahtet in `App.jsx` → `buyPro`/`giveTip`).
 
-**4.4 „Käufe wiederherstellen"** ist Pflicht für die App-Store-Freigabe – einen
-Button ergänzen, der `restore()` aufruft (Platz: Pro-Dialog).
+**4.4 „Käufe wiederherstellen"** ✅ **erledigt** – Button ist im Pro-Dialog und
+unter Einstellungen → Rechtliches vorhanden und ruft `restore()` auf. Sobald
+RevenueCat aktiv ist (4.3), funktioniert er nativ automatisch.
 
 ## 5. Datenschutz (unser USP – ernst nehmen)
 
 - **App-Privacy-Labels:** „Keine Daten erfasst" – die Tracking-Daten bleiben
   lokal auf dem Gerät, kein Server, kein Werbe-SDK.
-- **Datenschutzerklärung** (Pflicht in beiden Stores): kurze Seite hosten
-  (z. B. auf GitHub Pages) – Kernaussage: lokale Speicherung, keine Weitergabe;
-  Käufe werden von Apple/Google bzw. RevenueCat abgewickelt.
+- **Datenschutzerklärung** (Pflicht in beiden Stores): ✅ Seite vorhanden unter
+  `public/datenschutz.html` (in der App verlinkt: Einstellungen → Rechtliches).
+  Wird via GitHub Pages automatisch mitveröffentlicht, öffentliche URL lautet
+  dann `https://<user>.github.io/Klotracker/datenschutz.html`. **Noch zu tun:**
+  die Platzhalter `[DEIN NAME/FIRMA]`, Anschrift, `[DEINE-KONTAKT-EMAIL]` und
+  `[DATUM]` in der Datei ausfüllen (rechtlich verpflichtend) und diese URL in
+  App Store Connect / Play Console als Datenschutz-Link eintragen.
 - **Keine** ATT/Tracking-Dialoge nötig, da kein Tracking.
 
 ## 6. Store-Listing
@@ -121,11 +126,19 @@ Button ergänzen, der `restore()` aufruft (Platz: Pro-Dialog).
 
 ## 8. Checkliste vor Einreichung
 
-- [ ] Produkte in beiden Stores + RevenueCat angelegt, Preise gesetzt
-- [ ] `purchases.js` aktiviert, echter Kauf **auf Gerät** getestet (Sandbox/Test-Track)
-- [ ] „Käufe wiederherstellen" vorhanden
-- [ ] Icon & Splash generiert
-- [ ] Datenschutzerklärung verlinkt, Privacy-Labels ausgefüllt
-- [ ] Screenshots & Beschreibung
-- [ ] „kein Arztersatz"-Hinweis vorhanden
-- [ ] Testphase (4 Tage) & Pro-Gating auf Gerät verifiziert
+**Im Code erledigt (✅):**
+- [x] „Käufe wiederherstellen" vorhanden (Pro-Dialog + Einstellungen)
+- [x] Datenschutzerklärung als Seite vorhanden & in der App verlinkt
+- [x] „kein Arztersatz"-Hinweis vorhanden (App, Report, Datenschutz)
+- [x] Testphase (4 Tage) & Pro-Gating implementiert
+- [x] Kauf-Abstraktion + Capacitor-Config bereit
+
+**Von dir außerhalb des Codes zu erledigen (⬜):**
+- [ ] Apple Developer- (99 $/J) & Google-Play-Konto (25 $ einmalig) anlegen
+- [ ] Master-Icon 1024×1024 + Splash bereitstellen, Assets generieren (Abschnitt 3)
+- [ ] Produkte in beiden Stores + RevenueCat angelegt, Preise gesetzt (Abschnitt 4)
+- [ ] `purchases.js` mit RevenueCat aktivieren, echter Kauf **auf Gerät** getestet
+- [ ] Platzhalter in `datenschutz.html` ausfüllen + URL als Datenschutz-Link eintragen
+- [ ] App-Privacy-Labels ausfüllen („Keine Daten erfasst")
+- [ ] Screenshots & Beschreibungstext
+- [ ] Version/Build-Nummern setzen, einreichen (TestFlight bzw. Play Testing)
