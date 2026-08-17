@@ -1,6 +1,6 @@
 // Tipps & Gesundheits-Check – mit Augenzwinkern, aber ehrlichem Kern.
 //
-// WICHTIG: Klotracker ist keine medizinische App und ersetzt keine Ärztin
+// WICHTIG: Klopatra ist keine medizinische App und ersetzt keine Ärztin
 // und keinen Arzt. Die Hinweise sind Orientierung, kein Befund.
 
 import { averagePerDay, bristolDistribution, countToday, averageDrinkPerDay, fmtMl } from './stats.js'

@@ -232,7 +232,7 @@ export default function App() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `klotracker-export-${new Date().toISOString().slice(0, 10)}.json`
+    a.download = `klopatra-export-${new Date().toISOString().slice(0, 10)}.json`
     a.click()
     URL.revokeObjectURL(url)
     setShowSettings(false)
@@ -248,7 +248,7 @@ export default function App() {
       <header className="header">
         <span className="logo">🚽</span>
         <div>
-          <h1>Klotracker</h1>
+          <h1>Klopatra</h1>
           <p className="sub">{settings.name ? `Hallo, ${settings.name}! 👋` : 'Tracken mit Augenzwinkern'}</p>
         </div>
         <div className="spacer" />
@@ -394,7 +394,7 @@ export default function App() {
             <button className="pro-banner" onClick={() => { setShowSettings(false); setShowPro(true) }}>
               <span className="pb-ic" aria-hidden="true">🧻</span>
               <span className="pb-txt">
-                <strong>Klotracker Pro</strong>
+                <strong>Klopatra Pro</strong>
                 <small>
                   {pro.mode === 'unlocked' ? 'Aktiv – danke für den Support! 💛'
                     : pro.mode === 'trial' ? `Testphase: noch ${pro.daysLeft} ${pro.daysLeft === 1 ? 'Tag' : 'Tage'}`
@@ -472,7 +472,7 @@ export default function App() {
               <button className="btn ghost" onClick={() => { setShowSettings(false); setShowPro(true) }}>↩︎ Käufe wiederherstellen</button>
             </div>
             <p className="disclaimer" style={{ marginTop: 16 }}>
-              Klotracker v1 · Made mit 💛 und einer Rolle Klopapier. Keine medizinische App.
+              Klopatra v1 · Made mit 💛 und einer Rolle Klopapier. Keine medizinische App.
               Deine Daten bleiben lokal – <a href={import.meta.env.BASE_URL + 'datenschutz.html'} target="_blank" rel="noreferrer">Datenschutz</a>.
             </p>
             <div className="row" style={{ marginTop: 12 }}>

@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 const SLIDES = [
   {
     emoji: '🚽',
-    title: 'Willkommen bei Klotracker',
+    title: 'Willkommen bei Klopatra',
     text: 'Tracke deine Toilettengänge – Stuhlgang & Wasserlassen – mit einem Tipp. Mit Augenzwinkern, aber ernst, wo es zählt.'
   },
   {

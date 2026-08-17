@@ -10,7 +10,7 @@ export default function ProDialog({ status, tipCount = 0, onBuy, onTip, onClose,
   return (
     <div className="modal-back" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <h3>Klotracker Pro 🧻✨</h3>
+        <h3>Klopatra Pro 🧻✨</h3>
         <p className="msub">
           {unlocked
             ? `Du bist Supporter – danke! 💛${tipCount ? ` Schon ${tipCount}× Klopapier spendiert. 🧻` : ''}`

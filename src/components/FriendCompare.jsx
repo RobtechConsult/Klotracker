@@ -32,10 +32,10 @@ export default function FriendCompare({ entries, settings, now, incoming, onInco
     const code = encodeSummary(buildSummary(entries, settings, now))
     setMyCode(code)
     const url = shareUrl(code)
-    const text = 'Vergleich mal deine Klo-Woche mit meiner 🚽 (Klotracker):'
+    const text = 'Vergleich mal deine Klo-Woche mit meiner 🚽 (Klopatra):'
     try {
       if (navigator.share) {
-        await navigator.share({ title: 'Klotracker-Vergleich', text, url })
+        await navigator.share({ title: 'Klopatra-Vergleich', text, url })
         return
       }
     } catch {

@@ -1,6 +1,6 @@
 {
-  "appId": "com.robtechconsult.klotracker",
-  "appName": "Klotracker",
+  "appId": "com.robtechconsult.klopatra",
+  "appName": "Klopatra",
   "webDir": "dist",
   "backgroundColor": "#fdf6ec",
   "ios": {

@@ -19,8 +19,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg'],
       manifest: {
-        name: 'Klotracker – Toiletten-Tracker mit Augenzwinkern',
-        short_name: 'Klotracker',
+        name: 'Klopatra – Toiletten-Tracker mit Augenzwinkern',
+        short_name: 'Klopatra',
         description:
           'Tracke deine Toilettengänge, erkenne Muster und lass dir die nächste wahrscheinliche Sitzung vorhersagen – mit einer ordentlichen Portion Humor.',
         theme_color: '#7c5a3a',

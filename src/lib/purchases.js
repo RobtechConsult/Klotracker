@@ -16,12 +16,12 @@ export const isNative = () => Capacitor.isNativePlatform()
 // Pro: 3 Preis-Stufen (non-consumable), alle geben dasselbe Entitlement "pro".
 // Trinkgeld: consumables (wiederholbar kaufbar).
 export const PRODUCTS = {
-  pro_roll: 'klotracker.pro.roll',
-  pro_pack: 'klotracker.pro.pack',
-  pro_bulk: 'klotracker.pro.bulk',
-  tip_roll: 'klotracker.tip.roll',
-  tip_pack: 'klotracker.tip.pack',
-  tip_bulk: 'klotracker.tip.bulk'
+  pro_roll: 'klopatra.pro.roll',
+  pro_pack: 'klopatra.pro.pack',
+  pro_bulk: 'klopatra.pro.bulk',
+  tip_roll: 'klopatra.tip.roll',
+  tip_pack: 'klopatra.tip.pack',
+  tip_bulk: 'klopatra.tip.bulk'
 }
 export const PRO_ENTITLEMENT = 'pro'
 

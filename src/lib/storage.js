@@ -46,7 +46,7 @@ export function mergeEntries(existing, incoming) {
 export function parseImport(text) {
   const data = JSON.parse(text)
   const arr = Array.isArray(data) ? data : Array.isArray(data?.entries) ? data.entries : null
-  if (!arr) throw new Error('Kein gültiges Klotracker-Backup.')
+  if (!arr) throw new Error('Kein gültiges Klopatra-Backup.')
   return arr
 }
 

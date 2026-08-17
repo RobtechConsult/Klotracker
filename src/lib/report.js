@@ -101,7 +101,7 @@ export function renderReportHtml(d, generatedAt = new Date()) {
   const interval = d.intervalH == null ? '–' : d.intervalH < 24 ? `${d.intervalH.toFixed(1)} Std` : `${(d.intervalH / 24).toFixed(1)} Tage`
 
   return `<!doctype html><html lang="de"><head><meta charset="utf-8">
-<title>Klotracker – Verlaufsbericht</title>
+<title>Klopatra – Verlaufsbericht</title>
 <style>
   * { box-sizing: border-box; }
   body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color: #1a1a1a; margin: 0; padding: 28px; font-size: 13px; line-height: 1.5; }
@@ -126,7 +126,7 @@ export function renderReportHtml(d, generatedAt = new Date()) {
   @page { margin: 16mm; }
 </style></head><body>
 <div class="toolbar"><button class="btn" onclick="window.print()">🖨️ Als PDF speichern / drucken</button></div>
-<h1>Klotracker – Verlaufsbericht</h1>
+<h1>Klopatra – Verlaufsbericht</h1>
 <p class="sub">${d.name ? 'Person: ' + esc(d.name) + ' · ' : ''}Zeitraum: ${deDate(d.from)} – ${deDate(d.to)} (${d.days} Tage)</p>
 <p class="sub">Erstellt am ${deDate(generatedAt)}</p>
 
@@ -150,6 +150,6 @@ ${symItems ? `<ul>${symItems}</ul>` : '<p class="note">Keine Symptome dokumentie
 <h2>Tagesübersicht (Tage mit Einträgen)</h2>
 ${d.daily.length ? `<table><thead><tr><th>Datum</th><th class="num">Stuhl</th><th class="num">Wasser</th><th>Bristol</th><th>Symptome</th></tr></thead><tbody>${dailyRows}</tbody></table>` : '<p class="note">Keine Einträge im Zeitraum.</p>'}
 
-<p class="foot">Erstellt mit Klotracker (Selbst-Tracking). Diese Übersicht ist keine ärztliche Diagnose und ersetzt keine ärztliche Untersuchung. Alle Daten stammen aus Selbsteinträgen der nutzenden Person.</p>
+<p class="foot">Erstellt mit Klopatra (Selbst-Tracking). Diese Übersicht ist keine ärztliche Diagnose und ersetzt keine ärztliche Untersuchung. Alle Daten stammen aus Selbsteinträgen der nutzenden Person.</p>
 </body></html>`
 }

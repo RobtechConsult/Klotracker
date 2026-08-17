@@ -1,11 +1,11 @@
-# 🚽 Klotracker
+# 🚽👑 Klopatra
 
-**Die Toiletten-Tracking-App mit Augenzwinkern.**
+**Die Toiletten-Tracking-App mit Augenzwinkern.** Herrsche über deinen Thron.
 Trag deine Toilettengänge ein, sieh dein Muster bildlich, lass dir die nächste
 wahrscheinliche Sitzung vorhersagen – und bekomm dabei Tipps mit einer
 ordentlichen Portion Humor. 💩💧
 
-> ⚕️ **Kein Arztersatz.** Klotracker gibt Orientierung, keine Diagnose. Bei
+> ⚕️ **Kein Arztersatz.** Klopatra gibt Orientierung, keine Diagnose. Bei
 > anhaltenden Beschwerden, Blut im Stuhl oder starken Schmerzen: bitte ärztlich
 > abklären lassen.
 
@@ -133,4 +133,4 @@ gemergt.
 
 ---
 
-_Made mit 💛 und einer Rolle Klopapier. Klotracker ist keine medizinische App._
+_Made mit 💛 und einer Rolle Klopapier. Klopatra ist keine medizinische App._

@@ -1,4 +1,4 @@
-# 📱 Klotracker im App Store & Play Store veröffentlichen
+# 📱 Klopatra im App Store & Play Store veröffentlichen
 
 Die App ist eine React/Vite-PWA. Für die Stores wird sie mit **Capacitor** in
 native iOS-/Android-Hüllen verpackt – aus **einer** Codebasis. Die Web-Version
@@ -32,8 +32,8 @@ npm run app:ios          # vite build + cap sync ios + Xcode öffnen
 npm run app:android      # vite build + cap sync android + Android Studio öffnen
 ```
 
-`capacitor.config.json` ist gesetzt: `appId = com.robtechconsult.klotracker`,
-`appName = Klotracker`, `webDir = dist`.
+`capacitor.config.json` ist gesetzt: `appId = com.robtechconsult.klopatra`,
+`appName = Klopatra`, `webDir = dist`.
 
 ## 3. App-Icon & Splash
 
@@ -56,12 +56,12 @@ nur **eine Datei** (`src/lib/purchases.js`) mit echten Aufrufen gefüllt werden.
 
 | Produkt-ID | Typ | Zweck | Beispiel-Preis |
 |---|---|---|---|
-| `klotracker.pro.roll` | non-consumable | Pro-Unlock (Stufe „Eine Rolle") | 2,99 € |
-| `klotracker.pro.pack` | non-consumable | Pro-Unlock (Stufe „6er-Pack") | 4,99 € |
-| `klotracker.pro.bulk` | non-consumable | Pro-Unlock (Stufe „Großpackung") | 9,99 € |
-| `klotracker.tip.roll` | consumable | Trinkgeld (wiederholbar) | 1,99 € |
-| `klotracker.tip.pack` | consumable | Trinkgeld (wiederholbar) | 4,99 € |
-| `klotracker.tip.bulk` | consumable | Trinkgeld (wiederholbar) | 9,99 € |
+| `klopatra.pro.roll` | non-consumable | Pro-Unlock (Stufe „Eine Rolle") | 2,99 € |
+| `klopatra.pro.pack` | non-consumable | Pro-Unlock (Stufe „6er-Pack") | 4,99 € |
+| `klopatra.pro.bulk` | non-consumable | Pro-Unlock (Stufe „Großpackung") | 9,99 € |
+| `klopatra.tip.roll` | consumable | Trinkgeld (wiederholbar) | 1,99 € |
+| `klopatra.tip.pack` | consumable | Trinkgeld (wiederholbar) | 4,99 € |
+| `klopatra.tip.bulk` | consumable | Trinkgeld (wiederholbar) | 9,99 € |
 
 - **App Store Connect:** Features → In-App-Käufe → je Produkt anlegen.
 - **Play Console:** Monetarisierung → Produkte (In-App-Produkte für consumables,
@@ -71,7 +71,7 @@ nur **eine Datei** (`src/lib/purchases.js`) mit echten Aufrufen gefüllt werden.
 **4.2 RevenueCat konfigurieren**
 - Projekt anlegen, iOS- & Android-App verknüpfen (Bundle-IDs, Play-Service-Account,
   App-Store-Shared-Secret).
-- **Entitlement `pro`** anlegen und die drei `klotracker.pro.*`-Produkte damit
+- **Entitlement `pro`** anlegen und die drei `klopatra.pro.*`-Produkte damit
   verknüpfen (alle drei schalten dasselbe Pro frei).
 - Ein **Offering** mit allen sechs Produkten anlegen.
 - iOS- & Android-**API-Keys** kopieren.

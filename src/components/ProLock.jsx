@@ -8,7 +8,7 @@ export default function ProLock({ emoji = '🔒', title, desc, onUnlock }) {
       <div className="pl-emoji" aria-hidden="true">{emoji}</div>
       <h2 className="pl-title">{title}</h2>
       <p className="muted pl-desc">{desc}</p>
-      <button className="btn primary" onClick={onUnlock}>🔓 Klotracker Pro freischalten</button>
+      <button className="btn primary" onClick={onUnlock}>🔓 Klopatra Pro freischalten</button>
     </div>
   )
 }

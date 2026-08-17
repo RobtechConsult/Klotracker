@@ -28,7 +28,7 @@ export default function HealthCheck({ entries, now }) {
         ))
       )}
       <div className="disclaimer" style={{ marginTop: 12 }}>
-        ⚕️ Klotracker ist kein Arztersatz. Bei anhaltenden Beschwerden, Blut im Stuhl oder starken Schmerzen bitte ärztlich abklären lassen.
+        ⚕️ Klopatra ist kein Arztersatz. Bei anhaltenden Beschwerden, Blut im Stuhl oder starken Schmerzen bitte ärztlich abklären lassen.
       </div>
     </div>
   )
