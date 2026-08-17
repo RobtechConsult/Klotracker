@@ -48,16 +48,21 @@
     <!-- ground shadow -->
     <ellipse cx="0" cy="150" rx="118" ry="18" fill="#0a1122" opacity="0.45"/>
 
-    <!-- glossy soft-serve poop tip peeking above the headcloth -->
-    <path d="M-22 -118
-             C -30 -128 -22 -136 -11 -135
-             C -24 -142 -17 -153 -6 -151
-             C -19 -159 -11 -170 0 -168
-             C -9 -177 -2 -188 8 -184
-             C 22 -179 22 -162 14 -150
-             C 24 -140 19 -127 13 -121
-             C 6 -115 -15 -114 -22 -118 Z" fill="url(#poop)"/>
-    <path d="M6 -178 C 16 -174 16 -160 10 -152 C 18 -160 16 -174 6 -178 Z" fill="#ffffff" opacity="0.3"/>
+    <!-- glossy poop curl, growing out of the top of the headcloth -->
+    <path d="M-24 -104
+             C -26 -122 -14 -132 2 -131
+             C 22 -130 30 -116 25 -104 Z" fill="url(#poop)"/>
+    <path d="M-16 -110
+             C -18 -128 -6 -139 8 -137
+             C 20 -135 22 -122 14 -116
+             C 22 -124 20 -139 5 -142
+             C -9 -144 -20 -132 -18 -117 Z" fill="url(#poop)"/>
+    <path d="M-7 -128
+             C -9 -142 2 -151 12 -147
+             C 22 -142 20 -129 12 -124
+             C 20 -132 18 -146 6 -149
+             C -5 -151 -13 -141 -11 -130 Z" fill="url(#poop)"/>
+    <path d="M8 -142 C 18 -140 18 -128 12 -122 C 19 -130 17 -142 8 -145 Z" fill="#ffffff" opacity="0.28"/>
 
     <!-- the pile's face (brown) with gloss -->
     <path d="M-68 -14 C -68 -52 68 -52 68 -14 L68 92 C 68 126 -68 126 -68 92 Z" fill="url(#poop)"/>
