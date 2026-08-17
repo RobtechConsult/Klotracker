@@ -4,6 +4,10 @@
       <stop offset="0" stop-color="#2f4f96"/>
       <stop offset="1" stop-color="#152a4f"/>
     </linearGradient>
+    <linearGradient id="poop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b5793f"/>
+      <stop offset="1" stop-color="#6f4423"/>
+    </linearGradient>
     <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#ffe391"/>
       <stop offset="0.55" stop-color="#f0b542"/>
@@ -16,68 +20,63 @@
   </defs>
   <rect width="512" height="512" rx="112" fill="url(#bg)"/>
 
-  <!-- Nemes headdress (gold), with face cut-out in the middle -->
-  <path d="M256 92
-           C 174 92 126 150 126 236
-           C 126 300 146 348 160 372
-           L 214 372
-           L 214 246
-           C 214 210 232 190 256 190
-           C 280 190 298 210 298 246
-           L 298 372
-           L 352 372
-           C 366 348 386 300 386 236
-           C 386 150 338 92 256 92 Z" fill="url(#gold)"/>
+  <g transform="translate(256 300)">
+    <!-- ground shadow -->
+    <ellipse cx="0" cy="126" rx="140" ry="22" fill="#00000033"/>
 
-  <!-- blue stripes on the side lappets (classic Nemes look) -->
-  <g stroke="#203a6e" stroke-width="7" stroke-linecap="round">
-    <line x1="150" y1="250" x2="206" y2="250"/>
-    <line x1="150" y1="278" x2="206" y2="278"/>
-    <line x1="152" y1="306" x2="206" y2="306"/>
-    <line x1="156" y1="334" x2="206" y2="334"/>
-    <line x1="306" y1="250" x2="362" y2="250"/>
-    <line x1="306" y1="278" x2="362" y2="278"/>
-    <line x1="306" y1="306" x2="360" y2="306"/>
-    <line x1="306" y1="334" x2="356" y2="334"/>
-  </g>
+    <!-- chunky soft-serve poop tip peeking above the headcloth -->
+    <path d="M0 -92
+             C -38 -92 -38 -128 -6 -132
+             C -34 -137 -27 -164 2 -162
+             C 25 -163 27 -143 10 -136
+             C 34 -136 34 -96 0 -92 Z" fill="url(#poop)"/>
 
-  <!-- brow band across the hairline -->
-  <path d="M196 178 q60 -34 120 0 l0 18 q-60 -30 -120 0 Z" fill="url(#gold)"/>
+    <!-- the pile's face (brown), sized to sit inside the headcloth -->
+    <path d="M-68 -14 C -68 -52 68 -52 68 -14 L68 92 C 68 126 -68 126 -68 92 Z"
+          fill="url(#poop)"/>
 
-  <!-- face -->
-  <ellipse cx="256" cy="230" rx="60" ry="74" fill="url(#goldFace)"/>
+    <!-- Nemes headcloth: gold cap over the top of the pile -->
+    <path d="M-122 -18 C -122 -114 122 -114 122 -18 C 68 -44 -68 -44 -122 -18 Z" fill="url(#gold)"/>
 
-  <!-- symmetric Cleopatra eyes with winged kohl liner + bold brows -->
-  <g fill="#203a6e">
-    <!-- brows -->
-    <path d="M214 216 q22 -12 42 -6 l0 7 q-20 -6 -42 5 Z"/>
-    <path d="M298 216 q-22 -12 -42 -6 l0 7 q20 -6 42 5 Z"/>
-    <!-- left eye almond + wing -->
-    <path d="M216 232 q20 -12 40 -2 q-4 6 -8 8 l22 -4 q4 -1 5 3 q-2 4 -8 5 l-22 3 q-18 2 -29 -16 Z"/>
-    <!-- right eye almond + wing -->
-    <path d="M296 232 q-20 -12 -40 -2 q4 6 8 8 l-22 -4 q-4 -1 -5 3 q2 4 8 5 l22 3 q18 2 29 -16 Z"/>
-  </g>
-  <!-- iris dots -->
-  <circle cx="236" cy="236" r="6" fill="#0f1c33"/>
-  <circle cx="276" cy="236" r="6" fill="#0f1c33"/>
+    <!-- side lappets (striped), framing a wide face, covering the sides -->
+    <path d="M-122 -16 C -130 46 -110 102 -84 132 L-58 132 L-58 -32 C -84 -32 -112 -26 -122 -16 Z" fill="url(#gold)"/>
+    <path d="M122 -16 C 130 46 110 102 84 132 L58 132 L58 -32 C 84 -32 112 -26 122 -16 Z" fill="url(#gold)"/>
+    <g stroke="#203a6e" stroke-width="7" stroke-linecap="round">
+      <line x1="-114" y1="8"  x2="-62" y2="4"/>
+      <line x1="-112" y1="38" x2="-62" y2="34"/>
+      <line x1="-106" y1="68" x2="-62" y2="64"/>
+      <line x1="-98"  y1="98" x2="-62" y2="94"/>
+      <line x1="114" y1="8"  x2="62" y2="4"/>
+      <line x1="112" y1="38" x2="62" y2="34"/>
+      <line x1="106" y1="68" x2="62" y2="64"/>
+      <line x1="98"  y1="98" x2="62" y2="94"/>
+    </g>
 
-  <!-- lips -->
-  <path d="M240 274 q16 -8 32 0 q-16 12 -32 0 Z" fill="#c85a2a"/>
-  <path d="M240 274 q16 6 32 0" stroke="#a5451c" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <!-- brow band with uraeus cobra -->
+    <path d="M-116 -20 q116 -44 232 0 l0 20 q-116 -40 -232 0 Z" fill="url(#gold)"/>
+    <path d="M0 -30 C -6 -38 -6 -48 0 -54 C 6 -48 6 -38 0 -30 Z" fill="url(#gold)"/>
+    <path d="M-15 -52 q15 -20 30 0 q-15 -8 -30 0 Z" fill="url(#gold)" stroke="#cf8f24" stroke-width="2"/>
+    <circle cx="0" cy="-58" r="6" fill="#7fd0d8" stroke="#cf8f24" stroke-width="2"/>
 
-  <!-- uraeus cobra at the brow -->
-  <g>
-    <path d="M256 176 C 250 168 250 160 256 156 C 262 160 262 168 256 176 Z" fill="url(#gold)"/>
-    <path d="M240 158 q16 -22 32 0 q-16 -8 -32 0 Z" fill="url(#gold)" stroke="#cf8f24" stroke-width="2"/>
-    <circle cx="256" cy="150" r="6" fill="#7fd0d8" stroke="#cf8f24" stroke-width="2"/>
-  </g>
+    <!-- eyes with Cleopatra winged kohl liner -->
+    <circle cx="-38" cy="10" r="23" fill="#fff"/>
+    <circle cx="38" cy="10" r="23" fill="#fff"/>
+    <circle cx="-34" cy="14" r="10.5" fill="#203a6e"/>
+    <circle cx="42" cy="14" r="10.5" fill="#203a6e"/>
+    <g stroke="#1a2e57" stroke-width="7" fill="none" stroke-linecap="round">
+      <path d="M-60 -4 q22 -13 42 -6"/>
+      <path d="M-18 2 l17 -9"/>
+      <path d="M60 -4 q-22 -13 -42 -6"/>
+      <path d="M18 2 l-17 -9"/>
+    </g>
 
-  <!-- broad collar (usekh) with a subtle toilet-paper-roll pendant -->
-  <path d="M150 372 q106 78 212 0 l0 30 q-106 84 -212 0 Z" fill="url(#gold)"/>
-  <path d="M170 388 q86 60 172 0" stroke="#203a6e" stroke-width="6" fill="none"/>
-  <!-- pendant: tiny loo-roll wink -->
-  <g transform="translate(256 410)">
-    <ellipse cx="0" cy="0" rx="16" ry="14" fill="url(#goldFace)" stroke="#cf8f24" stroke-width="3"/>
-    <ellipse cx="0" cy="0" rx="6" ry="5" fill="#203a6e"/>
+    <!-- winking smile -->
+    <path d="M-30 52 q32 32 64 0" stroke="#241206" stroke-width="10" fill="none" stroke-linecap="round"/>
+
+    <!-- broad Egyptian collar (usekh) at the base -->
+    <path d="M-98 96 q98 68 196 0 l0 26 q-98 74 -196 0 Z" fill="url(#gold)"/>
+    <path d="M-76 110 q76 50 152 0" stroke="#203a6e" stroke-width="6" fill="none"/>
+    <circle cx="0" cy="128" r="12" fill="url(#goldFace)" stroke="#cf8f24" stroke-width="3"/>
+    <circle cx="0" cy="128" r="4.5" fill="#203a6e"/>
   </g>
 </svg>
