@@ -1,82 +1,129 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#2f4f96"/>
-      <stop offset="1" stop-color="#152a4f"/>
+    <radialGradient id="bg" cx="50%" cy="42%" r="72%">
+      <stop offset="0" stop-color="#3f62b4"/>
+      <stop offset="0.6" stop-color="#20386a"/>
+      <stop offset="1" stop-color="#101d38"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#fff2c6"/>
+      <stop offset="0.4" stop-color="#f4c860"/>
+      <stop offset="0.75" stop-color="#e0a437"/>
+      <stop offset="1" stop-color="#b9801f"/>
     </linearGradient>
-    <linearGradient id="poop" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#b5793f"/>
-      <stop offset="1" stop-color="#6f4423"/>
+    <linearGradient id="goldBand" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffe8a6"/>
+      <stop offset="1" stop-color="#db9f34"/>
     </linearGradient>
-    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffe391"/>
-      <stop offset="0.55" stop-color="#f0b542"/>
-      <stop offset="1" stop-color="#cf8f24"/>
+    <radialGradient id="poop" cx="38%" cy="30%" r="80%">
+      <stop offset="0" stop-color="#c68a4c"/>
+      <stop offset="0.6" stop-color="#8a5a30"/>
+      <stop offset="1" stop-color="#5f3a1e"/>
+    </radialGradient>
+    <linearGradient id="lapis" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2b52a0"/>
+      <stop offset="1" stop-color="#1a336a"/>
     </linearGradient>
-    <linearGradient id="goldFace" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffedb4"/>
-      <stop offset="1" stop-color="#f2c357"/>
-    </linearGradient>
+    <radialGradient id="gem" cx="40%" cy="35%" r="70%">
+      <stop offset="0" stop-color="#8fe3ea"/>
+      <stop offset="1" stop-color="#2c8f9c"/>
+    </radialGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="9" stdDeviation="11" flood-color="#0a1122" flood-opacity="0.4"/>
+    </filter>
+    <clipPath id="laps">
+      <path d="M-122 -16 C -130 46 -110 102 -84 132 L-58 132 L-58 -32 C -84 -32 -112 -26 -122 -16 Z"/>
+      <path d="M122 -16 C 130 46 110 102 84 132 L58 132 L58 -32 C 84 -32 112 -26 122 -16 Z"/>
+    </clipPath>
+    <clipPath id="faceClip">
+      <path d="M-68 -14 C -68 -52 68 -52 68 -14 L68 92 C 68 126 -68 126 -68 92 Z"/>
+    </clipPath>
   </defs>
+
   <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <!-- soft halo glow behind the figure -->
+  <circle cx="256" cy="248" r="150" fill="#5f7fd0" opacity="0.16"/>
 
-  <g transform="translate(256 300)">
+  <g transform="translate(256 292)" filter="url(#soft)">
     <!-- ground shadow -->
-    <ellipse cx="0" cy="126" rx="140" ry="22" fill="#00000033"/>
+    <ellipse cx="0" cy="150" rx="118" ry="18" fill="#0a1122" opacity="0.45"/>
 
-    <!-- chunky soft-serve poop tip peeking above the headcloth -->
-    <path d="M0 -92
-             C -38 -92 -38 -128 -6 -132
-             C -34 -137 -27 -164 2 -162
-             C 25 -163 27 -143 10 -136
-             C 34 -136 34 -96 0 -92 Z" fill="url(#poop)"/>
+    <!-- glossy soft-serve poop tip peeking above the headcloth -->
+    <path d="M-22 -118
+             C -30 -128 -22 -136 -11 -135
+             C -24 -142 -17 -153 -6 -151
+             C -19 -159 -11 -170 0 -168
+             C -9 -177 -2 -188 8 -184
+             C 22 -179 22 -162 14 -150
+             C 24 -140 19 -127 13 -121
+             C 6 -115 -15 -114 -22 -118 Z" fill="url(#poop)"/>
+    <path d="M6 -178 C 16 -174 16 -160 10 -152 C 18 -160 16 -174 6 -178 Z" fill="#ffffff" opacity="0.3"/>
 
-    <!-- the pile's face (brown), sized to sit inside the headcloth -->
-    <path d="M-68 -14 C -68 -52 68 -52 68 -14 L68 92 C 68 126 -68 126 -68 92 Z"
-          fill="url(#poop)"/>
+    <!-- the pile's face (brown) with gloss -->
+    <path d="M-68 -14 C -68 -52 68 -52 68 -14 L68 92 C 68 126 -68 126 -68 92 Z" fill="url(#poop)"/>
+    <g clip-path="url(#faceClip)">
+      <ellipse cx="-26" cy="4" rx="46" ry="34" fill="#ffffff" opacity="0.12"/>
+    </g>
 
-    <!-- Nemes headcloth: gold cap over the top of the pile -->
+    <!-- Nemes headcloth: gold cap over the top -->
     <path d="M-122 -18 C -122 -114 122 -114 122 -18 C 68 -44 -68 -44 -122 -18 Z" fill="url(#gold)"/>
+    <path d="M-122 -18 C -122 -114 122 -114 122 -18 C 96 -30 -96 -30 -122 -18 Z" fill="#ffffff" opacity="0.14"/>
 
-    <!-- side lappets (striped), framing a wide face, covering the sides -->
+    <!-- side lappets (gold) with alternating lapis bands -->
     <path d="M-122 -16 C -130 46 -110 102 -84 132 L-58 132 L-58 -32 C -84 -32 -112 -26 -122 -16 Z" fill="url(#gold)"/>
     <path d="M122 -16 C 130 46 110 102 84 132 L58 132 L58 -32 C 84 -32 112 -26 122 -16 Z" fill="url(#gold)"/>
-    <g stroke="#203a6e" stroke-width="7" stroke-linecap="round">
-      <line x1="-114" y1="8"  x2="-62" y2="4"/>
-      <line x1="-112" y1="38" x2="-62" y2="34"/>
-      <line x1="-106" y1="68" x2="-62" y2="64"/>
-      <line x1="-98"  y1="98" x2="-62" y2="94"/>
-      <line x1="114" y1="8"  x2="62" y2="4"/>
-      <line x1="112" y1="38" x2="62" y2="34"/>
-      <line x1="106" y1="68" x2="62" y2="64"/>
-      <line x1="98"  y1="98" x2="62" y2="94"/>
+    <g clip-path="url(#laps)" fill="url(#lapis)">
+      <rect x="-130" y="-8" width="260" height="13"/>
+      <rect x="-130" y="20" width="260" height="13"/>
+      <rect x="-130" y="48" width="260" height="13"/>
+      <rect x="-130" y="76" width="260" height="13"/>
+      <rect x="-130" y="104" width="260" height="13"/>
     </g>
 
-    <!-- brow band with uraeus cobra -->
-    <path d="M-116 -20 q116 -44 232 0 l0 20 q-116 -40 -232 0 Z" fill="url(#gold)"/>
-    <path d="M0 -30 C -6 -38 -6 -48 0 -54 C 6 -48 6 -38 0 -30 Z" fill="url(#gold)"/>
-    <path d="M-15 -52 q15 -20 30 0 q-15 -8 -30 0 Z" fill="url(#gold)" stroke="#cf8f24" stroke-width="2"/>
-    <circle cx="0" cy="-58" r="6" fill="#7fd0d8" stroke="#cf8f24" stroke-width="2"/>
+    <!-- brow band -->
+    <path d="M-116 -20 q116 -44 232 0 l0 22 q-116 -40 -232 0 Z" fill="url(#goldBand)"/>
+    <path d="M-116 -20 q116 -44 232 0 l0 6 q-116 -40 -232 0 Z" fill="#ffffff" opacity="0.3"/>
 
-    <!-- eyes with Cleopatra winged kohl liner -->
-    <circle cx="-38" cy="10" r="23" fill="#fff"/>
-    <circle cx="38" cy="10" r="23" fill="#fff"/>
-    <circle cx="-34" cy="14" r="10.5" fill="#203a6e"/>
-    <circle cx="42" cy="14" r="10.5" fill="#203a6e"/>
-    <g stroke="#1a2e57" stroke-width="7" fill="none" stroke-linecap="round">
-      <path d="M-60 -4 q22 -13 42 -6"/>
-      <path d="M-18 2 l17 -9"/>
-      <path d="M60 -4 q-22 -13 -42 -6"/>
-      <path d="M18 2 l-17 -9"/>
+    <!-- uraeus cobra on the brow -->
+    <g>
+      <path d="M0 -22 C -13 -30 -14 -46 -4 -56 C 0 -60 0 -60 4 -56 C 14 -46 13 -30 0 -22 Z" fill="url(#gold)"/>
+      <path d="M-16 -54 C -14 -74 14 -74 16 -54 C 6 -64 -6 -64 -16 -54 Z" fill="url(#gold)" stroke="#a8731c" stroke-width="1.5"/>
+      <circle cx="0" cy="-60" r="6.5" fill="url(#gem)"/>
     </g>
 
-    <!-- winking smile -->
-    <path d="M-30 52 q32 32 64 0" stroke="#241206" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <!-- eyes: almond with winged kohl liner + catchlight -->
+    <g>
+      <ellipse cx="-38" cy="12" rx="26" ry="21" fill="#fff"/>
+      <ellipse cx="38" cy="12" rx="26" ry="21" fill="#fff"/>
+      <circle cx="-35" cy="14" r="11.5" fill="#20264a"/>
+      <circle cx="41" cy="14" r="11.5" fill="#20264a"/>
+      <circle cx="-31" cy="9" r="3.6" fill="#fff"/>
+      <circle cx="45" cy="9" r="3.6" fill="#fff"/>
+      <!-- winged liner -->
+      <path d="M-64 2 C -52 -12 -22 -14 -12 -4 C -24 -8 -50 -6 -60 8 Z" fill="#1a1f3d"/>
+      <path d="M-64 2 C -70 0 -74 4 -72 9 L-60 8 Z" fill="#1a1f3d"/>
+      <path d="M64 2 C 52 -12 22 -14 12 -4 C 24 -8 50 -6 60 8 Z" fill="#1a1f3d"/>
+      <path d="M64 2 C 70 0 74 4 72 9 L60 8 Z" fill="#1a1f3d"/>
+    </g>
 
-    <!-- broad Egyptian collar (usekh) at the base -->
-    <path d="M-98 96 q98 68 196 0 l0 26 q-98 74 -196 0 Z" fill="url(#gold)"/>
-    <path d="M-76 110 q76 50 152 0" stroke="#203a6e" stroke-width="6" fill="none"/>
-    <circle cx="0" cy="128" r="12" fill="url(#goldFace)" stroke="#cf8f24" stroke-width="3"/>
-    <circle cx="0" cy="128" r="4.5" fill="#203a6e"/>
+    <!-- friendly smile -->
+    <path d="M-28 54 q28 30 56 0" stroke="#3a2410" stroke-width="9" fill="none" stroke-linecap="round"/>
+
+    <!-- broad Egyptian collar (usekh): stacked bead rows -->
+    <path d="M-104 92 Q0 156 104 92 L104 106 Q0 170 -104 106 Z" fill="url(#gold)"/>
+    <path d="M-100 106 Q0 168 100 106 L100 119 Q0 181 -100 119 Z" fill="url(#lapis)"/>
+    <path d="M-94 119 Q0 179 94 119 L94 131 Q0 191 -94 131 Z" fill="url(#gem)"/>
+    <!-- teardrop beads along the bottom -->
+    <g fill="url(#goldBand)">
+      <ellipse cx="-72" cy="140" rx="6" ry="10"/>
+      <ellipse cx="-48" cy="150" rx="6" ry="10"/>
+      <ellipse cx="-24" cy="156" rx="6" ry="10"/>
+      <ellipse cx="0" cy="159" rx="6.5" ry="11"/>
+      <ellipse cx="24" cy="156" rx="6" ry="10"/>
+      <ellipse cx="48" cy="150" rx="6" ry="10"/>
+      <ellipse cx="72" cy="140" rx="6" ry="10"/>
+    </g>
+    <!-- centre pendant -->
+    <circle cx="0" cy="112" r="13" fill="url(#gem)" stroke="#a8731c" stroke-width="3"/>
   </g>
 </svg>
