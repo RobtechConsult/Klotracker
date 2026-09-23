@@ -469,6 +469,7 @@ export default function App() {
             <div className="set-title">Rechtliches</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <button className="btn ghost" onClick={() => window.open(import.meta.env.BASE_URL + 'datenschutz.html', '_blank')}>🔒 Datenschutzerklärung</button>
+              <button className="btn ghost" onClick={() => window.open(import.meta.env.BASE_URL + 'impressum.html', '_blank')}>📄 Impressum</button>
               <button className="btn ghost" onClick={() => { setShowSettings(false); setShowPro(true) }}>↩︎ Käufe wiederherstellen</button>
             </div>
             <p className="disclaimer" style={{ marginTop: 16 }}>
