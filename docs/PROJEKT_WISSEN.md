@@ -37,7 +37,7 @@ Wasserlassen) – mit Gewohnheits-Prognose, Regelmäßigkeits-Check und Timer. A
 
 ## 3. Deployment (wichtig!)
 
-- **Live-URL:** https://klopatra.robtech-consult.de/
+- **Website (Landingpage):** https://klopatra.robtech-consult.de/
 - **Weg:** GitHub Actions (`.github/workflows/deploy.yml`) → `actions/deploy-pages`.
   **Source in den Repo-Settings = „GitHub Actions".**
 - **Regel: Was auf `main` landet, geht live.** Entwickelt wird auf dem Feature-Branch,
@@ -49,10 +49,18 @@ Wasserlassen) – mit Gewohnheits-Prognose, Regelmäßigkeits-Check und Timer. A
   - Der Workflow-Token (`GITHUB_TOKEN`) darf die **Pages-Quelle NICHT umstellen**
     (`403 Resource not accessible by integration`). Das ist eine einmalige
     Admin-Einstellung im UI.
-  - `BASE_PATH` kommt von `actions/configure-pages` (`steps.pages.outputs.base_path`).
-    Seit der Custom-Domain (2026-09-24) ist er leer → Vite baut relativ (`./`) für
-    die Domain-Wurzel. Die alte URL `robtechconsult.github.io/Klotracker/`
-    leitet GitHub automatisch auf die Domain um.
+  - **Entscheidung 2026-09-24: Keine Web-App mehr.** Klopatra wird nur nativ
+    (Capacitor) vertrieben. Die Domain zeigt die Landingpage aus `site/` +
+    Datenschutz/Impressum aus `public/` (Store-Pflicht). Die Vite-App wird im
+    Pages-Workflow nicht mehr gebaut. `site/sw.js` räumt den Service Worker alter
+    PWA-Installationen ab.
+  - Teilen-Links (Klo-Duell) zeigen fest auf `https://klopatra.robtech-consult.de/`
+    (`SHARE_BASE` in `social.js`), weil `location.origin` in der nativen App
+    `capacitor://localhost` wäre. Die Landingpage erkennt `#vergleich=` und
+    erklärt das Einfügen in der App. Später: echte Deep Links (Universal
+    Links / App Links) über dieselbe Domain.
+  - Die alte URL `robtechconsult.github.io/Klotracker/` leitet GitHub automatisch
+    auf die Domain um.
   - Custom-Domain: CNAME `klopatra` → `robtechconsult.github.io` bei IONOS
     (`robtech-consult.de`), plus `public/CNAME`. Details: `store/DOMAIN_SETUP.md`.
   - Aus der Sandbox ist `*.github.io` netzwerkseitig geblockt – Live-Status prüfen

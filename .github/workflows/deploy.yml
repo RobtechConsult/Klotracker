@@ -37,19 +37,21 @@ jobs:
         run: npm test
 
       - name: Configure Pages
-        id: pages
         uses: actions/configure-pages@v5
 
-      - name: Build
-        run: npm run build
-        env:
-          # Basis-Pfad von configure-pages; mit Custom-Domain leer (= Wurzel).
-          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+      # Die App selbst läuft nur nativ (Capacitor). Unter der Domain liegt die
+      # Landingpage aus site/ plus die rechtlichen Seiten aus public/, die auch
+      # in der App gebündelt sind (Store-Pflicht: öffentliche Datenschutz-URL).
+      - name: Assemble landing page
+        run: |
+          mkdir -p _site
+          cp -r site/. _site/
+          cp public/datenschutz.html public/impressum.html public/icon.svg public/CNAME _site/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./_site
 
   deploy:
     needs: build

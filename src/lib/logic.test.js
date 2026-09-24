@@ -5,7 +5,7 @@ import { averagePerDay, countsPerDay, streakDays, minutesOfDay, hourHistogram, f
 import { healthCheck } from './tips.js'
 import { mergeEntries, parseImport } from './storage.js'
 import { computeAchievements, achievementSummary } from './achievements.js'
-import { buildSummary, encodeSummary, decodeSummary, compare } from './social.js'
+import { buildSummary, encodeSummary, decodeSummary, compare, shareUrl } from './social.js'
 import { proStatus, TRIAL_DAYS } from './pro.js'
 import { reportData, renderReportHtml } from './report.js'
 
@@ -290,6 +290,13 @@ test('social: decodeSummary akzeptiert ganze Links & lehnt Müll ab', () => {
   const code = encodeSummary({ v: 1, n: '', s7: 1, sa: 1, ua: 1, dr: 1, tt: 1, rec: 1, st: 1 })
   assert.ok(decodeSummary('https://x.y/#vergleich=' + code))
   assert.throws(() => decodeSummary('total-kaputt!!'))
+})
+
+test('social: shareUrl zeigt immer auf die öffentliche Domain (auch aus der nativen App)', () => {
+  const code = encodeSummary({ v: 1, n: '', s7: 1, sa: 1, ua: 1, dr: 1, tt: 1, rec: 1, st: 1 })
+  const url = shareUrl(code)
+  assert.equal(url, 'https://klopatra.robtech-consult.de/#vergleich=' + code)
+  assert.ok(decodeSummary(url))
 })
 
 test('social: buildSummary + compare kürt Sieger', () => {

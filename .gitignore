@@ -7,3 +7,4 @@ dist
 # generiert (siehe STORE.md) und nicht eingecheckt.
 /ios
 /android
+_site/

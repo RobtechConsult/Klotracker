@@ -117,19 +117,18 @@ gefüllt.
 
 ---
 
-## Als Website veröffentlichen (GitHub Pages)
+## Website & App-Vertrieb
 
-Der Workflow `.github/workflows/deploy.yml` baut, testet und deployt die App bei
-jedem Push auf **`main`** über **GitHub Actions** (`actions/deploy-pages`).
+Klopatra wird als **native App** (Capacitor, siehe `STORE.md`) über App Store
+und Google Play vertrieben – die App läuft **nicht** öffentlich im Browser.
 
-**Einmalige Einstellung:** Settings → Pages → **Source: „GitHub Actions"**.
+Unter **https://klopatra.robtech-consult.de/** liegt stattdessen die
+**Landingpage** (`site/`) mit Support-Kontakt, Datenschutz und Impressum
+(Store-Pflicht). Dort landen auch geteilte Klo-Duell-Links (`#vergleich=…`).
 
-Danach gilt: **Was auf `main` landet, geht live.** Die App ist erreichbar unter:
-
-**https://klopatra.robtech-consult.de/**
-
-Entwickelt wird auf dem Feature-Branch; zum Veröffentlichen wird nach `main`
-gemergt.
+Der Workflow `.github/workflows/deploy.yml` testet bei jedem Push auf **`main`**
+und veröffentlicht `site/` plus `public/datenschutz.html`, `impressum.html`,
+`icon.svg` und `CNAME` über GitHub Pages (kein Vite-Build nötig).
 
 ---
 

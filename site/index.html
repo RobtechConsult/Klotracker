@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Klopatra – Tracken mit Augenzwinkern</title>
+  <meta name="description" content="Klopatra ist die Toiletten-Tracking-App mit Humor: Stuhlgang, Wasserlassen und Trinken erfassen, Muster sehen, nächste Sitzung vorhersagen. Alles lokal auf deinem Handy." />
+  <meta name="theme-color" content="#7c5a3a" />
+  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+  <meta property="og:title" content="Klopatra – Herrsche über deinen Thron 👑" />
+  <meta property="og:description" content="Die Toiletten-Tracking-App mit Augenzwinkern. Privat, offline, ohne Konto." />
+  <meta property="og:image" content="https://klopatra.robtech-consult.de/img/shot-01-home.jpg" />
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #fdf6ec; --card: #fffaf3; --ink: #2b2118; --muted: #6b5a4a;
+      --brand: #7c5a3a; --accent: #c8943f; --line: #eadfce;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #1a1613; --card: #241e19; --ink: #ece4da; --muted: #b3a595; --brand: #e0b877; --accent: #e0b877; --line: #3a3029; }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.55;
+    }
+    a { color: var(--brand); }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+    header.hero { text-align: center; padding: 56px 0 32px; }
+    .hero img.logo { width: 112px; height: 112px; border-radius: 26px; box-shadow: 0 10px 30px rgba(124, 90, 58, .25); }
+    h1 { font-size: clamp(2rem, 6vw, 3rem); margin: 18px 0 4px; letter-spacing: -.02em; }
+    .tagline { font-size: 1.2rem; color: var(--muted); margin: 0 0 22px; }
+    .lead { max-width: 620px; margin: 0 auto 26px; font-size: 1.08rem; }
+    .stores { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .store {
+      display: inline-flex; align-items: center; gap: 10px; padding: 11px 20px; border-radius: 12px;
+      background: var(--ink); color: var(--bg); text-decoration: none; font-weight: 600; opacity: .55;
+    }
+    .soon { margin-top: 10px; font-size: .9rem; color: var(--muted); }
+    section { padding: 36px 0; }
+    h2 { font-size: 1.5rem; text-align: center; margin: 0 0 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; }
+    .card .ico { font-size: 1.6rem; }
+    .card h3 { margin: 6px 0 4px; font-size: 1.05rem; }
+    .card p { margin: 0; color: var(--muted); font-size: .96rem; }
+    .shots { display: flex; gap: 16px; justify-content: center; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; }
+    .shots img { width: 220px; max-width: 70vw; height: auto; border-radius: 22px; border: 1px solid var(--line); scroll-snap-align: center; flex: none; }
+    .privacy { text-align: center; max-width: 640px; margin: 0 auto; }
+    .privacy .big { font-size: 1.25rem; font-weight: 600; }
+    .note { font-size: .9rem; color: var(--muted); }
+    .duel {
+      display: none; background: var(--card); border: 2px solid var(--accent); border-radius: 18px;
+      padding: 20px; margin: 0 auto 8px; max-width: 620px; text-align: center;
+    }
+    .duel.show { display: block; }
+    .duel h2 { margin-bottom: 8px; }
+    .duel ol { text-align: left; display: inline-block; margin: 8px 0 14px; }
+    .duel button {
+      font: inherit; font-weight: 600; padding: 10px 18px; border-radius: 10px; border: 0;
+      background: var(--brand); color: var(--bg); cursor: pointer;
+    }
+    footer { border-top: 1px solid var(--line); padding: 24px 0 40px; text-align: center; font-size: .92rem; color: var(--muted); }
+    footer nav { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <img class="logo" src="./icon.svg" alt="Klopatra-Icon" width="112" height="112" />
+      <h1>Klopatra</h1>
+      <p class="tagline">Herrsche über deinen Thron. 👑</p>
+
+      <!-- Wird eingeblendet, wenn jemand einen Klo-Duell-Link (#vergleich=…) öffnet. -->
+      <div class="duel" id="duel">
+        <h2>Du wurdest zum Klo-Duell herausgefordert! 🥊</h2>
+        <p>So nimmst du die Herausforderung an:</p>
+        <ol>
+          <li>Link kopieren (Button unten)</li>
+          <li>Klopatra öffnen → <strong>Statistik</strong> → <strong>Mit Freunden vergleichen</strong></li>
+          <li>Link einfügen – fertig ist der Kopf-an-Kopf-Vergleich</li>
+        </ol>
+        <div><button type="button" id="copy">Link kopieren 📋</button></div>
+        <p class="note" id="copied" hidden>Kopiert! Ab auf den Thron. 🚽</p>
+      </div>
+
+      <p class="lead">
+        Die Toiletten-Tracking-App mit Augenzwinkern: Toilettengänge mit einem Tipp erfassen,
+        dein Muster bildlich sehen und dir die nächste wahrscheinliche Sitzung vorhersagen lassen –
+        mit einer ordentlichen Portion Humor.
+      </p>
+      <div class="stores">
+        <span class="store" aria-disabled="true">App Store</span>
+        <span class="store" aria-disabled="true">▶ Google Play</span>
+      </div>
+      <p class="soon">Bald für iPhone und Android erhältlich.</p>
+    </header>
+
+    <section>
+      <h2>Was Klopatra kann</h2>
+      <div class="grid">
+        <div class="card"><div class="ico">💩💧</div><h3>Schnell-Tracking</h3><p>Stuhlgang oder Wasserlassen – ein Tipp, fertig. Details wie Bristol-Typ und Notiz optional.</p></div>
+        <div class="card"><div class="ico">🔮</div><h3>Gewohnheits-Prognose</h3><p>Der Algorithmus lernt deine typischen Zeiten und sagt die nächste Sitzung samt Zeitfenster voraus.</p></div>
+        <div class="card"><div class="ico">📊</div><h3>Muster sehen</h3><p>24-Stunden-Uhr, Wochen-Balken, Bristol-Verteilung und Trends im Wochenvergleich.</p></div>
+        <div class="card"><div class="ico">⏱️</div><h3>Zeit auf dem Thron</h3><p>Sitzungen stoppen – mit Wochen-Summe, Rekord und lustigen Umrechnungen.</p></div>
+        <div class="card"><div class="ico">🥤</div><h3>Trinken im Blick</h3><p>Wasser, Kaffee, Tee mit einem Tipp erfassen und dein Tagesziel erreichen.</p></div>
+        <div class="card"><div class="ico">🩺</div><h3>Regelmäßigkeits-Check</h3><p>Ehrliche Hinweise zu Häufigkeit und Konsistenz – humorvoll verpackt, sachlich im Kern.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Ein Blick in die App</h2>
+      <div class="shots">
+        <img src="./img/shot-01-home.jpg" alt="Startseite mit Schnell-Tracking und Prognose" width="540" height="1170" loading="lazy" />
+        <img src="./img/shot-02-stats.jpg" alt="Statistik mit 24-Stunden-Uhr und Wochen-Balken" width="540" height="1170" loading="lazy" />
+        <img src="./img/shot-04-history.jpg" alt="Verlauf aller Einträge" width="540" height="1170" loading="lazy" />
+      </div>
+    </section>
+
+    <section class="privacy">
+      <h2>Was aufs Klo geht, bleibt auf dem Klo. 🔒</h2>
+      <p class="big">Kein Konto. Kein Server. Kein Tracking. Keine Werbung.</p>
+      <p>Alle Einträge bleiben ausschließlich auf deinem Gerät. Du kannst sie jederzeit exportieren oder löschen.</p>
+      <p class="note">⚕️ Klopatra gibt Orientierung, keine Diagnose – kein Arztersatz. Bei anhaltenden Beschwerden,
+        Blut im Stuhl oder starken Schmerzen bitte ärztlich abklären lassen.</p>
+    </section>
+
+    <section id="support" class="privacy">
+      <h2>Hilfe &amp; Kontakt</h2>
+      <p>Fragen, Feedback oder ein Problem mit der App? Schreib uns:
+        <a href="mailto:shop@robtech-consult.de?subject=Klopatra%20Support">shop@robtech-consult.de</a></p>
+      <p class="note">Käufe wiederherstellen: in der App unter <em>Einstellungen → Rechtliches → Käufe wiederherstellen</em>.</p>
+    </section>
+  </div>
+
+  <footer>
+    <nav>
+      <a href="./datenschutz.html">Datenschutz</a>
+      <a href="./impressum.html">Impressum</a>
+      <a href="#support">Support</a>
+    </nav>
+    © 2026 Robert Krawczyk · robtech consult
+  </footer>
+
+  <script>
+    // Klo-Duell-Links aus der App (#vergleich=CODE) landen hier.
+    (function () {
+      if (!/vergleich=/.test(location.hash)) return
+      document.getElementById('duel').classList.add('show')
+      document.getElementById('copy').addEventListener('click', function () {
+        var done = function () { document.getElementById('copied').hidden = false }
+        if (navigator.clipboard) navigator.clipboard.writeText(location.href).then(done, done)
+        else { window.prompt('Link kopieren:', location.href); done() }
+      })
+    })()
+  </script>
+</body>
+</html>

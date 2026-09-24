@@ -83,8 +83,10 @@ export function compare(mine, friend) {
   return { rows, meScore: me, friendScore: them, verdict }
 }
 
-/** Baut einen teilbaren Link mit eingebettetem Code. */
+/** Öffentliche Domain – in der nativen App wäre location.origin z.B. capacitor://localhost. */
+export const SHARE_BASE = 'https://klopatra.robtech-consult.de/'
+
+/** Baut einen teilbaren Link mit eingebettetem Code (landet auf der Landingpage). */
 export function shareUrl(code) {
-  const base = (typeof location !== 'undefined' ? location.origin + location.pathname : '')
-  return `${base}#vergleich=${code}`
+  return `${SHARE_BASE}#vergleich=${code}`
 }
