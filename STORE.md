@@ -7,8 +7,10 @@ unter https://klopatra.robtech-consult.de/ liegt nur die Landingpage (`site/`).
 > Käufe (Pro / Trinkgeld) laufen über RevenueCat + Store-In-App-Käufe. Im
 > Browser (`npm run dev`, nur Entwicklung) schaltet die App lokal frei.
 
-**Entscheidungen (2026-09-24):** Auftritt als **Privatperson** (Robert Krawczyk),
-iOS-Build **in der Cloud (Codemagic)**, weil kein Mac vorhanden ist.
+**Entscheidungen (2026-09-24):** Apple als **Individual / Sole Proprietor**
+(Robert Krawczyk), Google als **Organisation** über das angemeldete Gewerbe
+(D-U-N-S), iOS-Build **in der Cloud (Codemagic)**, weil kein Mac vorhanden ist.
+Provision: Apple **Small Business Program** + Google **15 %-Stufe** → 15 % statt 30 %.
 
 ---
 
@@ -17,8 +19,9 @@ iOS-Build **in der Cloud (Codemagic)**, weil kein Mac vorhanden ist.
 - **Node 22+**, **JDK 21**
 - **Android:** Android Studio + SDK (lokal unter Windows vorhanden), **Google Play
   Developer Account** (einmalig 25 $)
-  - ⚠️ **Neue Privatkonten** müssen vor dem Livegang einen **geschlossenen Test mit
-    mind. 12 Testern über 14 Tage** fahren. Tester früh organisieren!
+  - Wir registrieren als **Organisation** (Gewerbe + D-U-N-S). Grund: **Neue
+    Privatkonten** müssten vor dem Livegang einen **geschlossenen Test mit mind.
+    12 Testern über 14 Tage** fahren – das entfällt für Organisationen.
 - **iOS:** **Apple Developer Account** (99 $/Jahr) + **Codemagic**-Konto (kostenlos,
   500 Mac-Minuten/Monat). Kein Mac nötig.
 - **EU-Händlerstatus (DSA):** Weil die App In-App-Käufe verkauft, bist du in beiden
@@ -135,17 +138,46 @@ RevenueCat aktiv ist (4.3), funktioniert er nativ automatisch.
 
 **Im Code erledigt (✅):**
 - [x] „Käufe wiederherstellen" vorhanden (Pro-Dialog + Einstellungen)
-- [x] Datenschutzerklärung als Seite vorhanden & in der App verlinkt
-- [x] „kein Arztersatz"-Hinweis vorhanden (App, Report, Datenschutz)
+- [x] Datenschutzerklärung ausgefüllt, live unter der Domain, in der App verlinkt
+- [x] „kein Arztersatz"-Hinweis vorhanden (App, Report, Datenschutz, Landingpage)
 - [x] Testphase (4 Tage) & Pro-Gating implementiert
-- [x] Kauf-Abstraktion + Capacitor-Config bereit
+- [x] Capacitor 8, ios/ + android/ mit Icons & Splash, Android-Build lokal getestet
+- [x] RevenueCat in `purchases.js` verdrahtet (fehlen nur die SDK-Keys)
+- [x] Codemagic-Workflow für iOS → TestFlight (`codemagic.yaml`)
 
-**Von dir außerhalb des Codes zu erledigen (⬜):**
-- [ ] Apple Developer- (99 $/J) & Google-Play-Konto (25 $ einmalig) anlegen
-- [ ] Master-Icon 1024×1024 + Splash bereitstellen, Assets generieren (Abschnitt 3)
-- [ ] Produkte in beiden Stores + RevenueCat angelegt, Preise gesetzt (Abschnitt 4)
-- [ ] `purchases.js` mit RevenueCat aktivieren, echter Kauf **auf Gerät** getestet
-- [ ] Platzhalter in `datenschutz.html` ausfüllen + URL als Datenschutz-Link eintragen
-- [ ] App-Privacy-Labels ausfüllen („Keine Daten erfasst")
-- [ ] Screenshots & Beschreibungstext
-- [ ] Version/Build-Nummern setzen, einreichen (TestFlight bzw. Play Testing)
+**Konten (DU):**
+- [ ] **Apple Developer Program** als *Individual / Sole Proprietor* (99 $/Jahr).
+      Anbietername im Store = bürgerlicher Name. Apple akzeptiert als „Organisation“
+      nur juristische Personen (GmbH/UG), nicht das Einzelgewerbe.
+- [ ] **D-U-N-S-Nummer** für das Gewerbe beantragen (kostenlos, 1–2+ Wochen) über
+      https://developer.apple.com/enroll/duns-lookup/ – Name/Adresse exakt wie in der
+      Gewerbeanmeldung.
+- [ ] **Google Play Console als Organisation** anlegen, *sobald die D-U-N-S da ist*
+      (25 $). Vorher **kein** Privatkonto anlegen – der Kontotyp lässt sich nicht
+      wechseln. Vorteil: kein Pflicht-Test mit 12 Testern × 14 Tage.
+      Vorher: 2-Faktor-Authentifizierung für das Google-Konto aktivieren.
+
+**Provision sparen (DU, direkt nach Freischaltung der Konten):**
+- [ ] 💰 **Apple: App Store Small Business Program** beantragen
+      (https://developer.apple.com/app-store/small-business-program/) →
+      **15 % statt 30 %** Provision (bis 1 Mio. $ Umsatz/Jahr). Gilt erst ab Aufnahme,
+      nicht rückwirkend → **vor dem ersten Verkauf** beantragen!
+- [ ] 💰 **Google: 15 %-Stufe** für die ersten 1 Mio. $ Umsatz/Jahr – in der Play
+      Console prüfen, ob sie aktiv ist bzw. aktiviert werden muss (Kontogruppe).
+- [ ] Apple **Paid Apps Agreement** (Schedule 2) akzeptieren + Bank- & Steuerdaten
+      in App Store Connect hinterlegen – ohne das funktionieren keine In-App-Käufe
+      (auch nicht in TestFlight).
+- [ ] Google **Zahlungsprofil** (Bank, Steuer) in der Play Console einrichten.
+- [ ] **EU-Händlerstatus (DSA)** in beiden Stores als „Händler“ angeben (Adresse,
+      Telefon, E-Mail werden öffentlich angezeigt).
+
+**Store-Setup (gemeinsam):**
+- [ ] App in App Store Connect + Play Console anlegen (Bundle-ID `com.robtechconsult.klopatra`)
+- [ ] Die 6 In-App-Produkte in beiden Stores anlegen, Preise setzen (Abschnitt 4.1)
+- [ ] RevenueCat: Projekt, Apps, Entitlement `pro`, SDK-Keys → `.env.local` + Codemagic
+- [ ] Echter (Test-)Kauf **auf Gerät** geprüft (iOS Sandbox / Play Lizenztester)
+- [ ] Privacy-Labels / Datensicherheit laut `store/SUBMISSION.md` („Kaufverlauf“)
+- [ ] Screenshots & Texte aus `store/STORE_LISTING.md` hochladen
+- [ ] Signierter Android-Build (Upload-Key sicher aufbewahren!) → interner Test
+- [ ] iOS-Build per Codemagic → TestFlight
+- [ ] Einreichen → Review → Release
