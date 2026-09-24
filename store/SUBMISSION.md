@@ -21,7 +21,7 @@ erhält der Entwickler keine personenbezogenen Zahlungsdaten.
 > Integration ist „Keine Daten erfasst" korrekt.
 
 Weitere Apple-Felder:
-- **Datenschutzrichtlinie-URL:** https://robtechconsult.github.io/Klotracker/datenschutz.html
+- **Datenschutzrichtlinie-URL:** https://klopatra.robtech-consult.de/datenschutz.html
 - **Altersfreigabe:** 4+ (keine anstößigen Inhalte; humorvoll, keine Medizinberatung)
 - **Verschlüsselung (ITSAppUsesNonExemptEncryption):** `NO` in Info.plist setzen
   (App nutzt keine eigene Verschlüsselung → keine Exportfreigabe nötig).
@@ -34,7 +34,7 @@ Weitere Apple-Felder:
 - **Werden Daten verschlüsselt übertragen?** → n/a (keine Übertragung).
 - **Können Nutzer Löschung anfordern?** → Ja – lokal über „Alle Daten löschen"
   bzw. App-Deinstallation.
-- **Datenschutzerklärung-URL:** https://robtechconsult.github.io/Klotracker/datenschutz.html
+- **Datenschutzerklärung-URL:** https://klopatra.robtech-consult.de/datenschutz.html
 - **Inhaltseinstufung (Fragebogen):** keine Gewalt/Sexualität/Drogen; Humor.
   Ergebnis voraussichtlich USK 0 / PEGI 3.
 - **App-Zugriff:** keine Anmeldung nötig (keine Testzugangsdaten erforderlich).

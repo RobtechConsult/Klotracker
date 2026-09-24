@@ -43,7 +43,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          # Basis-Pfad = Repo-Name (/Klotracker/), von configure-pages geliefert.
+          # Basis-Pfad von configure-pages; mit Custom-Domain leer (= Wurzel).
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
 
       - name: Upload artifact

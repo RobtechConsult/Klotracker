@@ -126,7 +126,7 @@ jedem Push auf **`main`** über **GitHub Actions** (`actions/deploy-pages`).
 
 Danach gilt: **Was auf `main` landet, geht live.** Die App ist erreichbar unter:
 
-**https://robtechconsult.github.io/Klotracker/**
+**https://klopatra.robtech-consult.de/**
 
 Entwickelt wird auf dem Feature-Branch; zum Veröffentlichen wird nach `main`
 gemergt.

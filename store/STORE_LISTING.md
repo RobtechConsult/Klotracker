@@ -15,9 +15,9 @@ Copy-&-paste-fertig. Zeichenlimits stehen in Klammern; alle Texte halten sie ein
 | Kategorie (sekundär) | Lifestyle |
 | Altersfreigabe | 4+ / USK 0 (keine sensiblen Inhalte; humorvoll, keine Medizinberatung) |
 | Preis | Gratis (mit optionalen In-App-Käufen) |
-| Datenschutz-URL | https://robtechconsult.github.io/Klotracker/datenschutz.html |
-| Support-URL | https://robtechconsult.github.io/Klotracker/ |
-| Marketing-URL (optional) | https://robtechconsult.github.io/Klotracker/ |
+| Datenschutz-URL | https://klopatra.robtech-consult.de/datenschutz.html |
+| Support-URL | https://klopatra.robtech-consult.de/ |
+| Marketing-URL (optional) | https://klopatra.robtech-consult.de/ |
 | Kontakt | Robert Krawczyk · shop@robtech-consult.de |
 
 ---

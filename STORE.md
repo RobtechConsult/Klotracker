@@ -104,7 +104,7 @@ RevenueCat aktiv ist (4.3), funktioniert er nativ automatisch.
 - **Datenschutzerklärung** (Pflicht in beiden Stores): ✅ Seite vorhanden unter
   `public/datenschutz.html` (in der App verlinkt: Einstellungen → Rechtliches).
   Wird via GitHub Pages automatisch mitveröffentlicht, öffentliche URL lautet
-  dann `https://<user>.github.io/Klotracker/datenschutz.html`. **Noch zu tun:**
+  dann `https://klopatra.robtech-consult.de/datenschutz.html`. **Noch zu tun:**
   die Platzhalter `[DEIN NAME/FIRMA]`, Anschrift, `[DEINE-KONTAKT-EMAIL]` und
   `[DATUM]` in der Datei ausfüllen (rechtlich verpflichtend) und diese URL in
   App Store Connect / Play Console als Datenschutz-Link eintragen.

@@ -3,12 +3,13 @@
 > Lebendes Dokument der Projektleitung. Hält Entscheidungen, Learnings, Konventionen
 > und den priorisierten Backlog fest. Wird bei jeder größeren Änderung aktualisiert.
 >
-> Zuletzt aktualisiert: 2026-07-31
+> Zuletzt aktualisiert: 2026-09-24
 >
 > **App-Name:** Klopatra (Klo + Kleopatra 👑). Marke/Anzeigename. Technische
 > Identifier bleiben teils historisch: localStorage-Keys `klotracker.*.v1`
-> (Datenerhalt bestehender Nutzer!) und der GitHub-Repo-/Pages-Pfad `/Klotracker/`
-> bleiben unverändert. Neu vereinheitlicht: Bundle-ID `com.robtechconsult.klopatra`,
+> (Datenerhalt bestehender Nutzer!) und der GitHub-Repo-Name `Klotracker`
+> bleiben unverändert. Live unter `https://klopatra.robtech-consult.de/`.
+> Neu vereinheitlicht: Bundle-ID `com.robtechconsult.klopatra`,
 > IAP-Produkt-IDs `klopatra.*` (noch nicht in Stores angelegt).
 
 ---
@@ -36,7 +37,7 @@ Wasserlassen) – mit Gewohnheits-Prognose, Regelmäßigkeits-Check und Timer. A
 
 ## 3. Deployment (wichtig!)
 
-- **Live-URL:** https://robtechconsult.github.io/Klotracker/
+- **Live-URL:** https://klopatra.robtech-consult.de/
 - **Weg:** GitHub Actions (`.github/workflows/deploy.yml`) → `actions/deploy-pages`.
   **Source in den Repo-Settings = „GitHub Actions".**
 - **Regel: Was auf `main` landet, geht live.** Entwickelt wird auf dem Feature-Branch,
@@ -48,8 +49,12 @@ Wasserlassen) – mit Gewohnheits-Prognose, Regelmäßigkeits-Check und Timer. A
   - Der Workflow-Token (`GITHUB_TOKEN`) darf die **Pages-Quelle NICHT umstellen**
     (`403 Resource not accessible by integration`). Das ist eine einmalige
     Admin-Einstellung im UI.
-  - `BASE_PATH` muss der Projekt-Pfad sein (`/Klotracker/`); kommt von
-    `actions/configure-pages` (`steps.pages.outputs.base_path`).
+  - `BASE_PATH` kommt von `actions/configure-pages` (`steps.pages.outputs.base_path`).
+    Seit der Custom-Domain (2026-09-24) ist er leer → Vite baut relativ (`./`) für
+    die Domain-Wurzel. Die alte URL `robtechconsult.github.io/Klotracker/`
+    leitet GitHub automatisch auf die Domain um.
+  - Custom-Domain: CNAME `klopatra` → `robtechconsult.github.io` bei IONOS
+    (`robtech-consult.de`), plus `public/CNAME`. Details: `store/DOMAIN_SETUP.md`.
   - Aus der Sandbox ist `*.github.io` netzwerkseitig geblockt – Live-Status prüfen
     wir über die **GitHub-API** (Workflow-/Deploy-Status), nicht per Browser.
 

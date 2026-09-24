@@ -16,8 +16,8 @@ vermutlich schon – deine E-Mail läuft darüber).
 - Vorteil Subdomain: einfachste DNS (nur ein CNAME), saubere Trennung, pro App
   eigene Datenschutz-URL (von den Stores gefordert).
 
-Aktuell live: `https://robtechconsult.github.io/Klotracker/` (bleibt als Redirect
-bestehen, sobald die Domain aktiv ist).
+✅ **Erledigt 2026-09-24:** Live unter `https://klopatra.robtech-consult.de/`.
+Die alte URL `https://robtechconsult.github.io/Klotracker/` leitet automatisch dorthin um.
 
 ---
 
