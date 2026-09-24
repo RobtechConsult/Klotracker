@@ -1,16 +1,20 @@
-// Kauf-Abstraktion. Auf Web/PWA gibt es keine In-App-Käufe – dort schaltet die
-// App lokal frei (Testbetrieb). Auf nativen Geräten (Capacitor iOS/Android)
-// werden hier die echten Store-Käufe abgewickelt.
-//
-// Empfohlener Weg fürs native Einbinden: RevenueCat
-// (@revenuecat/purchases-capacitor). Siehe STORE.md → "In-App-Käufe".
-// Der Code unten ist bewusst plugin-agnostisch: nur diese Datei muss angefasst
-// werden, um den echten Kauf zu aktivieren – die UI bleibt unverändert.
+// Kauf-Abstraktion. Im Browser (nur Entwicklung) gibt es keine In-App-Käufe –
+// dort schaltet die App lokal frei. Auf nativen Geräten (Capacitor iOS/Android)
+// laufen die echten Store-Käufe über RevenueCat (@revenuecat/purchases-capacitor).
+// Siehe STORE.md → "In-App-Käufe". Die UI kennt nur purchase()/restore().
 
 import { Capacitor } from '@capacitor/core'
+import { Purchases, PRODUCT_CATEGORY } from '@revenuecat/purchases-capacitor'
 
 export const platform = () => Capacitor.getPlatform() // 'web' | 'ios' | 'android'
 export const isNative = () => Capacitor.isNativePlatform()
+
+// Öffentliche RevenueCat-SDK-Keys (dürfen im App-Bundle stehen). Kommen aus
+// .env.local bzw. den Build-Umgebungsvariablen, siehe .env.example.
+const RC_KEYS = {
+  ios: import.meta.env.VITE_RC_IOS_KEY,
+  android: import.meta.env.VITE_RC_ANDROID_KEY
+}
 
 // Produkt-IDs – exakt so in App Store Connect / Google Play Console anlegen.
 // Pro: 3 Preis-Stufen (non-consumable), alle geben dasselbe Entitlement "pro".
@@ -28,13 +32,29 @@ export const PRO_ENTITLEMENT = 'pro'
 export const proProductForTier = (tierKey) => PRODUCTS[`pro_${tierKey}`]
 export const tipProductForTier = (tierKey) => PRODUCTS[`tip_${tierKey}`]
 
-/** Einmalig beim App-Start (nur nativ). No-op auf Web. */
+let configured = null // Promise, damit configure() nur einmal läuft
+
+function ensureConfigured() {
+  if (!configured) {
+    const apiKey = RC_KEYS[platform()]
+    if (!apiKey) return Promise.reject(new Error(`RevenueCat-Key für ${platform()} fehlt`))
+    configured = Purchases.configure({ apiKey }).catch((e) => { configured = null; throw e })
+  }
+  return configured
+}
+
+const hasPro = (customerInfo) => !!customerInfo?.entitlements?.active?.[PRO_ENTITLEMENT]
+
+/**
+ * Einmalig beim App-Start (nur nativ). Liefert, ob der Store ein aktives
+ * Pro-Entitlement kennt (z. B. nach Neuinstallation) – dann schaltet die App frei.
+ * @returns {Promise<{pro:boolean}>}
+ */
 export async function initPurchases() {
-  if (!isNative()) return
-  // NATIV (RevenueCat):
-  //   import { Purchases, LOG_LEVEL } from '@revenuecat/purchases-capacitor'
-  //   await Purchases.configure({ apiKey: platform()==='ios' ? RC_IOS_KEY : RC_ANDROID_KEY })
-  // Siehe STORE.md.
+  if (!isNative()) return { pro: false }
+  await ensureConfigured()
+  const { customerInfo } = await Purchases.getCustomerInfo()
+  return { pro: hasPro(customerInfo) }
 }
 
 /**
@@ -44,19 +64,27 @@ export async function initPurchases() {
  */
 export async function purchase(productId) {
   if (!isNative()) return { ok: false, platform: 'web' }
-  // NATIV (RevenueCat):
-  //   const offerings = await Purchases.getOfferings()
-  //   const pkg = findPackageByProductId(offerings, productId)
-  //   const { customerInfo } = await Purchases.purchasePackage({ aPackage: pkg })
-  //   return { ok: !!customerInfo.entitlements.active[PRO_ENTITLEMENT] || isConsumable(productId), platform: platform() }
-  throw new Error('IAP-Plugin noch nicht eingebunden (siehe STORE.md)')
+  await ensureConfigured()
+  const { products } = await Purchases.getProducts({
+    productIdentifiers: [productId],
+    type: PRODUCT_CATEGORY.NON_SUBSCRIPTION
+  })
+  const product = products.find((p) => p.identifier === productId)
+  if (!product) throw new Error(`Produkt ${productId} nicht im Store gefunden`)
+  try {
+    const { customerInfo } = await Purchases.purchaseStoreProduct({ product })
+    const isTip = productId.startsWith('klopatra.tip.')
+    return { ok: isTip || hasPro(customerInfo), platform: platform() }
+  } catch (e) {
+    if (e?.userCancelled) return { ok: false, platform: platform(), reason: 'cancelled' }
+    throw e
+  }
 }
 
 /** Käufe wiederherstellen (Pflicht für App-Store-Freigabe). */
 export async function restore() {
   if (!isNative()) return { ok: false, platform: 'web' }
-  // NATIV (RevenueCat):
-  //   const info = await Purchases.restorePurchases()
-  //   return { ok: !!info.customerInfo.entitlements.active[PRO_ENTITLEMENT], platform: platform() }
-  throw new Error('IAP-Plugin noch nicht eingebunden (siehe STORE.md)')
+  await ensureConfigured()
+  const { customerInfo } = await Purchases.restorePurchases()
+  return { ok: hasPro(customerInfo), platform: platform() }
 }

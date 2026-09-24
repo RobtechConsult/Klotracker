@@ -7,18 +7,16 @@ die Datenschutz-Angaben in beiden Stores angenehm einfach.
 
 ## 🍎 Apple – App Privacy (App Store Connect → App-Datenschutz)
 
-Frage „Erfasst diese App Daten?" → **Nein, wir erfassen keine Daten.**
+Frage „Erfasst diese App Daten?" → **Ja** – aber nur eine Kategorie, wegen RevenueCat:
 
-Begründung, falls nachgefragt: Alle Einträge werden ausschließlich lokal auf dem
-Gerät gespeichert (localStorage), es gibt keinen Server, kein Konto, kein Tracking,
-keine Analyse- oder Werbe-SDKs. In-App-Käufe laufen über Apple/RevenueCat; dabei
-erhält der Entwickler keine personenbezogenen Zahlungsdaten.
+| Datentyp | Zweck | Mit Identität verknüpft? | Tracking? |
+|---|---|---|---|
+| **Käufe → Kaufverlauf** | App-Funktionalität | Nein | Nein |
 
-> Hinweis: Sobald du RevenueCat einbindest, prüft Apple, dass RevenueCat selbst
-> keine mit dem Nutzer verknüpften Daten sammelt. RevenueCat kann anonyme
-> Kauf-/Diagnosedaten verarbeiten – wenn du dort „Nutzer-Attribute" NICHT setzt,
-> bleibt es bei „keine mit der Identität verknüpften Daten". Für die Standard-
-> Integration ist „Keine Daten erfasst" korrekt.
+Alles andere (Gesundheits-/Tracking-Einträge) bleibt **ausschließlich lokal** auf dem
+Gerät, kein Server, kein Konto, keine Analyse- oder Werbe-SDKs. RevenueCat arbeitet mit
+einer anonymen, zufälligen App-User-ID; wir setzen keine Nutzer-Attribute.
+(So empfiehlt es auch die RevenueCat-Doku „Apple App Privacy“.)
 
 Weitere Apple-Felder:
 - **Datenschutzrichtlinie-URL:** https://klopatra.robtech-consult.de/datenschutz.html
@@ -30,8 +28,10 @@ Weitere Apple-Felder:
 
 ## 🤖 Google Play – Data safety (Play Console → Datensicherheit)
 
-- **Werden Nutzerdaten erhoben oder geteilt?** → **Nein.**
-- **Werden Daten verschlüsselt übertragen?** → n/a (keine Übertragung).
+- **Werden Nutzerdaten erhoben oder geteilt?** → **Ja, erhoben** (nicht geteilt):
+  nur **Finanzdaten → Kaufverlauf** (RevenueCat), Zweck „App-Funktionen“, nicht
+  optional. Gesundheitsdaten bleiben lokal und werden **nicht** erhoben.
+- **Werden Daten verschlüsselt übertragen?** → Ja (RevenueCat nutzt HTTPS).
 - **Können Nutzer Löschung anfordern?** → Ja – lokal über „Alle Daten löschen"
   bzw. App-Deinstallation.
 - **Datenschutzerklärung-URL:** https://klopatra.robtech-consult.de/datenschutz.html

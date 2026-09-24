@@ -3,8 +3,5 @@ dist
 .DS_Store
 *.local
 
-# Capacitor – native Projekte werden lokal via `npx cap add ios/android`
-# generiert (siehe STORE.md) und nicht eingecheckt.
-/ios
-/android
+# Capacitor: native Projekte (ios/, android/) sind eingecheckt – nur Build-Artefakte ignorieren.
 _site/

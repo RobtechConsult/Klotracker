@@ -24,6 +24,8 @@ import Icon from './components/Icon.jsx'
 import { proStatus } from './lib/pro.js'
 import { reportData, renderReportHtml } from './lib/report.js'
 import { isNative, purchase, restore, proProductForTier, tipProductForTier, initPurchases } from './lib/purchases.js'
+import { shareFile } from './lib/nativeShare.js'
+import { SITE_URL } from './lib/site.js'
 
 export default function App() {
   const [entries, setEntries] = useState(() => loadEntries())
@@ -59,7 +61,13 @@ export default function App() {
   const setSetting = (patch) => setSettings((s) => ({ ...s, ...patch }))
 
   // In-App-Käufe initialisieren (nur nativ; auf Web No-op).
-  useEffect(() => { initPurchases() }, [])
+  // Kennt der Store schon einen Pro-Kauf (z. B. nach Neuinstallation), direkt freischalten.
+  useEffect(() => {
+    initPurchases()
+      .then(({ pro }) => { if (pro) setSetting({ proUnlocked: true }) })
+      .catch(() => { /* offline oder Store nicht erreichbar – später erneut beim Kauf */ })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // 4-Tage-Testphase beim allerersten Start anstoßen.
   useEffect(() => {
@@ -215,10 +223,18 @@ export default function App() {
       flash('Alles blitzeblank 🧼')
     }
   }
-  // Arzt-Report (Pro): druckbares HTML in neuem Tab -> „Als PDF speichern".
-  const makeReport = () => {
+  // Arzt-Report (Pro): druckbares HTML. Nativ übers Teilen-Menü (Drucken/als PDF
+  // sichern/Mail), im Browser als neuer Tab.
+  const makeReport = async () => {
     if (!pro.active) { setShowSettings(false); setShowPro(true); return }
     const html = renderReportHtml(reportData(entries, settings, now, 30), now)
+    if (isNative()) {
+      try {
+        await shareFile(`klopatra-report-${new Date().toISOString().slice(0, 10)}.html`, html, 'text/html')
+      } catch { /* Teilen abgebrochen */ }
+      setShowSettings(false)
+      return
+    }
     const w = window.open('', '_blank')
     if (!w) { flash('Bitte Pop-ups erlauben, um den Report zu öffnen 🙈'); return }
     w.document.open()
@@ -227,14 +243,10 @@ export default function App() {
     setShowSettings(false)
   }
 
-  const doExport = () => {
-    const blob = new Blob([exportJSON(entries)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `klopatra-export-${new Date().toISOString().slice(0, 10)}.json`
-    a.click()
-    URL.revokeObjectURL(url)
+  const doExport = async () => {
+    try {
+      await shareFile(`klopatra-export-${new Date().toISOString().slice(0, 10)}.json`, exportJSON(entries), 'application/json')
+    } catch { /* Teilen abgebrochen */ }
     setShowSettings(false)
   }
 
@@ -468,13 +480,13 @@ export default function App() {
 
             <div className="set-title">Rechtliches</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <button className="btn ghost" onClick={() => window.open(import.meta.env.BASE_URL + 'datenschutz.html', '_blank')}>🔒 Datenschutzerklärung</button>
-              <button className="btn ghost" onClick={() => window.open(import.meta.env.BASE_URL + 'impressum.html', '_blank')}>📄 Impressum</button>
+              <button className="btn ghost" onClick={() => window.open(SITE_URL + 'datenschutz.html', '_blank')}>🔒 Datenschutzerklärung</button>
+              <button className="btn ghost" onClick={() => window.open(SITE_URL + 'impressum.html', '_blank')}>📄 Impressum</button>
               <button className="btn ghost" onClick={() => { setShowSettings(false); setShowPro(true) }}>↩︎ Käufe wiederherstellen</button>
             </div>
             <p className="disclaimer" style={{ marginTop: 16 }}>
               Klopatra v1 · Made mit 💛 und einer Rolle Klopapier. Keine medizinische App.
-              Deine Daten bleiben lokal – <a href={import.meta.env.BASE_URL + 'datenschutz.html'} target="_blank" rel="noreferrer">Datenschutz</a>.
+              Deine Daten bleiben lokal – <a href={SITE_URL + 'datenschutz.html'} target="_blank" rel="noreferrer">Datenschutz</a>.
             </p>
             <div className="row" style={{ marginTop: 12 }}>
               <button className="btn primary" onClick={() => setShowSettings(false)}>Schließen</button>
@@ -483,7 +495,7 @@ export default function App() {
         </div>
       )}
 
-      {showPro && <ProDialog status={pro} tipCount={settings.tipCount} onBuy={buyPro} onTip={giveTip} onClose={() => setShowPro(false)} onResetTrial={resetTrial} onRestore={restorePurchases} />}
+      {showPro && <ProDialog status={pro} tipCount={settings.tipCount} onBuy={buyPro} onTip={giveTip} onClose={() => setShowPro(false)} onResetTrial={import.meta.env.DEV ? resetTrial : undefined} onRestore={restorePurchases} />}
 
       {!settings.onboarded && <Onboarding onDone={finishOnboarding} onLoadDemo={onboardWithDemo} />}
 

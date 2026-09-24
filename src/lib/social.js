@@ -3,6 +3,7 @@
 // (keine Zeitstempel, keine Rohdaten) – und nur, wenn man den Code aktiv teilt.
 
 import { weekTrend, averagePerDay, averageDrinkPerDay, toiletTimeStats, streakDays, fmtMl, fmtDuration, fmtDurationShort } from './stats.js'
+import { SITE_URL } from './site.js'
 
 const r1 = (x) => Math.round(x * 10) / 10
 
@@ -83,10 +84,7 @@ export function compare(mine, friend) {
   return { rows, meScore: me, friendScore: them, verdict }
 }
 
-/** Öffentliche Domain – in der nativen App wäre location.origin z.B. capacitor://localhost. */
-export const SHARE_BASE = 'https://klopatra.robtech-consult.de/'
-
 /** Baut einen teilbaren Link mit eingebettetem Code (landet auf der Landingpage). */
 export function shareUrl(code) {
-  return `${SHARE_BASE}#vergleich=${code}`
+  return `${SITE_URL}#vergleich=${code}`
 }

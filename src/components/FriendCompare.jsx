@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { buildSummary, encodeSummary, decodeSummary, compare, shareUrl } from '../lib/social.js'
+import { shareLink } from '../lib/nativeShare.js'
 
 // Serverloser Freundes-Vergleich per teilbarem Code/Link.
 export default function FriendCompare({ entries, settings, now, incoming, onIncomingHandled, onToast }) {
@@ -34,17 +35,10 @@ export default function FriendCompare({ entries, settings, now, incoming, onInco
     const url = shareUrl(code)
     const text = 'Vergleich mal deine Klo-Woche mit meiner 🚽 (Klopatra):'
     try {
-      if (navigator.share) {
-        await navigator.share({ title: 'Klopatra-Vergleich', text, url })
-        return
-      }
+      const how = await shareLink({ title: 'Klopatra-Vergleich', text, url })
+      if (how === 'copied') onToast && onToast('Link kopiert – teile ihn mit Freunden 📋')
     } catch {
-      /* Nutzer hat abgebrochen – dann zeigen wir den Code unten an. */
-    }
-    try {
-      await navigator.clipboard.writeText(url)
-      onToast && onToast('Link kopiert – teile ihn mit Freunden 📋')
-    } catch {
+      /* Abgebrochen oder nicht möglich – der Code steht unten zum Kopieren. */
       onToast && onToast('Code erzeugt – unten kopierbar 👇')
     }
   }

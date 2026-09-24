@@ -1,50 +1,67 @@
 # 📱 Klopatra im App Store & Play Store veröffentlichen
 
-Die App ist eine React/Vite-PWA. Für die Stores wird sie mit **Capacitor** in
-native iOS-/Android-Hüllen verpackt – aus **einer** Codebasis. Die Web-Version
-(GitHub Pages) läuft unverändert weiter.
+Die App ist eine React/Vite-App, die mit **Capacitor 8** in native iOS-/Android-Apps
+verpackt wird – aus **einer** Codebasis. **Es gibt keine öffentliche Web-Version**;
+unter https://klopatra.robtech-consult.de/ liegt nur die Landingpage (`site/`).
 
-> Web bleibt gratis & werbefrei. Käufe (Pro / Trinkgeld) laufen **nur nativ**
-> über die Store-In-App-Käufe. Im Web schaltet die App lokal frei (Testbetrieb).
+> Käufe (Pro / Trinkgeld) laufen über RevenueCat + Store-In-App-Käufe. Im
+> Browser (`npm run dev`, nur Entwicklung) schaltet die App lokal frei.
+
+**Entscheidungen (2026-09-24):** Auftritt als **Privatperson** (Robert Krawczyk),
+iOS-Build **in der Cloud (Codemagic)**, weil kein Mac vorhanden ist.
 
 ---
 
-## 1. Voraussetzungen (lokal, nicht im Web-Sandbox)
+## 1. Voraussetzungen
 
-- **Node 20+**
-- **iOS:** macOS + **Xcode**, **CocoaPods** (`sudo gem install cocoapods`), ein
-  **Apple Developer Account** (99 $/Jahr)
-- **Android:** **Android Studio** (+ JDK 17), ein **Google Play Developer
-  Account** (einmalig 25 $)
+- **Node 22+**, **JDK 21**
+- **Android:** Android Studio + SDK (lokal unter Windows vorhanden), **Google Play
+  Developer Account** (einmalig 25 $)
+  - ⚠️ **Neue Privatkonten** müssen vor dem Livegang einen **geschlossenen Test mit
+    mind. 12 Testern über 14 Tage** fahren. Tester früh organisieren!
+- **iOS:** **Apple Developer Account** (99 $/Jahr) + **Codemagic**-Konto (kostenlos,
+  500 Mac-Minuten/Monat). Kein Mac nötig.
+- **EU-Händlerstatus (DSA):** Weil die App In-App-Käufe verkauft, bist du in beiden
+  Stores „Händler“ → Adresse, Telefon und E-Mail werden im EU-Store öffentlich
+  angezeigt.
 
-## 2. Native Projekte erzeugen & starten
+## 2. Native Projekte
 
-Die Ordner `ios/` und `android/` sind **nicht eingecheckt** – einmalig anlegen:
+`ios/` und `android/` sind **eingecheckt** (mit Icons, Splash, Info.plist-Anpassungen:
+Sprache `de`, nur iPhone, nur Hochformat, `ITSAppUsesNonExemptEncryption = NO`).
 
 ```bash
-npm install
-npm run build            # erzeugt dist/ mit relativem Basispfad (für App korrekt)
-npx cap add ios          # legt ios/ an  (danach: cd ios/App && pod install)
-npx cap add android      # legt android/ an
+npm run app:sync         # vite build + cap sync (nach jeder Code-Änderung)
+npm run app:android      # … + Android Studio öffnen
 
-# Danach im Alltag: bauen, syncen, in der IDE öffnen
-npm run app:ios          # vite build + cap sync ios + Xcode öffnen
-npm run app:android      # vite build + cap sync android + Android Studio öffnen
+# Android-Test-APK ohne Android Studio (JAVA_HOME = JDK 21):
+cd android && ./gradlew assembleDebug   # → app/build/outputs/apk/debug/app-debug.apk
 ```
 
-`capacitor.config.json` ist gesetzt: `appId = com.robtechconsult.klopatra`,
-`appName = Klopatra`, `webDir = dist`.
+`capacitor.config.json`: `appId = com.robtechconsult.klopatra`, `appName = Klopatra`,
+`webDir = dist`.
+
+### iOS-Build in der Cloud (Codemagic)
+
+`codemagic.yaml` enthält den Workflow **„iOS → TestFlight“** (manuell starten).
+Einmalig einrichten:
+1. App Store Connect → Benutzer und Zugriff → Integrationen → **API-Key** (Rolle
+   „App Manager“) erstellen, `.p8` herunterladen.
+2. Codemagic → Teams → Integrations → **App Store Connect** → Key hochladen,
+   Name **`klopatra_asc`**.
+3. Codemagic → App → Environment variables → Gruppe **`revenuecat`** mit
+   `VITE_RC_IOS_KEY`.
+4. Nach Anlage der App in App Store Connect die numerische **Apple-ID** in
+   `codemagic.yaml` (`APP_STORE_APPLE_ID`) eintragen.
 
 ## 3. App-Icon & Splash
 
-Ein Master-Icon (1024×1024 PNG) + Splash bereitstellen und generieren lassen:
+Quellen liegen in `assets/` (Icon aus `store/klopatra-icon-1024.png`, Splash hell/
+dunkel). Neu erzeugen:
 
 ```bash
-npm i -D @capacitor/assets
-npx capacitor-assets generate --iconBackgroundColor '#fdf6ec' --splashBackgroundColor '#fdf6ec'
+npx capacitor-assets generate --ios --android --iconBackgroundColor '#fdf6ec' --iconBackgroundColorDark '#1a1613' --splashBackgroundColor '#fdf6ec' --splashBackgroundColorDark '#1a1613'
 ```
-
-(Vorlage: unser Mascot aus `public/icon.svg` als PNG rendern.)
 
 ## 4. In-App-Käufe (empfohlen: RevenueCat)
 
@@ -76,22 +93,12 @@ nur **eine Datei** (`src/lib/purchases.js`) mit echten Aufrufen gefüllt werden.
 - Ein **Offering** mit allen sechs Produkten anlegen.
 - iOS- & Android-**API-Keys** kopieren.
 
-**4.3 Plugin einbinden & `purchases.js` aktivieren**
-```bash
-npm i @revenuecat/purchases-capacitor
-npx cap sync
-```
-Dann in `src/lib/purchases.js` die drei markierten Stellen aktivieren
-(`initPurchases`, `purchase`, `restore`) – der Code steht bereits als Kommentar
-dort. Kurz:
-```js
-import { Purchases } from '@revenuecat/purchases-capacitor'
-// initPurchases(): await Purchases.configure({ apiKey: platform()==='ios' ? RC_IOS : RC_ANDROID })
-// purchase(id):   Offering-Package finden -> Purchases.purchasePackage(...) -> Entitlement prüfen
-// restore():      Purchases.restorePurchases() -> Entitlement 'pro' prüfen
-```
-Bei erfolgreichem Kauf setzt die App-Logik `settings.proUnlocked` (schon
-verdrahtet in `App.jsx` → `buyPro`/`giveTip`).
+**4.3 Plugin & Keys** ✅ **Code fertig** – `@revenuecat/purchases-capacitor` ist
+eingebunden, `src/lib/purchases.js` kauft direkt per Produkt-ID
+(`getProducts` → `purchaseStoreProduct`, kein Offering nötig), prüft das
+Entitlement `pro` und gleicht es beim App-Start ab (Neuinstallation → Pro wieder da).
+Fehlt nur noch: die **öffentlichen SDK-Keys** aus RevenueCat in `.env.local`
+(Vorlage `.env.example`) bzw. als Codemagic-Variable eintragen.
 
 **4.4 „Käufe wiederherstellen"** ✅ **erledigt** – Button ist im Pro-Dialog und
 unter Einstellungen → Rechtliches vorhanden und ruft `restore()` auf. Sobald
